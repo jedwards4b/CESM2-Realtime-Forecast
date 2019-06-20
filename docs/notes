@@ -1,0 +1,39 @@
+I pulled the GDAS and CDAS files for NCEP CFSv2 data from the RDA (NCAR) 
+data archive. These are 6-hourly data products located at:
+/glade/collections/rda/data/ds093.0 (most GDAS 1979-2010)
+and /glade/collections/rda/data/ds094.0 (first 3 months of 2011 are GDAS, 
+rest of 2011 - present are CDAS)
+
+The scripts untar_raw_CFSv2data_gdas.ncl and untar_raw_CFSv2data.ncl untar all 
+needed files through the timeseries and grab only the valid times needed for 
+the CLM DATM stream files. The files are placed in:
+/glade/collections/nmme/ncgd0022/jcaron/CFSv2/data_files
+
+The script create_landforcing_from_NCEPCFSv4.ncl processes these files into 
+netCDF DATM Stream files for CLM and puts them in:
+/glade/collections/nmme/ncgd0022/jcaron/CFSv2/forcing_files
+
+Then, I've produced a land domain file that CLM requires for a new dataset to 
+be used. The script obtain_T62_mask_dims.ncl(0.2d for T62 for high res) pulls 
+information from a data file and creates a mask used by Sean Swenson's 
+create_domain.pro (create_domain_hr.pro for high res) script. 
+
+Running Sean's script produces the actual domain file used by CLM, and I put 
+this in the forcing_files directory with all the other DATM stream data.
+(run idl, compile the script, and then run it using create_domain)
+
+Now, We move to spinning up the land with these data. But since these data are 
+new, there are not definied DATM compsets in CLM for them. So we will create a 
+new case with an existing compset and modify the data paths to meet our needs.
+
+To do this, we move to /glade/collections/nmme/ncgd0022/jcaron/code_landIC.
+Here we run the spin up of the land first with our NCEP CFSv2.
+
+Use Jerry O's script called 
+
+
+
+The newer, real-time NCEP CFSv2 data is here:
+
+
+
