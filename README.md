@@ -1,4 +1,5 @@
 Files in the bin directory:
+
 getNASAdata.py: Get data from the NASA eosdis server.
   Accepts --date in form yyyy-mm-dd as an input argument
   The ip address of the local system must be registered with NASA contact
