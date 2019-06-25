@@ -56,7 +56,7 @@ do iyr = 0, nyr-1
  stream = (/"Solar","Precip","TPQWL"/)
 
 ;------------------------------------------------------------------------------
-; naming convention for land files is 
+; naming convention for land files is
 ; clmforc.<product>.cYYYY.resxres.<stream>.YYYY-MM.nc
 ; where cYYYY is the creation year, and YYYY-MM is the data year and month
 ; resxres is the resolution, product is CRUNCEP or NCEPCFSv2 etc and the stream
@@ -102,10 +102,10 @@ if(strm.eq."Solar")then
   hcnt = hcnt + 6
  end if
 
- end do 
+ end do
 
  time@long_name = "observation time"
- time@units = tunits 
+ time@units = tunits
  time@calendar = "noleap"
  delete(time@_FillValue)
 
@@ -139,10 +139,10 @@ else
   hcnt = hcnt + 6
  end if
 
- end do 
+ end do
 
  time@long_name = "observation time"
- time@units = tunits 
+ time@units = tunits
  time@calendar = "noleap"
  delete(time@_FillValue)
 
@@ -173,7 +173,7 @@ if(yr(iyr).lt."2011")then
  delete_VarAtts(lonin,-1)
 
 else
-; beginning in 2011, grid changes to higher res. read in desired lat, lon 
+; beginning in 2011, grid changes to higher res. read in desired lat, lon
 ; for regridding
  fnd = "dims.nc"
  datd = addfile(fnd,"r")
@@ -284,7 +284,7 @@ end if
  globalAtt@case_title = "NCEP CFSv2 6_Hourly Atmospheric Forcing: Incoming Solar"
 
 
-  filedimdef(cdf,(/"time","lat","lon","scalar"/),\ 
+  filedimdef(cdf,(/"time","lat","lon","scalar"/),\
                  (/-1,nlat,nlon,1/), \
                  (/True,False,False,False/) )
   filevardef(cdf,"time","float",(/"time"/))
@@ -330,7 +330,7 @@ end if
 
   arr = arr>0.0 ; make sure it's not negative after regrid
 
- 
+
   cdf->FSDS = arr
 
  end if
@@ -349,7 +349,7 @@ end if
  globalAtt@case_title = "NCEP CFSv2 6_Hourly Atmospheric Forcing: Precipitation"
 
 
-  filedimdef(cdf,(/"time","lat","lon","scalar"/),\ 
+  filedimdef(cdf,(/"time","lat","lon","scalar"/),\
                  (/-1,nlat,nlon,1/), \
                  (/True,False,False,False/) )
   filevardef(cdf,"time","float",(/"time"/))
@@ -413,7 +413,7 @@ end if
   globalAtt@case_title = "NCEP CFSv2 6_Hourly Atmospheric Forcing: Temperature, Pressure, Winds, Humidity, and Downward Longwave Radiation"
 
 
-  filedimdef(cdf,(/"time","lat","lon","scalar"/),\ 
+  filedimdef(cdf,(/"time","lat","lon","scalar"/),\
                  (/-1,nlat,nlon,1/), \
                  (/True,False,False,False/) )
   filevardef(cdf,"time","float",(/"time"/))
@@ -479,7 +479,7 @@ end if
 
 ; regrid vector pair
 
-  delete(arr) 
+  delete(arr)
   arr1in = data[:]->UGRD_P0_L105_GGA0(0:(ndpm(cmo)*nhr)-1,::-1,:)
   arr2in = data[:]->VGRD_P0_L105_GGA0(0:(ndpm(cmo)*nhr)-1,::-1,:)
   arr1 = new( (/dimsizes(arr1in(:,0,0)),nlat,nlon/), "float")

@@ -14,9 +14,8 @@ netCDF DATM Stream files for CLM and puts them in:
 /glade/collections/nmme/ncgd0022/jcaron/CFSv2/forcing_files
 
 Then, I've produced a land domain file that CLM requires for a new dataset to 
-be used. The script obtain_T62_mask_dims.ncl(0.2d for T62 for high res) pulls 
-information from a data file and creates a mask used by Sean Swenson's 
-create_domain.pro (create_domain_hr.pro for high res) script. 
+be used. The script obtain_0.2d_mask_dims.ncl pulls information from a data 
+file and creates a mask used by Sean Swenson's create_domain_hr.pro script. 
 
 Running Sean's script produces the actual domain file used by CLM, and I put 
 this in the forcing_files directory with all the other DATM stream data.
@@ -25,15 +24,52 @@ this in the forcing_files directory with all the other DATM stream data.
 Now, We move to spinning up the land with these data. But since these data are 
 new, there are not definied DATM compsets in CLM for them. So we will create a 
 new case with an existing compset and modify the data paths to meet our needs.
+(This is where it would be much better to just have a new land compset get 
+created for us.)
 
 To do this, we move to /glade/collections/nmme/ncgd0022/jcaron/code_landIC.
 Here we run the spin up of the land first with our NCEP CFSv2.
 
-Use Jerry O's script called 
+In Jerry O's script called i.e13.ICFSCN.f09_f09.01_build.csh
+Modify path of model to create case from, casename for land spinup case, 
+resolution, account/projnum, location for bld & run, and configuration 
+desired (CLM_CONFIG_OPTS), as well as number of years to spin up over (in 
+our case not too many so that we are not including trends), and the DATM_MODE 
+which points to the data for an existing land datm compset. (the length of the
+spinup will depend a lot on whether it is an SP case or one with CN turned on).
+
+To check if the case is spunup, use Keith's scripts:
+in /glade/collections/nmme/ncgd0022/jcaron/new_nmme_runs/land_model/
+for SP run: SpinupStability_SP_v8.ncl
+for CN run: SpinupStability_v9.ncl
+being sure to change paths to your data and casename.
+ 
+Once it is spunup, use Jerry O's script:
+/glade/collections/nmme/ncgd0022/jcaron/code_landIC/i.e13.ICRUCN.ne30_ne30.1979-2018.001_build.csh
+to create a case to run the land model to create restarts across the full 
+range of forcing data. You need to change casename, resolution and all the 
+other usual changes for your specific case.
 
 
+special note/caveat:
+when extending the data, the land model wants a full month of data, so the 
+remaining days in the month if any, are currently set to missing. Also, the 
+model will not run past what you've specified in the case checkout without 
+updating the year, mo info by adding files to the user_datm stream files,
+as well as the data in the user_nl_datm file which is set to whatever year 
+you specified to be your last year when setting up your land case. THIS IS 
+IMPORTANT, because the land will wrap back around to the beginning of the 
+stream data (1979) otherwise.
 
-The newer, real-time NCEP CFSv2 data is here:
+AND you need to move or tar up or delete the *.rs1*.bin file from the run 
+directory. This apparently hangs onto information from the original create case.
 
 
+The newer, real-time NCEP CFSv2 data is at the rda site specified in the 
+untar script:
+/glade/collections/rda/data/ds094.0/<yyyy>/
 
+and can also be obtained from:
+
+http://nomads.ncep.noaa.gov/pub/data/nccf/com/cfs/prod/cdas.<yyyymmdd>/cdas1.t*z.sfluxgrbf06.grib2
+where yyyymmdd is the year month and day for approximately the last 5 days. 
