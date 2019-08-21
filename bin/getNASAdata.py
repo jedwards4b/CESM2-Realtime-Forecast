@@ -6,6 +6,7 @@ import datetime
 from standard_script_setup import *
 from CIME.utils            import run_cmd, expect
 from argparse              import RawTextHelpFormatter
+from calendar              import monthrange
 
 def parse_command_line(args, description):
     parser = argparse.ArgumentParser(description=description,
@@ -14,29 +15,43 @@ def parse_command_line(args, description):
     parser.add_argument("--date",
                         help="Specify a date for data retreval")
     args = CIME.utils.parse_args_and_handle_standard_logging_options(args, parser)
-
+    fullmonth = False
     if args.date:
         try:
             date = datetime.datetime.strptime(args.date, '%Y-%m-%d')
         except ValueError:
-            raise ValueError("Incorrect data format, should be YYYY-MM-DD")
+            try:
+                date = datetime.datetime.strptime(args.date, '%Y-%m')
+                fullmonth = True
+            except ValueError:
+                raise ValueError("Incorrect data format, should be YYYY-MM-DD or YYYY-MM")
     else:
         date = datetime.date.today()
+        date = date.replace(day=date.day-1)
 
+    return date, fullmonth
 
-    return date
 
 def get_julian_day_of_year(date):
     day1 = date.replace(month=1, day=1)
     return 1 + int ((date-day1).total_seconds()/(24*3600))
 
 def _main_func(description):
-    date = parse_command_line(sys.argv, description)
-    jday = get_julian_day_of_year(date)
-    dataroot = "https://goldsfs1.gesdisc.eosdis.nasa.gov/data/GEOS5/DFPITI3NVASM.5.12.4/{}/{:03d}/.hidden/".format(date.year,jday)
-    cmd = "wget -np -r -nH --directory-prefix=/glade/scratch/jedwards/NASAdata/ -A'GEOS.*' "+dataroot
-    err, output, _ = run_cmd(cmd, combine_output=True, verbose=True)
-    expect(err == 0,"Could not connect to repo via '{}'\nThis is most likely either a proxy, or network issue.\nOutput:\n{}".format(cmd, output.encode('utf-8')))
+    date, fullmonth = parse_command_line(sys.argv, description)
+    if fullmonth:
+        fday = 1
+        _, lday = monthrange(date.year, date.month)
+    else:
+        fday = date.day
+        lday = date.day
+
+    for day in range(fday, lday+1):
+        tdate = date.replace(day=day)
+        jday = get_julian_day_of_year(tdate)
+        dataroot = "https://goldsfs1.gesdisc.eosdis.nasa.gov/data/GEOS5/DFPITI3NVASM.5.12.4/{}/{:03d}/.hidden/".format(date.year,jday)
+        cmd = "wget -np -r -nH --directory-prefix=/glade/scratch/jedwards/NASAdata/ -A'GEOS.*' "+dataroot
+        err, output, _ = run_cmd(cmd, combine_output=True, verbose=True)
+        expect(err == 0,"Could not connect to repo via '{}'\nThis is most likely either a proxy, or network issue.\nOutput:\n{}".format(cmd, output.encode('utf-8')))
 
 
 if __name__ == "__main__":

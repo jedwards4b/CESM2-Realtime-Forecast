@@ -1,4 +1,5 @@
 Files in the bin directory:
+
 getNASAdata.py: Get data from the NASA eosdis server.
   Accepts --date in form yyyy-mm-dd as an input argument
   The ip address of the local system must be registered with NASA contact
@@ -10,3 +11,5 @@ getCDASdata.py: Untar and rename sfluxgrbf files from /glade/collections/rda/dat
 create_landforcing_from_NCEPCFC.ncl: Create datm stream files from CDAS data
   Accepts year and month as inputs and converts all files for that time period
   Updates existing files with new data.
+
+streamfilelib.ncl: Support file for create_landforcing_from_NCEPCFC.ncl
