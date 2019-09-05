@@ -1423,7 +1423,7 @@ subroutine dyn_run(ptop, ndt, te0, dyn_state, dyn_in, dyn_out, rc)
    nsplit = (ns+n2*nv-1) / (n2*nv)
    dt     = bdt / real(nsplit*n2*nv,r8)
 
-   if (print_subcycling .or. (step_count > 48 .and. step_count<50)) then
+   if (print_subcycling .or. (mod(step_count,48)==0)) then
       print_subcycling = .false.
       if (masterproc) then
          write(iulog,*) 'FV subcycling - nv, n2, nsplit, dt = ', nv, n2, nsplit, dt
@@ -2684,9 +2684,11 @@ subroutine dyn_run(ptop, ndt, te0, dyn_state, dyn_in, dyn_out, rc)
          enddo
       enddo
    end if
-   if(step_count == 48) then
-      dyn_state%nspltrac = 4
-      dyn_state%nspltvrm = 4
+   ! This will decrease large nsplit values to defaults over the first few days.
+   if(mod(step_count,48)==0) then
+      dyn_state%nsplit = max(16, dyn_state%nsplit/2)
+      dyn_state%nspltrac = max(4, dyn_state%nspltrac/2)
+      dyn_state%nspltvrm = max(4, dyn_state%nspltvrm/2)
    endif
    step_count = step_count+1
 

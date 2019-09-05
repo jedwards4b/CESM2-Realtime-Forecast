@@ -35,5 +35,3 @@ deactivate
 
 rename I2000Clm50BgcCrop.002run b.e21.BWHIST.SD.f09_g17.002 $landRestDir* # give land same case name as SD
 cp $landRestDir*nc $SDrestDir # copy those land files (no rpointers) to SD dir
-
-
