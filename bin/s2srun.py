@@ -48,7 +48,7 @@ def parse_command_line(args, description):
             except ValueError:
                 raise ValueError("Incorrect data format, should be YYYY-MM-DD or YYYY-MM")
     elif cdate:
-        date = datetime.datetime.strptime(cdate[:8], '%Y%m%d')
+        date = datetime.datetime.strptime(cdate, '%Y-%m-%d')
     else:
         date = datetime.date.today()
         date = date.replace(day=date.day-1)

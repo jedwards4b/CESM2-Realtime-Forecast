@@ -1,0 +1,45 @@
+[meta]
+  title = CESM CYLC postprocess for ensemble from 70Lwaccm6.00 to 70Lwaccm6.10
+[cylc]
+  UTC mode = True
+  cycle point format = CCYY-MM-DD
+  [[parameters]]
+    member = 0..10
+
+[scheduling]
+  initial cycle point = 1999-08-02
+  final cycle point = 1999-08-09
+
+  [[dependencies]]
+#    [[[R1]]]
+#      graph = "get_data => run<member> => st_archive<member> "
+    [[[R/P1W]]] # Weekly Cycling
+      graph = """
+             postprocess<member>
+	     """
+[runtime]
+  [[get_data]]
+    script = cd /glade/work/jedwards/sandboxes/CESM2-Realtime-Forecast/bin/; ./s2srun.py
+  [[st_archive<member>]]
+    script = cd /glade/work/jedwards/cases_S2S/70Lwaccm6.$(printf "%02d" ${CYLC_TASK_PARAM_member}); ./case.submit --job case.st_archive; ./xmlchange CONTINUE_RUN=TRUE
+
+    [[postprocess<member>]]
+      script = /glade/work/jedwards/sandboxes/CESM2-Realtime-Forecast/bin/pp_priority1.sh
+    [[run<member>]]
+    script = """
+cd /glade/work/jedwards/cases_S2S/70Lwaccm6.$(printf "%02d" ${CYLC_TASK_PARAM_member})
+cp ../user_nl_cam.${CYLC_TASK_TRY_NUMBER} user_nl_cam
+ ./case.submit --job case.run
+"""
+    [[[job]]]
+      execution retry delays = 5*PT6S
+      batch system = pbs
+      batch submit command template = qsub    -q regular -l walltime=04:00:00 -A P93300606  '%(job)s'
+    [[[directives]]]
+       -r = n
+       -j = oe
+       -V =
+       -S = /bin/bash
+       -l = select=31:ncpus=36:mpiprocs=36:ompthreads=1
+    [[[events]]]
+	handler events = retry, failed
