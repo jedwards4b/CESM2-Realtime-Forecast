@@ -8,12 +8,14 @@ end if
 if (.not. isvar("member")) then
   member = getenv("CYLC_TASK_PARAM_member")
   if (ismissing(member)) then
-    member = "00"
-  end if
-  if (strlen(member) .lt. 2) then
-    member = str_insert(member, "0", 0)
+    member = "000"
   end if
 end if
+print ("member len="+strlen(member))
+do while (strlen(member) .lt. 3)
+  member = str_insert(member, "0", 0)
+  print ("member len="+strlen(member))
+end do
 print ("Running for date "+date+" and member "+member)
 
 histDir = "/glade/scratch/jedwards/archive/70Lwaccm6." + date + "." + member + "/atm/hist/"
@@ -42,8 +44,8 @@ zg_500 = calculate_daily_values(f[:]->Z500, "avg", 0, False)
 
 
 ; -------------------------- HORIZONTAL INTERP and FILE SAVING  --------------------------
-xi = f[1]->lon
-yi = f[1]->lat
+xi = f[0]->lon
+yi = f[0]->lat
 xo = fspan(0., 359., 360)
 yo = fspan(-90., 90.,181)
 var = [/ rlut, pr, tas_2m, ts, ua_200, ua_850, va_200, va_850, zg_200, zg_500 /]

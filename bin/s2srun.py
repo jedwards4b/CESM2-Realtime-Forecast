@@ -61,7 +61,7 @@ def per_run_case_updates(case, date, sdrestdir, user_mods_dir, rundir):
     member = os.path.basename(caseroot)[-3:]
 
     unlock_file("env_case.xml",caseroot=caseroot)
-    case.set_value("CASE",basecasename+"."+date+member)
+    case.set_value("CASE",basecasename+date+"."+member)
     case.flush()
     lock_file("env_case.xml",caseroot=caseroot)
 
@@ -85,7 +85,7 @@ def per_run_case_updates(case, date, sdrestdir, user_mods_dir, rundir):
 def build_base_case(date, baseroot, basecasename, res, compset, overwrite,
                     sdrestdir, pertdir, user_mods_dir, pecount=None):
 
-    caseroot = os.path.join(baseroot,basecasename+".00")
+    caseroot = os.path.join(baseroot,basecasename+".000")
 
     with Case(caseroot, read_only=False) as case:
         if overwrite or not os.path.isdir(caseroot):
@@ -94,7 +94,7 @@ def build_base_case(date, baseroot, basecasename, res, compset, overwrite,
                         user_mods_dir=user_mods_dir, pecount=pecount)
             # make sure that changing the casename will not affect these variables
             case.set_value("EXEROOT",case.get_value("EXEROOT", resolved=True))
-            case.set_value("RUNDIR",case.get_value("RUNDIR",resolved=True)+".00")
+            case.set_value("RUNDIR",case.get_value("RUNDIR",resolved=True)+".000")
 
             case.set_value("RUN_TYPE","hybrid")
             case.set_value("GET_REFCASE",False)
@@ -140,7 +140,7 @@ def stage_refcase(rundir, refdir):
 
 def clone_base_case(date, caseroot, ensemble, sdrestdir, pertdir, user_mods_dir, overwrite):
 
-    startval = "01"
+    startval = "001"
     nint = len(startval)
     cloneroot = caseroot
     for i in range(int(startval), int(startval)+ensemble):
@@ -156,7 +156,7 @@ def clone_base_case(date, caseroot, ensemble, sdrestdir, pertdir, user_mods_dir,
         with Case(caseroot, read_only=True) as case:
             # rundir is initially 00 reset to current member
             rundir = case.get_value("RUNDIR")
-            rundir = rundir[:-3]+member_string
+            rundir = rundir[:-nint]+member_string
             case.set_value("RUNDIR",rundir)
             per_run_case_updates(case, date, sdrestdir, user_mods_dir, rundir)
 

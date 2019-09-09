@@ -4,16 +4,18 @@
   UTC mode = True
   cycle point format = CCYY-MM-DD
   [[parameters]]
+    # The number of ensemble members can be changed here
     member = 0..10
 
 [scheduling]
-  initial cycle point = 1999-08-16
+  # Change the run start and end dates here
+  initial cycle point = 1999-08-02
   final cycle point = 1999-08-30
 
   [[dependencies]]
-#    [[[R1]]]
-#      graph = "get_data => run<member> => st_archive<member> "
-    [[[R/P1W]]] # Weekly Cycling
+  # Weekly Cycling, new date will submit when st_archive is complete for each member
+  # run needs to finish, not nessasarily successfully for next step to start
+    [[[R/P1W]]]
       graph = """
 	     st_archive<member>[-P1W] => get_data => run<member>
              run<member>:finish => st_archive<member> => postprocess<member>
@@ -22,29 +24,30 @@
   [[get_data]]
     script = cd /glade/work/jedwards/sandboxes/CESM2-Realtime-Forecast/bin/; ./s2srun.py
   [[st_archive<member>]]
-    script = cd /glade/work/jedwards/cases_S2S/70Lwaccm6.$(printf "%02d" ${CYLC_TASK_PARAM_member}); ./case.submit --job case.st_archive; ./xmlchange CONTINUE_RUN=TRUE
-
-    [[postprocess<member>]]
-      script = """
-source /glade/u/apps/ch/opt/lmod/7.5.3/lmod/lmod/init/sh
-module load ncl
-ncl /glade/work/jedwards/sandboxes/CESM2-Realtime-Forecast/bin/pp_priority1.ncl
+    script = """
+cd /glade/work/jedwards/cases_S2S/70Lwaccm6.$(printf "%03d" ${CYLC_TASK_PARAM_member})
+./case.submit --job case.st_archive
+./xmlchange CONTINUE_RUN=TRUE
 """
+    [[postprocess<member>]]
+      script = /glade/work/jedwards/sandboxes/CESM2-Realtime-Forecast/bin/pp_priority1.sh
     [[run<member>]]
     script = """
-cd /glade/work/jedwards/cases_S2S/70Lwaccm6.$(printf "%02d" ${CYLC_TASK_PARAM_member})
+cd /glade/work/jedwards/cases_S2S/70Lwaccm6.$(printf "%03d" ${CYLC_TASK_PARAM_member})
 cp ../user_nl_cam.${CYLC_TASK_TRY_NUMBER} user_nl_cam
  ./case.submit --job case.run
 """
     [[[job]]]
+      # Retry each run up to 5 times with different fv_nsplit values
       execution retry delays = 5*PT6S
       batch system = pbs
-      batch submit command template = qsub    -q regular -l walltime=04:00:00 -A P93300606  '%(job)s'
+      batch submit command template = qsub    -q regular -l walltime=04:00:00 -A NCGD0042  '%(job)s'
     [[[directives]]]
        -r = n
        -j = oe
        -V =
        -S = /bin/bash
-       -l = select=31:ncpus=36:mpiprocs=36:ompthreads=1
+       # dont forget to change this line if you change pelayout
+       -l = select=15:ncpus=36:mpiprocs=36:ompthreads=1
     [[[events]]]
 	handler events = retry, failed
