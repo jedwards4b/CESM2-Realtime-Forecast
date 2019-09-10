@@ -15,7 +15,8 @@ sys.path.append(_LIBDIR)
 _LIBDIR = os.path.join(cesmroot,"cime","scripts","lib")
 sys.path.append(_LIBDIR)
 
-import datetime, glob
+import datetime, glob, random
+from distutils.spawn import find_executable
 import CIME.build as build
 from standard_script_setup import *
 from CIME.case             import Case
@@ -117,14 +118,15 @@ def build_base_case(date, baseroot, basecasename, res, compset, overwrite,
         rundir = case.get_value("RUNDIR")
         per_run_case_updates(case, date, sdrestdir, user_mods_dir, rundir)
         success = build.case_build(caseroot, case=case)
-        pertfile = os.path.join(pertdir,"70Lwaccm6.cam.i."+date+"-00000-000.nc")
-        caminit = os.path.join(rundir,"b.e21.BWHIST.SD.f09_g17.002.cam.i."+date+"-00000.nc")
-        print("Linking {} to {}".format(pertfile, caminit))
-        if os.path.isfile(caminit):
-            os.unlink(caminit)
-        os.symlink(pertfile, caminit)
 
-        return caseroot
+#        pertfile = os.path.join(pertdir,"70Lwaccm6.cam.i."+date+"-00000-000.nc")
+#        caminit = os.path.join(rundir,"b.e21.BWHIST.SD.f09_g17.002.cam.i."+date+"-00000.nc")
+#        print("Linking {} to {}".format(pertfile, caminit))
+#        if os.path.isfile(caminit):
+#            os.unlink(caminit)
+#        os.symlink(pertfile, caminit)
+
+        return caseroot, rundir
 
 def stage_refcase(rundir, refdir):
     if not os.path.isdir(rundir):
@@ -160,14 +162,16 @@ def clone_base_case(date, caseroot, ensemble, sdrestdir, pertdir, user_mods_dir,
             case.set_value("RUNDIR",rundir)
             per_run_case_updates(case, date, sdrestdir, user_mods_dir, rundir)
 
-        pertfile = os.path.join(pertdir,"70Lwaccm6.cam.i."+date+"-00000-{:03}.nc".format(i))
-        caminit = os.path.join(rundir,"b.e21.BWHIST.SD.f09_g17.002.cam.i."+date+"-00000.nc")
-        if os.path.isfile(caminit):
-            os.unlink(caminit)
-        print("Linking {} to {}".format(pertfile, caminit))
-        os.symlink(pertfile, caminit)
+#        pertfile = os.path.join(pertdir,"70Lwaccm6.cam.i."+date+"-00000-{:03}.nc".format(i))
+#        caminit = os.path.join(rundir,"b.e21.BWHIST.SD.f09_g17.002.cam.i."+date+"-00000.nc")
+#        if os.path.isfile(caminit):
+#            os.unlink(caminit)
+#        print("Linking {} to {}".format(pertfile, caminit))
+#        os.symlink(pertfile, caminit)
 
 def get_data_from_campaignstore(date):
+    date_year=date[0:3]
+    cam_source_path = '/gpfs/csfs1/cesm/development/cross-wg/S2S/SDnudgedOcn/rest/{date}-00000/b.e21.BWHIST.SD.f09_g17.002.nudgedOcn.cam.i.{date}-00000.nc'.format(date=date)
     source_path = '/gpfs/csfs1/cesm/development/cross-wg/S2S/SD/rest/{}-00000/'.format(date)
     dest_path = '/glade/scratch/jedwards/S2S_70LIC_globus/SD/rest/{}/'.format(date)
     lnd_source_path = '/gpfs/csfs1/cesm/development/cross-wg/S2S/land/rest/{}-00000/'.format(date)
@@ -180,6 +184,8 @@ def get_data_from_campaignstore(date):
     transfer_data = get_globus_transfer_object(tc, src_endpoint, dest_endpoint, 'S2S initial data transfer')
     transfer_data = add_to_transfer_request(transfer_data, source_path, dest_path)
     transfer_data = add_to_transfer_request(transfer_data, lnd_source_path, dest_path)
+    print("HERE cam source path {}".format(cam_source_path))
+    transfer_data = add_to_transfer_request(transfer_data, cam_source_path, os.path.join(dest_path,os.path.basename(cam_source_path)))
     activate_endpoint(tc, src_endpoint)
     activate_endpoint(tc, dest_endpoint)
     if complete_transfer_request(tc, transfer_data):
@@ -187,6 +193,36 @@ def get_data_from_campaignstore(date):
             newfile = lndfile.replace("I2000Clm50BgcCrop.002run","b.e21.BWHIST.SD.f09_g17.002")
             print("Renaming {} to {}".format(lndfile,newfile))
             os.rename(os.path.join(dest_path,lndfile), os.path.join(dest_path,newfile))
+
+def create_cam_ic_perturbed(original, ensemble, date, baserundir, outroot="b.e21.BWHIST.SD.f09_g17.002.cam.i.",
+                            diffsdir="/glade/scratch/sglanvil/S2S_70LIC/", factor=0.15):
+    rvals = random.sample(range(498),k=ensemble//2)
+    outfile = os.path.join(baserundir,outroot+date+"-00000.nc")
+    # first link the original ic file to the 0th ensemble member
+    if os.path.exists(outfile):
+        os.unlink(outfile)
+    print("Linking {} to {}".format(original, outfile))
+    os.symlink(original, outfile)
+
+    # for each pair of ensemble members create an ic file with same perturbation opposite sign
+    for i in range(1,ensemble, 2):
+        month = date[5:7]
+        perturb_file = os.path.join(diffsdir,"{}".format(month),"70Lwaccm6.cam.i.M{}.diff.{}.nc".format(month,rvals[i//2]))
+        outfile1 = os.path.join(baserundir[:-3]+"{:03d}".format(i), outroot+date+"-tmp.nc")
+        outfile2 = os.path.join(baserundir[:-3]+"{:03d}".format(i+1), outroot+date+"-tmp.nc")
+        print("Creating pertubted init file {}".format(outfile1))
+        safe_copy(original, outfile1)
+        safe_copy(original, outfile2)
+
+        ncflint = "/glade/u/apps/ch/opt/nco/4.7.9/gnu/8.3.0/bin/ncflint"
+        cmd = ncflint+" -A -v US,VS,T,Q,PS -w {},1.0 {} {} {}".format(factor, perturb_file, original, outfile1)
+        cmd2 = ncflint+" -A -v US,VS,T,Q,PS -w {},1.0 {} {} {}".format(-1*factor, perturb_file, original, outfile2)
+
+        run_cmd(cmd, verbose=True)
+        os.rename(outfile1, outfile1.replace("-tmp.nc","-00000.nc"))
+        print("Creating pertubted init file {}".format(outfile2))
+        run_cmd(cmd2, verbose=True)
+        os.rename(outfile2, outfile2.replace("-tmp.nc","-00000.nc"))
 
 def _main_func(description):
     date, fullmonth = parse_command_line(sys.argv, description)
@@ -203,9 +239,12 @@ def _main_func(description):
     user_mods_dir = os.path.join(s2sfcstroot,"user_mods",basecasename)
     # END TODO
     get_data_from_campaignstore(date)
-    caseroot = build_base_case(date, baseroot, basecasename, res,
+    caseroot, rundir = build_base_case(date, baseroot, basecasename, res,
                                compset, overwrite, sdrestdir, pertdir, user_mods_dir+'.base', pecount="S")
     clone_base_case(date, caseroot, ensemble, sdrestdir, pertdir, user_mods_dir, overwrite)
+    caminame = os.path.join(sdrestdir,"b.e21.BWHIST.SD.f09_g17.002.nudgedOcn.cam.i.{date}-00000.nc".format(date=date))
+    create_cam_ic_perturbed(caminame,ensemble, date,
+                            rundir)
 
 if __name__ == "__main__":
     _main_func(__doc__)
