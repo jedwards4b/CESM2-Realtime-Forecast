@@ -18,7 +18,8 @@ do while (strlen(member) .lt. 3)
 end do
 print ("Running for date "+date+" and member "+member)
 
-histDir = "/glade/scratch/jedwards/archive/70Lwaccm6." + date + "." + member + "/atm/hist/"
+histDir = getenv("SCRATCH")+"/archive/70Lwaccm6." + date + "." + member + "/atm/hist/"
+outDir = getenv("SCRATCH") + "/70Lwaccm6/" + date + "/"
 
 ; -------------------------- READ IN H2 VARIABLES --------------------------
 h2files = systemfunc("ls " + histDir + "*cam.h2.*")
@@ -53,7 +54,7 @@ varStrings = (/ "rlut", "pr", "tas_2m", "ts", "ua_200", "ua_850", "va_200", "va_
 do i = 0,ListCount(var)-1
 	v:=linint2(xi,yi,var[i],True,xo,yo,0)
 
-	fout = histDir + varStrings(i) + "_70Lwaccm6_" + date + "_" + member + ".nc"
+	fout = outDir + varStrings(i) + "_70Lwaccm6_" + date + "_" + member + ".nc"
 	system("/bin/rm -f " + fout)   ; remove any pre-existing file
 	ncdf = addfile(fout ,"c")  ; open output netCDF file
 	filedimdef(ncdf,"time",-1,True)

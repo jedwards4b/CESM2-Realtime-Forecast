@@ -5,7 +5,7 @@
   cycle point format = CCYY-MM-DD
   [[parameters]]
     # The number of ensemble members can be changed here
-    member = 0..10
+    member = 0..0
 
 [scheduling]
   # Change the run start and end dates here
@@ -22,19 +22,19 @@
 	     """
 [runtime]
   [[get_data]]
-    script = cd /glade/work/jedwards/sandboxes/CESM2-Realtime-Forecast/bin/; ./s2srun.py
+    script = cd ${FCST_HOME}/bin/; ./s2srun.py
   [[st_archive<member>]]
     script = """
-cd /glade/work/jedwards/cases_S2S/70Lwaccm6.$(printf "%03d" ${CYLC_TASK_PARAM_member})
+cd ${WORK}/cases/70Lwaccm6/70Lwaccm6.$(printf "%03d" ${CYLC_TASK_PARAM_member})
 ./case.submit --job case.st_archive
 ./xmlchange CONTINUE_RUN=TRUE
 """
     [[postprocess<member>]]
-      script = /glade/work/jedwards/sandboxes/CESM2-Realtime-Forecast/bin/pp_priority1.sh
+      script = ${FCST_HOME}/bin/pp_priority1.sh
     [[run<member>]]
     script = """
-cd /glade/work/jedwards/cases_S2S/70Lwaccm6.$(printf "%03d" ${CYLC_TASK_PARAM_member})
-cp ../user_nl_cam.${CYLC_TASK_TRY_NUMBER} user_nl_cam
+cd ${WORK}/cases/70Lwaccm6/70Lwaccm6.$(printf "%03d" ${CYLC_TASK_PARAM_member})
+cp ${FCST_HOME}/user_mods/70Lwaccm6.base/user_nl_cam.${CYLC_TASK_TRY_NUMBER} user_nl_cam
  ./case.submit --job case.run
 """
     [[[job]]]
@@ -48,6 +48,7 @@ cp ../user_nl_cam.${CYLC_TASK_TRY_NUMBER} user_nl_cam
        -V =
        -S = /bin/bash
        # dont forget to change this line if you change pelayout
-       -l = select=15:ncpus=36:mpiprocs=36:ompthreads=1
+       # How can we connect this to the pelayout?
+       -l = select=17:ncpus=36:mpiprocs=36:ompthreads=1
     [[[events]]]
 	handler events = retry, failed

@@ -21,13 +21,13 @@ def get_globus_auth_data_struct(client, token=None):
     if os.path.isfile(globus_auth_file):
         with open(globus_auth_file) as auth_file:
             return json.load(auth_file)
-    else:
+    elif token:
         globus_auth_data = token.by_resource_server['auth.globus.org']
         with open(globus_auth_file, 'w') as outfile:
             json.dump(globus_auth_data, outfile)
         return globus_auth_data
 
-
+    return None
 
 def get_globus_transfer_data_struct(client):
     home = os.environ.get("HOME")

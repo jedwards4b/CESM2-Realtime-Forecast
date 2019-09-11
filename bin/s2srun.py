@@ -1,14 +1,14 @@
 #!/usr/bin/env python
 import os, sys
-#cesmroot = os.environ.get('CESM_ROOT')
-cesmroot = os.path.join(os.sep+"glade","u","home","jedwards","sandboxes","CESM2-Realtime-Forecast","cesm2_1")
+cesmroot = os.environ.get('CESM_ROOT')
 s2sfcstroot = os.path.join(os.path.dirname(os.path.join(os.path.abspath(__file__))), os.path.pardir)
 
 if cesmroot is None:
     print ("ERROR CESM_ROOT must be defined in environment")
     exit
 
-_LIBDIR="/glade/u/home/jedwards/.local/lib/python3.6/site-packages/"
+# This is needed for globus_sdk
+_LIBDIR=os.path.join(os.environ.get("HOME"),".local","lib","python3.6","site-packages")
 sys.path.append(_LIBDIR)
 _LIBDIR = os.path.join(cesmroot,"cime","scripts","Tools")
 sys.path.append(_LIBDIR)
@@ -32,8 +32,6 @@ def parse_command_line(args, description):
     CIME.utils.setup_standard_logging_options(parser)
     parser.add_argument("--date",
                         help="Specify a start Date")
-
-
 
     args = CIME.utils.parse_args_and_handle_standard_logging_options(args, parser)
     fullmonth = False
@@ -84,7 +82,7 @@ def per_run_case_updates(case, date, sdrestdir, user_mods_dir, rundir):
 
 
 def build_base_case(date, baseroot, basecasename, res, compset, overwrite,
-                    sdrestdir, pertdir, user_mods_dir, pecount=None):
+                    sdrestdir, user_mods_dir, pecount=None):
 
     caseroot = os.path.join(baseroot,basecasename+".000")
 
@@ -92,7 +90,7 @@ def build_base_case(date, baseroot, basecasename, res, compset, overwrite,
         if overwrite or not os.path.isdir(caseroot):
             case.create(os.path.basename(caseroot), cesmroot, compset, res,
                         run_unsupported=True, answer="r",walltime="04:00:00",
-                        user_mods_dir=user_mods_dir, pecount=pecount)
+                        user_mods_dir=user_mods_dir, pecount=pecount, project="NCGD0042")
             # make sure that changing the casename will not affect these variables
             case.set_value("EXEROOT",case.get_value("EXEROOT", resolved=True))
             case.set_value("RUNDIR",case.get_value("RUNDIR",resolved=True)+".000")
@@ -109,11 +107,6 @@ def build_base_case(date, baseroot, basecasename, res, compset, overwrite,
             case.set_value("CCSM_BGC","CO2A")
             case.set_value("EXTERNAL_WORKFLOW",True)
             case.set_value("CLM_NAMELIST_OPTS", "use_init_interp=.true.")
-#            case.set_value("ATM_NCPL",96)
-#            case.set_value("ICE_NCPL",96)
-#            case.set_value("LND_NCPL",96)
-#            case.set_value("WAV_NCPL",96)
-
 
         rundir = case.get_value("RUNDIR")
         per_run_case_updates(case, date, sdrestdir, user_mods_dir, rundir)
@@ -140,7 +133,7 @@ def stage_refcase(rundir, refdir):
                 os.unlink(newfile)
             os.symlink(reffile, newfile)
 
-def clone_base_case(date, caseroot, ensemble, sdrestdir, pertdir, user_mods_dir, overwrite):
+def clone_base_case(date, caseroot, ensemble, sdrestdir, user_mods_dir, overwrite):
 
     startval = "001"
     nint = len(startval)
@@ -173,7 +166,7 @@ def get_data_from_campaignstore(date):
     date_year=date[0:3]
     cam_source_path = '/gpfs/csfs1/cesm/development/cross-wg/S2S/SDnudgedOcn/rest/{date}-00000/b.e21.BWHIST.SD.f09_g17.002.nudgedOcn.cam.i.{date}-00000.nc'.format(date=date)
     source_path = '/gpfs/csfs1/cesm/development/cross-wg/S2S/SD/rest/{}-00000/'.format(date)
-    dest_path = '/glade/scratch/jedwards/S2S_70LIC_globus/SD/rest/{}/'.format(date)
+    dest_path = os.path.join(os.getenv("SCRATCH"),"S2S_70LIC_globus","SD","rest","{}".format(date))
     lnd_source_path = '/gpfs/csfs1/cesm/development/cross-wg/S2S/land/rest/{}-00000/'.format(date)
     client = initialize_client()
     globus_auth_data = get_globus_auth_data_struct(client)
@@ -228,20 +221,19 @@ def _main_func(description):
     date, fullmonth = parse_command_line(sys.argv, description)
 
     # TODO make these input vars
-    baseroot = "/glade/work/jedwards/cases_S2S"
     basecasename = "70Lwaccm6"
+    baseroot = os.path.join(os.getenv("WORK"),"cases",basecasename)
     res = "f09_g17"
     compset = "BWHIST"
     overwrite = False
-    sdrestdir = "/glade/scratch/jedwards/S2S_70LIC_globus/SD/rest/{}".format(date)
-    pertdir = "/glade/scratch/sglanvil/S2S_70LIC/FINAL/{}-0.15_RFIC/".format(date)
+    sdrestdir = os.path.join(os.getenv("SCRATCH"),"S2S_70LIC_globus","SD","rest","{}".format(date))
     ensemble = 10
     user_mods_dir = os.path.join(s2sfcstroot,"user_mods",basecasename)
     # END TODO
     get_data_from_campaignstore(date)
     caseroot, rundir = build_base_case(date, baseroot, basecasename, res,
-                               compset, overwrite, sdrestdir, pertdir, user_mods_dir+'.base', pecount="S")
-    clone_base_case(date, caseroot, ensemble, sdrestdir, pertdir, user_mods_dir, overwrite)
+                               compset, overwrite, sdrestdir, user_mods_dir+'.base', pecount="S")
+    clone_base_case(date, caseroot, ensemble, sdrestdir, user_mods_dir, overwrite)
     caminame = os.path.join(sdrestdir,"b.e21.BWHIST.SD.f09_g17.002.nudgedOcn.cam.i.{date}-00000.nc".format(date=date))
     create_cam_ic_perturbed(caminame,ensemble, date,
                             rundir)
