@@ -1,4 +1,8 @@
 begin
+; First index is intentionally blank
+month_abbr = (/"","jan","feb","mar","apr","may","jun","jul","aug","sep", \
+                    "oct","nov","dec"/)
+
 if (.not. isvar("date")) then
   date = getenv("CYLC_TASK_CYCLE_POINT")
   if (ismissing(date)) then
@@ -8,18 +12,19 @@ end if
 if (.not. isvar("member")) then
   member = getenv("CYLC_TASK_PARAM_member")
   if (ismissing(member)) then
-    member = "000"
+    member = "00"
   end if
 end if
-print ("member len="+strlen(member))
-do while (strlen(member) .lt. 3)
+do while (strlen(member) .lt. 2)
   member = str_insert(member, "0", 0)
   print ("member len="+strlen(member))
 end do
-print ("Running for date "+date+" and member "+member)
-
+cdate = stringtochar(date)
+mm = tostring(cdate(5:6))
+yyyy = tostring(cdate(0:3))
+outdate=tostring(cdate(8:9))+month_abbr(tointeger(mm))+yyyy
+print ("Running for date "+outdate+" and member "+member)
 histDir = getenv("SCRATCH")+"/archive/70Lwaccm6." + date + "." + member + "/atm/hist/"
-outDir = getenv("SCRATCH") + "/70Lwaccm6/" + date + "/"
 
 ; -------------------------- READ IN H2 VARIABLES --------------------------
 h2files = systemfunc("ls " + histDir + "*cam.h2.*")
@@ -53,9 +58,15 @@ var = [/ rlut, pr, tas_2m, ts, ua_200, ua_850, va_200, va_850, zg_200, zg_500 /]
 varStrings = (/ "rlut", "pr", "tas_2m", "ts", "ua_200", "ua_850", "va_200", "va_850", "zg_200", "zg_500" /)
 do i = 0,ListCount(var)-1
 	v:=linint2(xi,yi,var[i],True,xo,yo,0)
+	outDir = getenv("SCRATCH") + "/70Lwaccm6/" + varStrings(i) + "/" + yyyy + "/" + mm + "/"
 
-	fout = outDir + varStrings(i) + "_70Lwaccm6_" + date + "_" + member + ".nc"
-	system("/bin/rm -f " + fout)   ; remove any pre-existing file
+	fout = outDir + varStrings(i) + "_70Lwaccm6_" + outdate + "_00z_d01_d46_m" + member + ".nc"
+	if (.not. fileexists(outDir)) then
+          system("mkdir -p "+outDir)
+        end if
+	if (fileexists(fout)) then
+          system("/bin/rm -f " + fout)   ; remove any pre-existing file
+	end if
 	ncdf = addfile(fout ,"c")  ; open output netCDF file
 	filedimdef(ncdf,"time",-1,True)
 

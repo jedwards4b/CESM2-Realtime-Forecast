@@ -5,7 +5,7 @@
   cycle point format = CCYY-MM-DD
   [[parameters]]
     # The number of ensemble members can be changed here
-    member = 0..0
+    member = 0..10
 
 [scheduling]
   # Change the run start and end dates here
