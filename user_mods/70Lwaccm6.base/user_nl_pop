@@ -1,1 +1,5 @@
   chl_option='file'
+!  history_freq = 1
+!  history_freq_opt = 'nday'
+  tavg_file_freq_opt(2) = 'nday'
+  tavg_file_freq(2) = 45
