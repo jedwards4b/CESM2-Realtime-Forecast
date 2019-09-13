@@ -45,7 +45,7 @@ def parse_command_line(args, description):
 
 def create_cam_ic_perturbed(original, ensemble, date, baserundir, outroot="b.e21.BWHIST.SD.f09_g17.002.cam.i.",
                             diffsdir="/glade/scratch/sglanvil/S2S_70LIC/", factor=0.15):
-    rvals = random.sample(range(498),k=ensemble//2)
+    rvals = random.sample(range(500),k=ensemble//2)
     #save these rvals to a file
     with open(os.path.join(os.getenv("WORK"),"cases","70Lwaccm6","camic_"+date+".txt"),"w") as fd:
         fd.write("{}".format(rvals))
@@ -61,8 +61,8 @@ def create_cam_ic_perturbed(original, ensemble, date, baserundir, outroot="b.e21
     for i in range(1,ensemble, 2):
         month = date[5:7]
         perturb_file = os.path.join(diffsdir,"{}".format(month),"70Lwaccm6.cam.i.M{}.diff.{}.nc".format(month,rvals[i//2]))
-        outfile1 = os.path.join(baserundir[:-3]+"{:03d}".format(i), outroot+date+"-tmp.nc")
-        outfile2 = os.path.join(baserundir[:-3]+"{:03d}".format(i+1), outroot+date+"-tmp.nc")
+        outfile1 = os.path.join(baserundir[:-2]+"{:02d}".format(i), outroot+date+"-tmp.nc")
+        outfile2 = os.path.join(baserundir[:-2]+"{:02d}".format(i+1), outroot+date+"-tmp.nc")
         print("Creating perturbed init file {}".format(outfile1))
         t = threading.Thread(target=create_perturbed_init_file,args=(original, perturb_file, outfile1, factor))
         t.start()
@@ -87,7 +87,7 @@ def _main_func(description):
     # TODO make these input vars
     sdrestdir = os.path.join(os.getenv("SCRATCH"),"S2S_70LIC_globus","SD","rest","{}".format(date))
     ensemble = 10
-    baserundir = os.path.join(os.getenv("SCRATCH"),"70Lwaccm6.000.tmp","run.000")
+    baserundir = os.path.join(os.getenv("SCRATCH"),"70Lwaccm6.00","run.00")
     # END TODO
 
     caminame = os.path.join(sdrestdir,"b.e21.BWHIST.SD.f09_g17.002.nudgedOcn.cam.i.{date}-00000.nc".format(date=date))

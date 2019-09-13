@@ -60,7 +60,7 @@ def per_run_case_updates(case, date, sdrestdir, user_mods_dir, rundir):
     member = os.path.basename(caseroot)[-2:]
 
     unlock_file("env_case.xml",caseroot=caseroot)
-    case.set_value("CASE",basecasename+date+"."+member)
+    case.set_value("CASE",basecasename+"."+date+"."+member)
     case.flush()
     lock_file("env_case.xml",caseroot=caseroot)
 

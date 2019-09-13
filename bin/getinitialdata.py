@@ -9,6 +9,10 @@ if cesmroot is None:
 # This is needed for globus_sdk
 _LIBDIR=os.path.join(os.environ.get("HOME"),".local","lib","python3.6","site-packages")
 sys.path.append(_LIBDIR)
+_LIBDIR = os.path.join(cesmroot,"cime","scripts","Tools")
+sys.path.append(_LIBDIR)
+_LIBDIR = os.path.join(cesmroot,"cime","scripts","lib")
+sys.path.append(_LIBDIR)
 
 import datetime, glob
 from standard_script_setup import *
@@ -42,12 +46,17 @@ def get_data_from_campaignstore(date):
     cam_source_path = '/gpfs/csfs1/cesm/development/cross-wg/S2S/SDnudgedOcn/rest/{date}-00000/b.e21.BWHIST.SD.f09_g17.002.nudgedOcn.cam.i.{date}-00000.nc'.format(date=date)
     source_path = '/gpfs/csfs1/cesm/development/cross-wg/S2S/SD/rest/{}-00000/'.format(date)
     dest_path = os.path.join(os.getenv("SCRATCH"),"S2S_70LIC_globus","SD","rest","{}".format(date))
+    if os.path.exists(dest_path):
+        print("Data already exists in {}".format(dest_path))
+        return
+
     lnd_source_path = '/gpfs/csfs1/cesm/development/cross-wg/S2S/land/rest/{}-00000/'.format(date)
     client = initialize_client()
     globus_transfer_data = get_globus_transfer_data_struct(client)
     tc = get_transfer_client(client, globus_transfer_data)
     src_endpoint = get_endpoint_id(tc,"NCAR Campaign Storage")
     dest_endpoint = get_endpoint_id(tc,"NCAR GLADE")
+
     transfer_data = get_globus_transfer_object(tc, src_endpoint, dest_endpoint, 'S2S initial data transfer')
     transfer_data = add_to_transfer_request(transfer_data, source_path, dest_path)
     transfer_data = add_to_transfer_request(transfer_data, lnd_source_path, dest_path)
