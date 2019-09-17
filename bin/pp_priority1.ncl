@@ -1,29 +1,7 @@
 begin
 ; First index is intentionally blank
-month_abbr = (/"","jan","feb","mar","apr","may","jun","jul","aug","sep", \
-                    "oct","nov","dec"/)
+load "get_member_and_date.ncl"
 
-if (.not. isvar("date")) then
-  date = getenv("CYLC_TASK_CYCLE_POINT")
-  if (ismissing(date)) then
-    date = "1999-01-18"
-  end if
-end if
-if (.not. isvar("member")) then
-  member = getenv("CYLC_TASK_PARAM_member")
-  if (ismissing(member)) then
-    member = "00"
-  end if
-end if
-do while (strlen(member) .lt. 2)
-  member = str_insert(member, "0", 0)
-  print ("member len="+strlen(member))
-end do
-cdate = stringtochar(date)
-mm = tostring(cdate(5:6))
-yyyy = tostring(cdate(0:3))
-outdate=tostring(cdate(8:9))+month_abbr(tointeger(mm))+yyyy
-print ("Running for date "+outdate+" and member "+member)
 histDir = getenv("SCRATCH")+"/archive/70Lwaccm6." + date + "." + member + "/atm/hist/"
 
 ; -------------------------- READ IN H2 VARIABLES --------------------------
@@ -56,7 +34,7 @@ xo = fspan(0., 359., 360)
 yo = fspan(-90., 90.,181)
 var = [/ rlut, pr, tas_2m, ts, ua_200, ua_850, va_200, va_850, zg_200, zg_500 /]
 varStrings = (/ "rlut", "pr", "tas_2m", "ts", "ua_200", "ua_850", "va_200", "va_850", "zg_200", "zg_500" /)
-do i = 0,ListCount(var)-1
+  do i = 0,ListCount(var)-1
 	v:=linint2(xi,yi,var[i],True,xo,yo,0)
 	outDir = getenv("SCRATCH") + "/70Lwaccm6/" + varStrings(i) + "/" + yyyy + "/" + mm + "/"
 
@@ -83,7 +61,7 @@ do i = 0,ListCount(var)-1
 	end if
 
 	ncdf->$varStrings(i)$=v
-end do
+  end do
 
 
 

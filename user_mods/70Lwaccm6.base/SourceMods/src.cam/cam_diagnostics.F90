@@ -998,27 +998,33 @@ contains
       call outfld('Z500    ', p_surf, pcols, lchnk)
     end if
     if (hist_fld_active('Z300')) then
-      call vertinterp(ncol, pcols, pver, state%pmid, 30000._r8, z3, p_surf, ln_interp=.true.)
+      call vertinterp(ncol, pcols, pver, state%pmid, 30000._r8, z3, p_surf, &
+          extrapolate='Z', ln_interp=.true., ps=state%ps, phis=state%phis, tbot=state%t(:,pver))
       call outfld('Z300    ', p_surf, pcols, lchnk)
     end if
     if (hist_fld_active('Z200')) then
-      call vertinterp(ncol, pcols, pver, state%pmid, 20000._r8, z3, p_surf, ln_interp=.true.)
+      call vertinterp(ncol, pcols, pver, state%pmid, 20000._r8, z3, p_surf, &
+          extrapolate='Z', ln_interp=.true., ps=state%ps, phis=state%phis, tbot=state%t(:,pver))
       call outfld('Z200    ', p_surf, pcols, lchnk)
     end if
     if (hist_fld_active('Z100')) then
-      call vertinterp(ncol, pcols, pver, state%pmid, 10000._r8, z3, p_surf, ln_interp=.true.)
+      call vertinterp(ncol, pcols, pver, state%pmid, 10000._r8, z3, p_surf, &
+          extrapolate='Z', ln_interp=.true., ps=state%ps, phis=state%phis, tbot=state%t(:,pver))
       call outfld('Z100    ', p_surf, pcols, lchnk)
     end if
     if (hist_fld_active('Z050')) then
-      call vertinterp(ncol, pcols, pver, state%pmid,  5000._r8, z3, p_surf, ln_interp=.true.)
+      call vertinterp(ncol, pcols, pver, state%pmid,  5000._r8, z3, p_surf, &
+          extrapolate='Z', ln_interp=.true., ps=state%ps, phis=state%phis, tbot=state%t(:,pver))
       call outfld('Z050    ', p_surf, pcols, lchnk)
     end if
     if (hist_fld_active('Z030')) then
-      call vertinterp(ncol, pcols, pver, state%pmid,  3000._r8, z3, p_surf, ln_interp=.true.)
+      call vertinterp(ncol, pcols, pver, state%pmid,  3000._r8, z3, p_surf, &
+          extrapolate='Z', ln_interp=.true., ps=state%ps, phis=state%phis, tbot=state%t(:,pver))
       call outfld('Z030    ', p_surf, pcols, lchnk)
     end if
     if (hist_fld_active('Z010')) then
-      call vertinterp(ncol, pcols, pver, state%pmid,  1000._r8, z3, p_surf, ln_interp=.true.)
+      call vertinterp(ncol, pcols, pver, state%pmid,  1000._r8, z3, p_surf, &
+          extrapolate='Z', ln_interp=.true., ps=state%ps, phis=state%phis, tbot=state%t(:,pver))
       call outfld('Z010    ', p_surf, pcols, lchnk)
     end if
 
@@ -1108,11 +1114,13 @@ contains
       call outfld('T400    ', p_surf, pcols, lchnk )
     end if
     if (hist_fld_active('T300')) then
-      call vertinterp(ncol, pcols, pver, state%pmid, 30000._r8, state%t, p_surf)
+      call vertinterp(ncol, pcols, pver, state%pmid, 30000._r8, state%t, p_surf, &
+          extrapolate='T', ps=state%ps, phis=state%phis)
       call outfld('T300    ', p_surf, pcols, lchnk )
     end if
     if (hist_fld_active('T200')) then
-      call vertinterp(ncol, pcols, pver, state%pmid, 20000._r8, state%t, p_surf)
+      call vertinterp(ncol, pcols, pver, state%pmid, 20000._r8, state%t, p_surf, &
+          extrapolate='T', ps=state%ps, phis=state%phis)
       call outfld('T200    ', p_surf, pcols, lchnk )
     end if
     if (hist_fld_active('U850')) then
@@ -1271,17 +1279,20 @@ contains
     end if
 
     if (hist_fld_active('T100')) then
-      call vertinterp(ncol, pcols, pver, state%pmid, 10000._r8, state%t, p_surf)
+      call vertinterp(ncol, pcols, pver, state%pmid, 10000._r8, state%t, p_surf, &
+          extrapolate='T', ps=state%ps, phis=state%phis)
       call outfld('T100           ', p_surf, pcols, lchnk )
     end if
 
     if (hist_fld_active('T030')) then
-      call vertinterp(ncol, pcols, pver, state%pmid, 3000._r8, state%t, p_surf)
+      call vertinterp(ncol, pcols, pver, state%pmid, 3000._r8, state%t, p_surf, &
+          extrapolate='T', ps=state%ps, phis=state%phis)
       call outfld('T030           ', p_surf, pcols, lchnk )
     end if
 
     if (hist_fld_active('T050')) then
-      call vertinterp(ncol, pcols, pver, state%pmid, 5000._r8, state%t, p_surf)
+      call vertinterp(ncol, pcols, pver, state%pmid, 5000._r8, state%t, p_surf, &
+          extrapolate='T', ps=state%ps, phis=state%phis)
       call outfld('T050           ', p_surf, pcols, lchnk )
     end if
 

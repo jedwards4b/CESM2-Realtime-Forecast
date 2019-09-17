@@ -81,10 +81,10 @@ def per_run_case_updates(case, date, sdrestdir, user_mods_dir, rundir):
     lock_file("env_batch.xml",caseroot=caseroot)
 
 
-def build_base_case(date, baseroot, basecasename, res, compset, overwrite,
+def build_base_case(date, baseroot, basecasename, basemonth,res, compset, overwrite,
                     sdrestdir, user_mods_dir, pecount=None):
 
-    caseroot = os.path.join(baseroot,basecasename+".00")
+    caseroot = os.path.join(baseroot,basecasename+"."+basemonth+".00")
 
     with Case(caseroot, read_only=False) as case:
         if overwrite or not os.path.isdir(caseroot):
@@ -141,6 +141,7 @@ def _main_func(description):
 
     # TODO make these input vars
     basecasename = "70Lwaccm6"
+    basemonth = date[5:7]
     baseroot = os.path.join(os.getenv("WORK"),"cases",basecasename)
     res = "f09_g17"
     compset = "BWHIST"
@@ -149,8 +150,8 @@ def _main_func(description):
     ensemble = 10
     user_mods_dir = os.path.join(s2sfcstroot,"user_mods",basecasename)
     # END TODO
-
-    caseroot = build_base_case(date, baseroot, basecasename, res,
+    print("basemonth = {}".format(basemonth))
+    caseroot = build_base_case(date, baseroot, basecasename, basemonth, res,
                             compset, overwrite, sdrestdir, user_mods_dir+'.base', pecount="S")
     clone_base_case(date, caseroot, ensemble, sdrestdir, user_mods_dir, overwrite)
 

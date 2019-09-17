@@ -87,7 +87,7 @@ def _main_func(description):
     # TODO make these input vars
     sdrestdir = os.path.join(os.getenv("SCRATCH"),"S2S_70LIC_globus","SD","rest","{}".format(date))
     ensemble = 10
-    baserundir = os.path.join(os.getenv("SCRATCH"),"70Lwaccm6.00","run.00")
+    baserundir = os.path.join(os.getenv("SCRATCH"),"70Lwaccm6."+date[5:7]+".00","run.00")
     # END TODO
 
     caminame = os.path.join(sdrestdir,"b.e21.BWHIST.SD.f09_g17.002.nudgedOcn.cam.i.{date}-00000.nc".format(date=date))

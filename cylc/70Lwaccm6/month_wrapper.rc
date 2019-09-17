@@ -1,23 +1,31 @@
+#!Jinja2
 # This will run the hind cast for each month from intial to final cycle point
 # one year at a time, all months for a given year run simultaniously
+{% set mnames = ["jan","feb","mar","apr","may","jun","jul","aug","sep","oct","nov","dec"] %}
+
 [cylc]
    cycle point format = %Y
    [[parameters]]
-#     mname = jan feb mar apr may jun jul aug sep oct nov dec
-      mname = jan
+      mnum = 1..12
 [scheduling]
    initial cycle point = 1999
    final cycle point = 2019
    [[dependencies]]
        [[[R1]]]
-           graph = prep => month<mname>
+           graph = prep => month<mnum>
        [[[P1Y]]]
-           graph = month<mname>[-P1Y] => month<mname>
+           graph = month<mnum>[-P1Y] => month<mnum>
 [runtime]
    [[prep]]
       script = """
-rm -r $HOME/cylc-run/${CYLC_TASK_PARAM_mname}
-cylc register ${CYLC_TASK_PARAM_mname} ${FCST_HOME}/cylc/70Lwaccm6/${CYLC_TASK_PARAM_mname}
+{% for month in mnames %}
+  rm -fr $HOME/cylc-run/{{month}}
+  cylc register {{month}} ${FCST_HOME}/cylc/70Lwaccm6/{{month}}
+{% endfor %}
 """
-   [[month<mname>]]
-      script = cylc run --no-detach --set=YEAR=$CYLC_TASK_CYCLE_POINT ${CYLC_TASK_PARAM_mname}
+{% for month in mnames %}
+   [[month_mnum{{"{0:02d}".format(loop.index)}}]]
+   script = """
+cylc run --no-detach --set=YEAR=$CYLC_TASK_CYCLE_POINT --set=MONTH={{"{0:02d}".format(loop.index)}} {{month}}
+"""
+{% endfor %}

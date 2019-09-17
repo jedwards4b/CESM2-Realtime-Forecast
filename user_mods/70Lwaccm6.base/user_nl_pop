@@ -1,5 +1,10 @@
   chl_option='file'
 !  history_freq = 1
 !  history_freq_opt = 'nday'
-  tavg_file_freq_opt(2) = 'nday'
+  tavg_file_freq_opt = 'never','nday','never'
   tavg_file_freq(2) = 45
+ ldiag_global_tracer_budgets = .false.
+ ldiag_bsf = .false.
+ ltavg_nino_diags_requested = .false.
+n_salt_trans_requested = .false.
+n_heat_trans_requested = .false.
