@@ -6,7 +6,7 @@ varStrings = (/ "U_24_COS", "U_24_SIN", "U_12_COS", "U_12_SIN", "V_24_COS", "V_2
 
 ; -------------------------------- SPECIFY H FILES -------------------------------
 
-histDir = getenv("SCRATCH") + "/archive/70Lwaccm6." + date + "." + member + "/atm/hist/"
+histDir = getenv("SCRATCH") + "/archive/70Lwaccm6." + mm + "." + date + "." + member + "/atm/hist/"
 hfiles = systemfunc("ls " + histDir + "*cam.h4.*")
 fin = addfile(hfiles,"r")
 

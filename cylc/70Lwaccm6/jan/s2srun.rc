@@ -50,7 +50,7 @@ cd ${WORK}/cases/70Lwaccm6/70Lwaccm6.${CYLC_TASK_CYCLE_MONTH}.$(printf "%02d" ${
 """
     [[postprocess<member>]]
       script = """
-module load ncl
+module load ncl nco
 ${FCST_HOME}/bin/postprocess.py
 """
     [[run<member>]]

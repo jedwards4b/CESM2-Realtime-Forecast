@@ -14,7 +14,7 @@ sys.path.append(_LIBDIR)
 _LIBDIR = os.path.join(cesmroot,"cime","scripts","lib")
 sys.path.append(_LIBDIR)
 
-import datetime, threading, time, shutil
+import datetime, threading, time, shutil, glob
 from standard_script_setup import *
 from CIME.case             import Case
 from CIME.utils            import run_cmd
@@ -48,11 +48,25 @@ def run_ncl_scripts():
     scripts = ("pp_priority1.ncl","pp_h1vertical.ncl", "pp_h4vertical.ncl")
     path = os.path.join(os.getenv("HOME"),"CESM2-Realtime-Forecast","bin")
     for script in scripts:
-        t = threading.Thread(target="ncl "+os.path.join(path,script))
-        t.start()
-    while(threading.active_count() > 1):
-        time.sleep(1)
+        run_cmd("ncl "+script,verbose=True,from_dir=os.path.join(os.getenv("FCST_HOME"),"bin"))
+#        t = threading.Thread(target="ncl "+os.path.join(path,script))
+#        t.start()
+#    while(threading.active_count() > 1):
+#        time.sleep(1)
 
+def send_data_to_campaignstore(source_path):
+    dest_path = '/gpfs/csfs1/cesm/development/cross-wg/S2S/'
+    
+    client = initialize_client()
+    globus_transfer_data = get_globus_transfer_data_struct(client)
+    tc = get_transfer_client(client, globus_transfer_data)
+    dest_endpoint = get_endpoint_id(tc,"NCAR Campaign Storage")
+    src_endpoint = get_endpoint_id(tc,"NCAR GLADE")
+    transfer_data = get_globus_transfer_object(tc, src_endpoint, dest_endpoint, 'S2S data transfer')
+    transfer_data = add_to_transfer_request(transfer_data, source_path, dest_path)
+    activate_endpoint(tc, src_endpoint)
+    activate_endpoint(tc, dest_endpoint)
+    complete_transfer_request(tc, transfer_data)
     
 def _main_func(description):
     date = parse_command_line(sys.argv, description)
@@ -61,8 +75,8 @@ def _main_func(description):
     basecasename = "70Lwaccm6"
     basemonth = date[5:7]
     baseroot = os.path.join(os.getenv("WORK"),"cases",basecasename)
-    member = os.getenv("CYLC_TASK_PARAM_member")
-    caseroot = os.path.join(baseroot,"70Lwaccm6."+basemonth+"{0:02d}".format(member))
+    member = int(os.getenv("CYLC_TASK_PARAM_member"))
+    caseroot = os.path.join(baseroot,basecasename+"."+basemonth+".{0:02d}".format(member))
     with Case(caseroot, read_only=True) as case:
         rundir = case.get_value("RUNDIR")
         dout_s_root = case.get_value("DOUT_S_ROOT")
@@ -73,13 +87,23 @@ def _main_func(description):
     run_cmd("rsync -azvh "+os.path.join(scratch,"70Lwaccm6")+" jedwards@burnt.cgd.ucar.edu:/ftp/pub/jedwards/70Lwaccm6")
 
     # Clean up
-    shutil.rmtree(rundir)
-    for _dir in ("cpl","exp", "glc", "wav", "rest"):
-        shutil.rmtree(os.path.join(dout_s_root,_dir))
+    if os.path.isdir(rundir):
+        shutil.rmtree(rundir)
+    for _dir in ("cpl","esp", "glc", "wav", "rest"):
+        if os.path.isdir(os.path.join(dout_s_root,_dir)):
+            shutil.rmtree(os.path.join(dout_s_root,_dir))
     atmhistpath = os.path.join(dout_s_root,"atm","hist")
+    icehistpath = os.path.join(dout_s_root,"ice","hist")
     for histfile in os.listdir(atmhistpath):
         if "h1" in histfile or "h4" in histfile:
             os.unlink(os.path.join(atmhistpath,histfile))
+    #Concatinate cice history into a single file
+    fnameout = basecasename+"."+basemonth+"."+date+".{0:02d}".format(member)+".cice.h.nc"
+    run_cmd("ncrcat * "+fnameout,from_dir=icehistpath)
+    for _file in glob.iglob(os.path.join(icehistpath,"*ice.h.*.nc")):
+        os.unlink(_file)
+    send_data_to_campaignstore(dout_s_root+os.sep )
+
         
 if __name__ == "__main__":
     _main_func(__doc__)

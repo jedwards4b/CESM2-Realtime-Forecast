@@ -7,14 +7,14 @@ varStrings = (/ "U","V","T","OMEGA","Z3","Q","UQ","VQ","O3" /)
 
 ; -------------------------------- SPECIFY FILES -------------------------------
 
-histDir = getenv("SCRATCH")+"/archive/70Lwaccm6." + date + "." + member + "/atm/hist/"
+histDir = getenv("SCRATCH")+"/archive/70Lwaccm6." + mm+ "."+date + "." + member + "/atm/hist/"
 hfiles = systemfunc("ls " + histDir + "*cam.h1.*")
 f = addfiles(hfiles, "r")
 ListSetType(f, "cat")
 
-hyam=f[1]->hyam
-hybm=f[1]->hybm
-P0mb=0.01*f[1]->P0
+hyam=f[0]->hyam
+hybm=f[0]->hybm
+P0mb=0.01*f[0]->P0
 lev_p!0         = "lev_p"                  ; variable/dim name 
 lev_p&lev_p     =  lev_p                   ; create coordinate variable
 lev_p@long_name = "pressure"               ; attach some attributes

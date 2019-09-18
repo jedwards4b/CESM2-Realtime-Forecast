@@ -69,13 +69,14 @@ def per_run_case_updates(case, date, sdrestdir, user_mods_dir, rundir):
     case.set_value("RUN_STARTDATE",date)
     case.set_value("RUN_REFDIR",sdrestdir)
     case.set_value("PROJECT","NCGD0042")
-    # restage user_mods for each run
+    # restage user_nl files for each run
     for usermod in glob.iglob(user_mods_dir+"/user*"):
         safe_copy(usermod, caseroot)
 
     case.case_setup()
 
     stage_refcase(rundir, sdrestdir)
+    # this doesnt appear to work correctly
     unlock_file("env_batch.xml",caseroot=caseroot)
     case.flush()
     lock_file("env_batch.xml",caseroot=caseroot)
