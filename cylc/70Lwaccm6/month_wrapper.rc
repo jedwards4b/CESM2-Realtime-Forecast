@@ -9,7 +9,7 @@
       mnum = 1..12
 [scheduling]
    initial cycle point = 1999
-   final cycle point = 2019
+   final cycle point = 1999
    [[dependencies]]
        [[[R1]]]
            graph = prep => month<mnum>

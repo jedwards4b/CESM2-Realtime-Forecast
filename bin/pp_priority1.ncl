@@ -61,8 +61,6 @@ varStrings = (/ "rlut", "pr", "tas_2m", "ts", "ua_200", "ua_850", "va_200", "va_
 	end if
 
 	ncdf->$varStrings(i)$=v
+	print("Completed file: "+fout)
   end do
-
-
-
 end

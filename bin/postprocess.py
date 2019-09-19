@@ -14,7 +14,8 @@ sys.path.append(_LIBDIR)
 _LIBDIR = os.path.join(cesmroot,"cime","scripts","lib")
 sys.path.append(_LIBDIR)
 
-import datetime, threading, time, shutil, glob
+import datetime, shutil, glob
+from subprocess import Popen, PIPE
 from standard_script_setup import *
 from CIME.case             import Case
 from CIME.utils            import run_cmd
@@ -45,14 +46,26 @@ def parse_command_line(args, description):
     return date.strftime("%Y-%m-%d")
 
 def run_ncl_scripts():
-    scripts = ("pp_priority1.ncl","pp_h1vertical.ncl", "pp_h4vertical.ncl")
-    path = os.path.join(os.getenv("HOME"),"CESM2-Realtime-Forecast","bin")
+    scripts = ["pp_priority1.ncl","pp_h1vertical.ncl", "pp_h4vertical.ncl"]
+
+    outfiles = []
+    processes = []
     for script in scripts:
-        run_cmd("ncl "+script,verbose=True,from_dir=os.path.join(os.getenv("FCST_HOME"),"bin"))
-#        t = threading.Thread(target="ncl "+os.path.join(path,script))
-#        t.start()
-#    while(threading.active_count() > 1):
-#        time.sleep(1)
+        processes.append(Popen("ncl "+script,cwd=os.path.join(os.getenv("FCST_HOME"),"bin"), stdout=PIPE, shell=True))
+    errored = []
+
+    for p in processes:
+        result = p.communicate()[0].decode("utf-8")
+        stat = p.wait()
+        if stat != 0:
+            errored.append(p)
+        else:
+            for line in result.splitlines():
+                if "Completed file:" in line:
+                    outfiles.append(line[line.find(os.sep):])
+        processes.remove(p)
+
+    return outfiles
 
 def send_data_to_campaignstore(source_path):
     dest_path = '/gpfs/csfs1/cesm/development/cross-wg/S2S/'
@@ -70,25 +83,34 @@ def send_data_to_campaignstore(source_path):
     
 def _main_func(description):
     date = parse_command_line(sys.argv, description)
-    scratch = os.getenv("SCRATCH")
     # TODO make these input vars
     basecasename = "70Lwaccm6"
     basemonth = date[5:7]
     baseroot = os.path.join(os.getenv("WORK"),"cases",basecasename)
     member = int(os.getenv("CYLC_TASK_PARAM_member"))
     caseroot = os.path.join(baseroot,basecasename+"."+basemonth+".{0:02d}".format(member))
+    ftproot = " jedwards@burnt.cgd.ucar.edu:/ftp/pub/jedwards/70Lwaccm6/"
     with Case(caseroot, read_only=True) as case:
         rundir = case.get_value("RUNDIR")
         dout_s_root = case.get_value("DOUT_S_ROOT")
         
     # END TODO
-    run_ncl_scripts()
+    outfiles = run_ncl_scripts()
+
     # Copy data to ftp site
-    run_cmd("rsync -azvh "+os.path.join(scratch,"70Lwaccm6")+" jedwards@burnt.cgd.ucar.edu:/ftp/pub/jedwards/70Lwaccm6")
+    for file in outfiles:
+        fsplit = file.find("70Lwaccm6/")+10
+        fpath = os.path.dirname(file[fsplit-1:])
+        rsynccmd = "rsync -azvh --rsync-path=\"mkdir -p /ftp/pub/jedwards/70Lwaccm6/"+fpath+" && rsync\" "+file+" "+ftproot+fpath
+        print("copying file {} to ftp server location {}".format(file,fpath))
+        run_cmd(rsynccmd,verbose=True)
+
 
     # Clean up
     if os.path.isdir(rundir):
-        shutil.rmtree(rundir)
+        for _file in glob.iglob(os.path.join(rundir,"*"+date+"*")):
+            os.unlink(_file)
+
     for _dir in ("cpl","esp", "glc", "wav", "rest"):
         if os.path.isdir(os.path.join(dout_s_root,_dir)):
             shutil.rmtree(os.path.join(dout_s_root,_dir))

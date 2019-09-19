@@ -20,8 +20,8 @@
   # run needs to finish, not nessasarily successfully for next step to start
     [[[R/W-1/P1W]]]
       graph = """
-	     st_archive<member>[-P1W] => get_data => build_model => run<member>
-             run<member>:finish => st_archive<member> => postprocess<member>
+        st_archive<member>[-P1W] => get_data => build_model => run<member>
+        run<member>:finish => st_archive<member> => postprocess<member> => dispose<member>
 	     """
 [runtime]
   [[get_data]]
@@ -49,10 +49,27 @@ cd ${WORK}/cases/70Lwaccm6/70Lwaccm6.${CYLC_TASK_CYCLE_MONTH}.$(printf "%02d" ${
 #./xmlchange CONTINUE_RUN=TRUE  don't want this for this workflow
 """
     [[postprocess<member>]]
+    # Globus process, must run on host
       script = """
 module load ncl nco
 ${FCST_HOME}/bin/postprocess.py
 """
+    [[[job]]]
+      batch system = pbs
+      batch submit command template = qsub -q regular -l walltime=01:00:00 -A NCGD0042 '%(job)s'
+    [[[directives]]]
+       -r = n
+       -j = oe
+       -V =
+       -S = /bin/bash
+       -l = select=1:ncpus=36:ompthreads=36
+
+    [[dispose<member>]]
+    # Globus process, must run on host
+      script = """
+${FCST_HOME}/bin/dispose_data.py
+"""
+
     [[run<member>]]
     script = """
 cd ${WORK}/cases/70Lwaccm6/70Lwaccm6.${CYLC_TASK_CYCLE_MONTH}.$(printf "%02d" ${CYLC_TASK_PARAM_member})
