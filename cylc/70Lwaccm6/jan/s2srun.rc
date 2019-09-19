@@ -20,8 +20,8 @@
   # run needs to finish, not nessasarily successfully for next step to start
     [[[R/W-1/P1W]]]
       graph = """
-        st_archive<member>[-P1W] => get_data => build_model => run<member>
-        run<member>:finish => st_archive<member> => postprocess<member> => dispose<member>
+        st_archive<member>[-P1W] => get_data => build_model => run_family:finish-all => dispose
+        run<member>:finish => st_archive<member> => postprocess<member>
 	     """
 [runtime]
   [[get_data]]
@@ -64,13 +64,14 @@ ${FCST_HOME}/bin/postprocess.py
        -S = /bin/bash
        -l = select=1:ncpus=36:ompthreads=36
 
-    [[dispose<member>]]
+    [[dispose]]
     # Globus process, must run on host
       script = """
 ${FCST_HOME}/bin/dispose_data.py
 """
-
     [[run<member>]]
+       inherit = run_family
+    [[run_family]]
     script = """
 cd ${WORK}/cases/70Lwaccm6/70Lwaccm6.${CYLC_TASK_CYCLE_MONTH}.$(printf "%02d" ${CYLC_TASK_PARAM_member})
 cp ${FCST_HOME}/user_mods/70Lwaccm6.base/user_nl_cam.${CYLC_TASK_TRY_NUMBER} user_nl_cam
