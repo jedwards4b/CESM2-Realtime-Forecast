@@ -2,7 +2,7 @@ begin
 ; First index is intentionally blank
 load "get_member_and_date.ncl"
 
-histDir = getenv("SCRATCH")+"/archive/70Lwaccm6." + mm+ "."+ date + "." + member + "/atm/hist/"
+histDir = getenv("ARCHIVEROOT")+"/archive/70Lwaccm6." + mm+ "."+ date + "." + member + "/atm/hist/"
 
 ; -------------------------- READ IN H2 VARIABLES --------------------------
 h2files = systemfunc("ls " + histDir + "*cam.h2.*")
@@ -40,7 +40,7 @@ var = [/ ta_100, ta_10, ta_30, ta_50, ua_10, va_10, ua_30, va_30, ua_50, va_50, 
 varStrings = (/ "ta_100", "ta_10", "ta_30", "ta_50", "ua_10", "va_10", "ua_30", "va_30", "ua_50", "va_50", "zg_10", "zg_30", "zg_50", "zg_850", "uvas" /)
 do i = 0,ListCount(var)-1
 	v:=linint2(xi,yi,var[i],True,xo,yo,0)
-	outDir = getenv("SCRATCH") + "/70Lwaccm6/p3/" + varStrings(i) + "/" + yyyy + "/" + mm + "/"
+	outDir = getenv("ARCHIVEROOT") + "/70Lwaccm6/p3/" + varStrings(i) + "/" + yyyy + "/" + mm + "/"
 
 	fout = outDir + varStrings(i) + "_70Lwaccm6_" + outdate + "_00z_d01_d46_m" + member + ".nc"
 	if (.not. fileexists(outDir)) then
@@ -63,7 +63,4 @@ do i = 0,ListCount(var)-1
 	ncdf->$varStrings(i)$=v
 	print("Completed file: "+fout)
 end do
-
-
-
 end

@@ -2,7 +2,7 @@ begin
 ; First index is intentionally blank
 load "get_member_and_date.ncl"
 
-histDir = getenv("SCRATCH")+"/archive/70Lwaccm6." + mm+ "."+date + "." + member + "/atm/hist/"
+histDir = getenv("ARCHIVEROOT")+"/archive/70Lwaccm6." + mm+ "."+date + "." + member + "/atm/hist/"
 
 ; -------------------------- READ IN H2 VARIABLES --------------------------
 h2files = systemfunc("ls " + histDir + "*cam.h2.*")
@@ -36,7 +36,7 @@ var = [/ rlut, pr, tas_2m, ts, ua_200, ua_850, va_200, va_850, zg_200, zg_500 /]
 varStrings = (/ "rlut", "pr", "tas_2m", "ts", "ua_200", "ua_850", "va_200", "va_850", "zg_200", "zg_500" /)
   do i = 0,ListCount(var)-1
 	v:=linint2(xi,yi,var[i],True,xo,yo,0)
-	outDir = getenv("SCRATCH") + "/70Lwaccm6/p1/" + varStrings(i) + "/" + yyyy + "/" + mm + "/"
+	outDir = getenv("ARCHIVEROOT") + "/70Lwaccm6/p1/" + varStrings(i) + "/" + yyyy + "/" + mm + "/"
 
 	fout = outDir + varStrings(i) + "_70Lwaccm6_" + outdate + "_00z_d01_d46_m" + member + ".nc"
 	if (.not. fileexists(outDir)) then

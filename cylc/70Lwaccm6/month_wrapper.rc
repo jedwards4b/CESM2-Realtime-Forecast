@@ -8,8 +8,8 @@
    [[parameters]]
       mnum = 1..12
 [scheduling]
-   initial cycle point = 1999
-   final cycle point = 1999
+   initial cycle point = 2000
+   final cycle point = 2000
    [[dependencies]]
        [[[R1]]]
            graph = prep => month<mnum>

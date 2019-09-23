@@ -68,7 +68,13 @@ def per_run_case_updates(case, date, sdrestdir, user_mods_dir, rundir):
     case.set_value("RUN_REFDATE",date)
     case.set_value("RUN_STARTDATE",date)
     case.set_value("RUN_REFDIR",sdrestdir)
+    case.set_value("REST_OPTION",'none')
     case.set_value("PROJECT","NCGD0042")
+    dout_s_root = case.get_value("DOUT_S_ROOT")
+    dout_s_root = dout_s_root[:-2] + member
+    if dout_s_root.startswith("/glade/scratch"):
+        dout_s_root = dout_s_root.replace("/glade/scratch/","/glade/p/nsc/ncgd0042/")
+    case.set_value("DOUT_S_ROOT",dout_s_root)
     # restage user_nl files for each run
     for usermod in glob.iglob(user_mods_dir+"/user*"):
         safe_copy(usermod, caseroot)
@@ -99,11 +105,11 @@ def build_base_case(date, baseroot, basecasename, basemonth,res, compset, overwr
             case.set_value("RUN_TYPE","hybrid")
             case.set_value("GET_REFCASE",False)
             case.set_value("RUN_REFDIR",sdrestdir)
-            case.set_value("RUN_REFCASE", "b.e21.{}.SD.{}.002".format(compset,res))
+            case.set_value("RUN_REFCASE", "b.e21.{}.SD.{}.002.nudgedOcn".format(compset,res))
             case.set_value("STOP_OPTION","ndays")
             case.set_value("STOP_N", 45)
-            case.set_value("REST_OPTION","ndays")
-            case.set_value("REST_N", 45)
+            case.set_value("REST_OPTION","none")
+
             case.set_value("OCN_TRACER_MODULES","")
             case.set_value("CCSM_BGC","CO2A")
             case.set_value("EXTERNAL_WORKFLOW",True)
@@ -147,7 +153,7 @@ def _main_func(description):
     res = "f09_g17"
     compset = "BWHIST"
     overwrite = False
-    sdrestdir = os.path.join(os.getenv("SCRATCH"),"S2S_70LIC_globus","SD","rest","{}".format(date))
+    sdrestdir = os.path.join(os.getenv("SCRATCH"),"S2S_70LIC_globus","SDnudgedOcn","rest","{}".format(date))
     ensemble = 10
     user_mods_dir = os.path.join(s2sfcstroot,"user_mods",basecasename)
     # END TODO

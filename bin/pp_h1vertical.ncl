@@ -7,7 +7,7 @@ varStrings = (/ "U","V","T","OMEGA","Z3","Q","UQ","VQ","O3" /)
 
 ; -------------------------------- SPECIFY FILES -------------------------------
 
-histDir = getenv("SCRATCH")+"/archive/70Lwaccm6." + mm+ "."+date + "." + member + "/atm/hist/"
+histDir = getenv("ARCHIVEROOT")+"/archive/70Lwaccm6." + mm+ "."+date + "." + member + "/atm/hist/"
 hfiles = systemfunc("ls " + histDir + "*cam.h1.*")
 f = addfiles(hfiles, "r")
 ListSetType(f, "cat")
@@ -22,7 +22,7 @@ lev_p@units     = "hPa"
 lev_p@positive  = "down"
 
   do i = 0,dimsizes(varStrings)-1
-        outDir = getenv("SCRATCH")+"/70Lwaccm6/" + varStrings(i) + "/" + yyyy + "/" + mm + "/"
+        outDir = getenv("ARCHIVEROOT")+"/70Lwaccm6/" + varStrings(i) + "/" + yyyy + "/" + mm + "/"
 	v = f[:]->$varStrings(i)$
 	PS = f[:]->PS
 	vnew = vinth2p(v,hyam,hybm,lev_p,PS,1,P0mb,1,False)

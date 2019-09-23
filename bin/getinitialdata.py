@@ -65,7 +65,7 @@ def get_data_from_campaignstore(date):
     activate_endpoint(tc, dest_endpoint)
     if complete_transfer_request(tc, transfer_data):
         for lndfile in glob.iglob(dest_path+"I2000*"):
-            newfile = lndfile.replace("I2000Clm50BgcCrop.002run","b.e21.BWHIST.SD.f09_g17.002")
+            newfile = lndfile.replace("I2000Clm50BgcCrop.002run","b.e21.BWHIST.SD.f09_g17.002.nudgedOcn")
             print("Renaming {} to {}".format(lndfile,newfile))
             os.rename(os.path.join(dest_path,lndfile), os.path.join(dest_path,newfile))
 

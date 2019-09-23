@@ -66,7 +66,7 @@ def _main_func(description):
     basecasename = "70Lwaccm6"
     basemonth = date[5:7]
     baseroot = os.path.join(os.getenv("WORK"),"cases",basecasename)
-    sdrestdir = os.path.join(scratch,"S2S_70LIC_globus","SD","rest","{}".format(date))
+    sdrestdir = os.path.join(scratch,"S2S_70LIC_globus","SDnudgedOcn","rest","{}".format(date))
     if os.path.isdir(sdrestdir):
         shutil.rmtree(sdrestdir)        
     for i in range(0,10):
@@ -75,9 +75,6 @@ def _main_func(description):
         with Case(caseroot, read_only=True) as case:
             rundir = case.get_value("RUNDIR")
             dout_s_root = case.get_value("DOUT_S_ROOT")
-        
-        # Copy data to ftp site
-        run_cmd("rsync -azvh "+os.path.join(scratch,"70Lwaccm6")+" jedwards@burnt.cgd.ucar.edu:/ftp/pub/jedwards/70Lwaccm6")
 
         # Clean up
         if os.path.isdir(rundir):
@@ -98,7 +95,7 @@ def _main_func(description):
         run_cmd("ncrcat * "+fnameout,from_dir=icehistpath)
         for _file in glob.iglob(os.path.join(icehistpath,"*ice.h.*.nc")):
             os.unlink(_file)
-        send_data_to_campaignstore(dout_s_root+os.sep )
+#        send_data_to_campaignstore(dout_s_root+os.sep )
         
 if __name__ == "__main__":
     _main_func(__doc__)

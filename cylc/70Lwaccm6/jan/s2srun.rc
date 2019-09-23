@@ -56,7 +56,7 @@ ${FCST_HOME}/bin/postprocess.py
 """
     [[[job]]]
       batch system = pbs
-      batch submit command template = qsub -q regular -l walltime=01:00:00 -A NCGD0042 '%(job)s'
+      batch submit command template = qsub -q regular -l walltime=02:00:00 -A NCGD0042 '%(job)s'
     [[[directives]]]
        -r = n
        -j = oe

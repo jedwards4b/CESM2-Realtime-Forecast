@@ -43,7 +43,7 @@ def parse_command_line(args, description):
 
     return date.strftime("%Y-%m-%d")
 
-def create_cam_ic_perturbed(original, ensemble, date, baserundir, outroot="b.e21.BWHIST.SD.f09_g17.002.cam.i.",
+def create_cam_ic_perturbed(original, ensemble, date, baserundir, outroot="b.e21.BWHIST.SD.f09_g17.002.nudgedOcn.cam.i.",
                             diffsdir="/glade/scratch/sglanvil/S2S_70LIC/", factor=0.15):
     rvals = random.sample(range(500),k=ensemble//2)
     #save these rvals to a file
@@ -85,7 +85,7 @@ def _main_func(description):
     date = parse_command_line(sys.argv, description)
 
     # TODO make these input vars
-    sdrestdir = os.path.join(os.getenv("SCRATCH"),"S2S_70LIC_globus","SD","rest","{}".format(date))
+    sdrestdir = os.path.join(os.getenv("SCRATCH"),"S2S_70LIC_globus","SDnudgedOcn","rest","{}".format(date))
     ensemble = 10
     baserundir = os.path.join(os.getenv("SCRATCH"),"70Lwaccm6."+date[5:7]+".00","run.00")
     # END TODO
