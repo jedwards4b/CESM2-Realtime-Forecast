@@ -44,7 +44,7 @@ def parse_command_line(args, description):
     return date.strftime("%Y-%m-%d")
 
 def create_cam_ic_perturbed(original, ensemble, date, baserundir, outroot="b.e21.BWHIST.SD.f09_g17.002.nudgedOcn.cam.i.",
-                            diffsdir="/glade/scratch/sglanvil/S2S_70LIC/", factor=0.15):
+                            diffsdir="/glade/p/nsc/ncgd0042/ssfcst/S2S_70LIC/", factor=0.15):
     rvals = random.sample(range(500),k=ensemble//2)
     #save these rvals to a file
     with open(os.path.join(os.getenv("WORK"),"cases","70Lwaccm6","camic_"+date+".txt"),"w") as fd:

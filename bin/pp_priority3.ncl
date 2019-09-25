@@ -29,15 +29,14 @@ zg_10 = calculate_daily_values(f[:]->Z010, "avg", 0, False)
 zg_30 = calculate_daily_values(f[:]->Z030, "avg", 0, False)
 zg_50 = calculate_daily_values(f[:]->Z050, "avg", 0, False)
 zg_850 = calculate_daily_values(f[:]->Z850, "avg", 0, False)
-uvas = calculate_daily_values(f[:]->U10, "avg", 0, False)
 
 ; -------------------------- HORIZONTAL INTERP and FILE SAVING  --------------------------
 xi = f[0]->lon
 yi = f[0]->lat
 xo = fspan(0., 359., 360)
 yo = fspan(-90., 90.,181)
-var = [/ ta_100, ta_10, ta_30, ta_50, ua_10, va_10, ua_30, va_30, ua_50, va_50, zg_10, zg_30, zg_50, zg_850, uvas /]
-varStrings = (/ "ta_100", "ta_10", "ta_30", "ta_50", "ua_10", "va_10", "ua_30", "va_30", "ua_50", "va_50", "zg_10", "zg_30", "zg_50", "zg_850", "uvas" /)
+var = [/ ta_100, ta_10, ta_30, ta_50, ua_10, va_10, ua_30, va_30, ua_50, va_50, zg_10, zg_30, zg_50, zg_850 /]
+varStrings = (/ "ta_100", "ta_10", "ta_30", "ta_50", "ua_10", "va_10", "ua_30", "va_30", "ua_50", "va_50", "zg_10", "zg_30", "zg_50", "zg_850" /)
 do i = 0,ListCount(var)-1
 	v:=linint2(xi,yi,var[i],True,xo,yo,0)
 	outDir = getenv("ARCHIVEROOT") + "/70Lwaccm6/p3/" + varStrings(i) + "/" + yyyy + "/" + mm + "/"

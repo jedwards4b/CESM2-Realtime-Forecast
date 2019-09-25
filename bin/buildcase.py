@@ -60,7 +60,8 @@ def per_run_case_updates(case, date, sdrestdir, user_mods_dir, rundir):
     member = os.path.basename(caseroot)[-2:]
 
     unlock_file("env_case.xml",caseroot=caseroot)
-    case.set_value("CASE",basecasename+"."+date+"."+member)
+    casename = basecasename+"."+date+"."+member
+    case.set_value("CASE",casename)
     case.flush()
     lock_file("env_case.xml",caseroot=caseroot)
 
@@ -71,7 +72,7 @@ def per_run_case_updates(case, date, sdrestdir, user_mods_dir, rundir):
     case.set_value("REST_OPTION",'none')
     case.set_value("PROJECT","NCGD0042")
     dout_s_root = case.get_value("DOUT_S_ROOT")
-    dout_s_root = dout_s_root[:-2] + member
+    dout_s_root = os.path.join(os.path.dirname(dout_s_root),casename)
     if dout_s_root.startswith("/glade/scratch"):
         dout_s_root = dout_s_root.replace("/glade/scratch/","/glade/p/nsc/ncgd0042/")
     case.set_value("DOUT_S_ROOT",dout_s_root)

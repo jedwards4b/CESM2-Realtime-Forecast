@@ -46,7 +46,7 @@ def parse_command_line(args, description):
     return date.strftime("%Y-%m-%d")
 
 def send_data_to_campaignstore(source_path):
-    dest_path = '/gpfs/csfs1/cesm/development/cross-wg/S2S/'
+    dest_path = '/gpfs/csfs1/cesm/collections/S2Sfcst/'
     
     client = initialize_client()
     globus_transfer_data = get_globus_transfer_data_struct(client)
@@ -95,7 +95,8 @@ def _main_func(description):
         run_cmd("ncrcat * "+fnameout,from_dir=icehistpath)
         for _file in glob.iglob(os.path.join(icehistpath,"*ice.h.*.nc")):
             os.unlink(_file)
-#        send_data_to_campaignstore(dout_s_root+os.sep )
+        send_data_to_campaignstore(dout_s_root+os.sep )
+        
         
 if __name__ == "__main__":
     _main_func(__doc__)

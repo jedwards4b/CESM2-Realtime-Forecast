@@ -46,7 +46,7 @@ def parse_command_line(args, description):
     return date.strftime("%Y-%m-%d")
 
 def run_ncl_scripts():
-    scripts = ["pp_priority1.ncl","pp_priority3.ncl","pp_h1vertical.ncl", "pp_h4vertical.ncl"]
+    scripts = ["pp_priority1.ncl","pp_priority2.ncl","pp_priority3.ncl","pp_h1vertical.ncl", "pp_h4vertical.ncl"]
 
     outfiles = []
     processes = []
