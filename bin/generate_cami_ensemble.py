@@ -7,8 +7,8 @@ if cesmroot is None:
     raise SystemExit("ERROR: CESM_ROOT must be defined in environment")
 
 # This is needed for globus_sdk
-_LIBDIR=os.path.join(os.environ.get("HOME"),".local","lib","python3.6","site-packages")
-sys.path.append(_LIBDIR)
+#_LIBDIR=os.path.join(os.environ.get("HOME"),".local","lib","python3.6","site-packages")
+#sys.path.append(_LIBDIR)
 _LIBDIR = os.path.join(cesmroot,"cime","scripts","Tools")
 sys.path.append(_LIBDIR)
 _LIBDIR = os.path.join(cesmroot,"cime","scripts","lib")
@@ -43,12 +43,47 @@ def parse_command_line(args, description):
 
     return date.strftime("%Y-%m-%d")
 
-def create_cam_ic_perturbed(original, ensemble, date, baserundir, outroot="b.e21.BWHIST.SD.f09_g17.002.nudgedOcn.cam.i.",
-                            diffsdir="/glade/p/nsc/ncgd0042/ssfcst/S2S_70LIC/", factor=0.15):
-    rvals = random.sample(range(500),k=ensemble//2)
-    #save these rvals to a file
-    with open(os.path.join(os.getenv("WORK"),"cases","70Lwaccm6","camic_"+date+".txt"),"w") as fd:
-        fd.write("{}".format(rvals))
+def get_rvals(date, ensemble):
+    rvals_file = os.path.join(os.getenv("WORK"),"cases","70Lwaccm6","camic_"+date+".txt")
+    if os.path.isfile(rvals_file):
+        rvals = []
+        with open(rvals_file,"r") as fd:
+            rawvals = fd.read().split(',')
+        for rval in rawvals:
+            if rval.startswith('['):
+                rval = int(rval[1:])
+            elif rval.endswith(']'):
+                rval = int(rval[:-1])
+            else:
+                rval = int(rval)
+            rvals.append(rval)
+    else:
+        rvals = random.sample(range(500),k=ensemble//2)
+        #save these rvals to a file
+        with open(rvals_file,"w") as fd:
+            fd.write("{}".format(rvals))
+    return rvals
+
+def get_data_from_campaignstore(files, source_path, dest_path):
+    
+    client = initialize_client()
+    globus_transfer_data = get_globus_transfer_data_struct(client)
+    tc = get_transfer_client(client, globus_transfer_data)
+    dest_endpoint = get_endpoint_id(tc,"NCAR Campaign Storage")
+    src_endpoint = get_endpoint_id(tc,"NCAR GLADE")
+    transfer_data = get_globus_transfer_object(tc, src_endpoint, dest_endpoint, 'S2S data transfer')
+    dotrans = False
+    for _file in files:
+        if not os.path.isfile(os.path.join(dest_path,_file)):
+            transfer_data = add_to_transfer_request(transfer_data, os.path.join(source_path, _file), os.path.join(dest_path,_file))
+            dotrans = True
+    if dotrans:
+        activate_endpoint(tc, src_endpoint)
+        activate_endpoint(tc, dest_endpoint)
+        complete_transfer_request(tc, transfer_data)
+
+def create_cam_ic_perturbed(original, ensemble, date, baserundir, outroot="b.e21.BWHIST.SD.f09_g17.002.nudgedOcn.cam.i.", factor=0.15):
+    rvals = get_rvals(date, ensemble)
 
     outfile = os.path.join(baserundir,outroot+date+"-00000.nc")
     # first link the original ic file to the 0th ensemble member
@@ -58,9 +93,22 @@ def create_cam_ic_perturbed(original, ensemble, date, baserundir, outroot="b.e21
     os.symlink(original, outfile)
 
     # for each pair of ensemble members create an ic file with same perturbation opposite sign
+    month = date[5:7]
+    collections_path = '/gpfs/csfs1/cesm/collections/S2Sfcst/'
+    local_path = os.path.join(os.getenv("SCRATCH"),"S2Sfcst")
+    perturb_files = []
     for i in range(1,ensemble, 2):
-        month = date[5:7]
-        perturb_file = os.path.join(diffsdir,"{}".format(month),"70Lwaccm6.cam.i.M{}.diff.{}.nc".format(month,rvals[i//2]))
+        perturb_file = os.path.join("S2S_70LIC",
+                                    "{}".format(month),
+                                    "70Lwaccm6.cam.i.M{}.diff.{}.nc".format(month,rvals[i//2]))
+        if not os.path.isdir(os.path.basename(os.path.join(local_path,perturb_file))):
+            os.makedirs(os.path.basename(os.path.join(local_path,perturb_file)))
+        perturb_files.append(perturb_file)
+    get_data_from_campaignstore(perturb_files, collections_path, local_path)
+
+
+    for i in range(1,ensemble, 2):
+        perturb_file = os.path.join(local_path,perturb_files[i//2-1])
         outfile1 = os.path.join(baserundir[:-2]+"{:02d}".format(i), outroot+date+"-tmp.nc")
         outfile2 = os.path.join(baserundir[:-2]+"{:02d}".format(i+1), outroot+date+"-tmp.nc")
         print("Creating perturbed init file {}".format(outfile1))
@@ -70,15 +118,16 @@ def create_cam_ic_perturbed(original, ensemble, date, baserundir, outroot="b.e21
         t.start()
     while(threading.active_count() > 1):
         time.sleep(1)
-
+    for perturb_file in perturb_files:
+        os.unlink(os.path.join(local_path,perturb_file))
+    
 
 def create_perturbed_init_file(original, perturb_file, outfile, weight):
-    ncflint = "/glade/u/apps/ch/opt/nco/4.7.9/gnu/8.3.0/bin/ncflint"
+    ncflint = "ncflint"
     safe_copy(original, outfile)
     cmd = ncflint+" -A -v US,VS,T,Q,PS -w {},1.0 {} {} {}".format(weight, perturb_file, original, outfile)    
     run_cmd(cmd, verbose=True)
     os.rename(outfile, outfile.replace("-tmp.nc","-00000.nc"))
-
 
 
 def _main_func(description):
