@@ -20,7 +20,7 @@
       script = """
 {% for month in mnames %}
   rm -fr $HOME/cylc-run/{{month}}
-  cylc register {{month}} ${FCST_HOME}/cylc/70Lwaccm6/jan
+  cylc register {{month}} ${FCST_HOME}/cylc/70Lwaccm6/monthly
 {% endfor %}
 """
 {% for month in mnames %}
