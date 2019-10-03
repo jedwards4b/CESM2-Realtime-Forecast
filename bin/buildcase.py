@@ -50,9 +50,10 @@ def stage_refcase(rundir, refdir):
             safe_copy(reffile, rundir)
         else:
             newfile = os.path.join(rundir,os.path.basename(reffile))
-            if os.path.exists(newfile):
-                os.unlink(newfile)
-            os.symlink(reffile, newfile)
+            if not "cam.i" in newfile:
+                if os.path.lexists(newfile):
+                    os.unlink(newfile)
+                os.symlink(reffile, newfile)
 
 def per_run_case_updates(case, date, sdrestdir, user_mods_dir, rundir):
     caseroot = case.get_value("CASEROOT")
