@@ -102,7 +102,7 @@ def create_cam_ic_perturbed(original, ensemble, date, baserundir, outroot="b.e21
                                     "{}".format(month),
                                     "70Lwaccm6.cam.i.M{}.diff.{}.nc".format(month,rvals[i//2]))
         if not os.path.isdir(os.path.basename(os.path.join(local_path,perturb_file))):
-            dirname = os.path.basename(os.path.join(local_path,perturb_file))
+            dirname = os.path.dirname(os.path.join(local_path,perturb_file))
             print("Creating directory {}".format(dirname))
             os.makedirs(dirname)
         perturb_files.append(perturb_file)

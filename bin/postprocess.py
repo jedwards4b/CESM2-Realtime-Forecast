@@ -46,7 +46,8 @@ def parse_command_line(args, description):
     return date.strftime("%Y-%m-%d")
 
 def run_ncl_scripts():
-    scripts = ["pp_priority1.ncl","pp_priority2.ncl","pp_priority3.ncl","pp_h1vertical.ncl", "pp_h4vertical.ncl"]
+    scripts = ["pp_priority2.ncl","pp_priority1.ncl","pp_priority3.ncl","pp_h1vertical.ncl", "pp_h4vertical.ncl"]
+#    scripts = ["pp_priority2.ncl"]
 
     outfiles = []
     processes = []
@@ -54,16 +55,18 @@ def run_ncl_scripts():
         processes.append(Popen("ncl "+script,cwd=os.path.join(os.getenv("FCST_HOME"),"bin"), stdout=PIPE, shell=True))
     errored = []
 
-    for p in processes:
+    while processes:
+        p = processes.pop()
         result = p.communicate()[0].decode("utf-8")
         stat = p.wait()
         if stat != 0:
+            print ("ERROR in ncl stat is {}".format(stat))
             errored.append(p)
         else:
             for line in result.splitlines():
                 if "Completed file:" in line:
+                    print ("{}".format(line))
                     outfiles.append(line[line.find(os.sep):])
-        processes.remove(p)
 
     return outfiles
 

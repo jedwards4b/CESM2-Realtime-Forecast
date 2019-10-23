@@ -1,15 +1,15 @@
 #!Jinja2
 # This will run the hind cast for each month from intial to final cycle point
 # one year at a time, all months for a given year run simultaniously
-{% set mnames = ["jan","feb","mar","apr","may","jun","jul","aug","sep","oct","nov","dec"] %}
+{% set mnames = ["jan"] %}
 
 [cylc]
    cycle point format = %Y
    [[parameters]]
       mnum = 1..12
 [scheduling]
-   initial cycle point = 2002
-   final cycle point = 2002
+   initial cycle point = 2007
+   final cycle point = 2007
    [[dependencies]]
        [[[R1]]]
            graph = prep => month<mnum>
