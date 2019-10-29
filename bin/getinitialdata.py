@@ -49,25 +49,34 @@ def get_data_from_campaignstore(date):
     if os.path.exists(dest_path):
         print("Data already exists in {}".format(dest_path))
         return
-
+    mkpaths(dest_path)
     lnd_source_path = '/gpfs/csfs1/cesm/development/cross-wg/S2S/land/rest/{}-00000/'.format(date)
-    client = initialize_client()
-    globus_transfer_data = get_globus_transfer_data_struct(client)
-    tc = get_transfer_client(client, globus_transfer_data)
-    src_endpoint = get_endpoint_id(tc,"NCAR Campaign Storage")
-    dest_endpoint = get_endpoint_id(tc,"NCAR GLADE")
+    if os.path.isdir(source_path) and os.path.isdir(lnd_source_path):
+        for _file in glob.iglob(source_path+"/*"):
+            safe_copy(_file, dest_path)
+        for _file in glob.iglob(lnd_source_path+"/*"):
+            safe_copy(_file, dest_path)
+    else:
+        client = initialize_client()
+        globus_transfer_data = get_globus_transfer_data_struct(client)
+        tc = get_transfer_client(client, globus_transfer_data)
+        src_endpoint = get_endpoint_id(tc,"NCAR Campaign Storage")
+        dest_endpoint = get_endpoint_id(tc,"NCAR GLADE")
 
-    transfer_data = get_globus_transfer_object(tc, src_endpoint, dest_endpoint, 'S2S initial data transfer')
-    transfer_data = add_to_transfer_request(transfer_data, source_path, dest_path)
-    transfer_data = add_to_transfer_request(transfer_data, lnd_source_path, dest_path)
+        transfer_data = get_globus_transfer_object(tc, src_endpoint, dest_endpoint, 'S2S initial data transfer')
+        transfer_data = add_to_transfer_request(transfer_data, source_path, dest_path)
+        transfer_data = add_to_transfer_request(transfer_data, lnd_source_path, dest_path)
 #    transfer_data = add_to_transfer_request(transfer_data, cam_source_path, os.path.join(dest_path,os.path.basename(cam_source_path)))
-    activate_endpoint(tc, src_endpoint)
-    activate_endpoint(tc, dest_endpoint)
-    if complete_transfer_request(tc, transfer_data):
-        for lndfile in glob.iglob(dest_path+"I2000*"):
-            newfile = lndfile.replace("I2000Clm50BgcCrop.002run","b.e21.BWHIST.SD.f09_g17.002.nudgedOcn")
-            print("Renaming {} to {}".format(lndfile,newfile))
-            os.rename(os.path.join(dest_path,lndfile), os.path.join(dest_path,newfile))
+        activate_endpoint(tc, src_endpoint)
+        activate_endpoint(tc, dest_endpoint)
+        complete_transfer_request(tc, transfer_data)
+
+    for lndfile in glob.iglob(dest_path+"I2000*"):
+        newfile = lndfile.replace("I2000Clm50BgcCrop.002run","b.e21.BWHIST.SD.f09_g17.002.nudgedOcn")
+        print("Renaming {} to {}".format(lndfile,newfile))
+        os.rename(os.path.join(dest_path,lndfile), os.path.join(dest_path,newfile))
+    
+
 
 def _main_func(description):
     date = parse_command_line(sys.argv, description)
