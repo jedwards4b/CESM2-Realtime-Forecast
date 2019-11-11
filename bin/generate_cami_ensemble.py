@@ -18,7 +18,7 @@ import datetime, random, threading, time
 from standard_script_setup import *
 from CIME.utils            import run_cmd, safe_copy
 from argparse              import RawTextHelpFormatter
-from globus_utils          import *
+#from globus_utils          import *
 
 def parse_command_line(args, description):
     parser = argparse.ArgumentParser(description=description,
@@ -65,22 +65,26 @@ def get_rvals(date, ensemble):
     return rvals
 
 def get_data_from_campaignstore(files, source_path, dest_path):
-    
-    client = initialize_client()
-    globus_transfer_data = get_globus_transfer_data_struct(client)
-    tc = get_transfer_client(client, globus_transfer_data)
-    dest_endpoint = get_endpoint_id(tc,"NCAR Campaign Storage")
-    src_endpoint = get_endpoint_id(tc,"NCAR GLADE")
-    transfer_data = get_globus_transfer_object(tc, src_endpoint, dest_endpoint, 'S2S data transfer')
-    dotrans = False
-    for _file in files:
-        if not os.path.isfile(os.path.join(dest_path,_file)):
-            transfer_data = add_to_transfer_request(transfer_data, os.path.join(source_path, _file), os.path.join(dest_path,_file))
-            dotrans = True
-    if dotrans:
-        activate_endpoint(tc, src_endpoint)
-        activate_endpoint(tc, dest_endpoint)
-        complete_transfer_request(tc, transfer_data)
+    if os.path.isdir(source_path):
+        for _file in glob.iglob(source_path+"*"):
+            safe_copy(_file, dest_path)
+        return
+#    print("Initiating globus transfer")
+#    client = initialize_client()
+#    globus_transfer_data = get_globus_transfer_data_struct(client)
+#    tc = get_transfer_client(client, globus_transfer_data)
+#    dest_endpoint = get_endpoint_id(tc,"NCAR Campaign Storage")
+#    src_endpoint = get_endpoint_id(tc,"NCAR GLADE")
+#    transfer_data = get_globus_transfer_object(tc, src_endpoint, dest_endpoint, 'S2S data transfer')
+#    dotrans = False
+#    for _file in files:
+#        if not os.path.isfile(os.path.join(dest_path,_file)):
+#            transfer_data = add_to_transfer_request(transfer_data, os.path.join(source_path, _file), os.path.join(dest_path,_file))
+#            dotrans = True
+#    if dotrans:
+#        activate_endpoint(tc, src_endpoint)
+#        activate_endpoint(tc, dest_endpoint)
+#        complete_transfer_request(tc, transfer_data)
 
 def create_cam_ic_perturbed(original, ensemble, date, baserundir, outroot="b.e21.BWHIST.SD.f09_g17.002.nudgedOcn.cam.i.", factor=0.15):
     rvals = get_rvals(date, ensemble)
@@ -94,19 +98,20 @@ def create_cam_ic_perturbed(original, ensemble, date, baserundir, outroot="b.e21
 
     # for each pair of ensemble members create an ic file with same perturbation opposite sign
     month = date[5:7]
-    collections_path = '/gpfs/csfs1/cesm/collections/S2Sfcst/'
-    local_path = os.path.join(os.getenv("SCRATCH"),"S2Sfcst")
+#    collections_path = '/gpfs/csfs1/cesm/collections/S2Sfcst/'
+    local_path = '/glade/campaign/cesm/collections/S2Sfcst/'
+#    local_path = os.path.join(os.getenv("SCRATCH"),"S2Sfcst")
     perturb_files = []
     for i in range(1,ensemble, 2):
         perturb_file = os.path.join("S2S_70LIC",
                                     "{}".format(month),
                                     "70Lwaccm6.cam.i.M{}.diff.{}.nc".format(month,rvals[i//2]))
-        if not os.path.isdir(os.path.basename(os.path.join(local_path,perturb_file))):
-            dirname = os.path.dirname(os.path.join(local_path,perturb_file))
+        dirname = os.path.dirname(os.path.join(local_path,perturb_file))
+        if not os.path.isdir(dirname):
             print("Creating directory {}".format(dirname))
             os.makedirs(dirname)
         perturb_files.append(perturb_file)
-    get_data_from_campaignstore(perturb_files, collections_path, local_path)
+#    get_data_from_campaignstore(perturb_files, collections_path, local_path)
 
 
     for i in range(1,ensemble, 2):
@@ -120,8 +125,8 @@ def create_cam_ic_perturbed(original, ensemble, date, baserundir, outroot="b.e21
         t.start()
     while(threading.active_count() > 1):
         time.sleep(1)
-    for perturb_file in perturb_files:
-        os.unlink(os.path.join(local_path,perturb_file))
+#    for perturb_file in perturb_files:
+#        os.unlink(os.path.join(local_path,perturb_file))
     
 
 def create_perturbed_init_file(original, perturb_file, outfile, weight):

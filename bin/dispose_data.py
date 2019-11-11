@@ -96,7 +96,8 @@ def _main_func(description):
             run_cmd("ncrcat * "+fnameout,from_dir=icehistpath)
             for _file in glob.iglob(os.path.join(icehistpath,"*ice.h.*.nc")):
                 os.unlink(_file)
-            send_data_to_campaignstore(dout_s_root+os.sep )
+        
+#            send_data_to_campaignstore(dout_s_root+os.sep )
         
         
 if __name__ == "__main__":

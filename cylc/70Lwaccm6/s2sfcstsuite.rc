@@ -1,70 +1,33 @@
-[meta]
-  title = CESM CYLC workflow for ensemble from 70Lwaccm6.00 to 70Lwaccm6.10
+#!Jinja2
+# This will run the hind cast for each month from intial to final cycle point
+# one year at a time, all months for a given year run simultaniously
+#{% set mnames = ["jan","feb","mar","apr","may","jun","jul","aug","sep","oct","nov","dec"] %}
+
+{% set mnames = ["oct"] %}
+
 [cylc]
-  UTC mode = True
-  cycle point format = CCYY-MM-DD
-  [[parameters]]
-    # The number of ensemble members can be changed here
-    member = 0..10
-
+   cycle point format = %Y
+   [[parameters]]
+      mnum = 1..12
 [scheduling]
-  # Change the run start and end dates here
-  initial cycle point = 1999-08-02
-  final cycle point = 1999-08-30
-
-  [[dependencies]]
-  # Weekly Cycling, new date will submit when st_archive is complete for each member
-  # run needs to finish, not nessasarily successfully for next step to start
-    [[[R/P1W]]]
-      graph = """
-	     st_archive<member>[-P1W] => get_data => build_model => run<member>
-             run<member>:finish => st_archive<member> => postprocess<member>
-	     """
+   initial cycle point = 2007
+   final cycle point = 2007
+   [[dependencies]]
+       [[[R1]]]
+           graph = prep => month<mnum>
+       [[[P1Y]]]
+           graph = month<mnum>[-P1Y] => month<mnum>
 [runtime]
-  [[get_data]]
-    script = cd ${FCST_HOME}/bin/; ./getinitialdata.py
-  [[build_model]]
-    script = """
-cd ${FCST_HOME}/bin/
-./buildcase.py
-./generate_cami_ensemble.py
+   [[prep]]
+      script = """
+{% for month in mnames %}
+  rm -fr $HOME/cylc-run/{{month}}
+  cylc register {{month}} ${FCST_HOME}/cylc/70Lwaccm6/monthly
+{% endfor %}
 """
-    [[[job]]]
-      batch system = pbs
-      batch submit command template = qsub -q regular -l walltime=01:00:00 -A NCGD0042 '%(job)s'
-    [[[directives]]]
-       -r = n
-       -j = oe
-       -V =
-       -S = /bin/bash
-       -l = select=1:ncpus=36:ompthreads=36
-
-  [[st_archive<member>]]
-    script = """
-cd ${WORK}/cases/70Lwaccm6/70Lwaccm6.$(printf "%02d" ${CYLC_TASK_PARAM_member})
-./case.submit --job case.st_archive
-#./xmlchange CONTINUE_RUN=TRUE  don't want this for this workflow
+{% for month in mnames %}
+   [[month_mnum{{"{0:02d}".format(loop.index)}}]]
+   script = """
+cylc run --no-detach --set=YEAR=$CYLC_TASK_CYCLE_POINT --set=MONTH={{"{0:02d}".format(loop.index)}} {{month}}
 """
-    [[postprocess<member>]]
-      script = ${FCST_HOME}/bin/pp_priority1.sh
-    [[run<member>]]
-    script = """
-cd ${WORK}/cases/70Lwaccm6/70Lwaccm6.$(printf "%02d" ${CYLC_TASK_PARAM_member})
-cp ${FCST_HOME}/user_mods/70Lwaccm6.base/user_nl_cam.${CYLC_TASK_TRY_NUMBER} user_nl_cam
- ./case.submit --job case.run
-"""
-    [[[job]]]
-      # Retry each run up to 5 times with different fv_nsplit values
-      execution retry delays = 5*PT6S
-      batch system = pbs
-      batch submit command template = qsub    -q regular -l walltime=05:00:00 -A NCGD0042  '%(job)s'
-    [[[directives]]]
-       -r = n
-       -j = oe
-       -V =
-       -S = /bin/bash
-       # dont forget to change this line if you change pelayout
-       # How can we connect this to the pelayout?
-       -l = select=17:ncpus=36:mpiprocs=36:ompthreads=1
-    [[[events]]]
-	handler events = retry, failed
+{% endfor %}

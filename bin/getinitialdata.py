@@ -18,6 +18,7 @@ import datetime, glob
 from standard_script_setup import *
 from argparse              import RawTextHelpFormatter
 from globus_utils          import *
+from CIME.utils            import safe_copy
 
 def parse_command_line(args, description):
     parser = argparse.ArgumentParser(description=description,
@@ -43,15 +44,19 @@ def parse_command_line(args, description):
     return date.strftime("%Y-%m-%d")
 
 def get_data_from_campaignstore(date):
-    source_path = '/gpfs/csfs1/cesm/development/cross-wg/S2S/SDnudgedOcn/rest/{date}-00000/'.format(date=date)
+    source_path = 'cesm/development/cross-wg/S2S/SDnudgedOcn/rest/{date}-00000/'.format(date=date)
 #    source_path = '/gpfs/csfs1/cesm/development/cross-wg/S2S/SD/rest/{}-00000/'.format(date)
     dest_path = os.path.join(os.getenv("SCRATCH"),"S2S_70LIC_globus","SDnudgedOcn","rest","{}".format(date))
     if os.path.exists(dest_path):
         print("Data already exists in {}".format(dest_path))
         return
-    mkpaths(dest_path)
-    lnd_source_path = '/gpfs/csfs1/cesm/development/cross-wg/S2S/land/rest/{}-00000/'.format(date)
-    if os.path.isdir(source_path) and os.path.isdir(lnd_source_path):
+    os.makedirs(dest_path)
+    lnd_source_path = 'cesm/development/cross-wg/S2S/land/rest/{}-00000/'.format(date)
+    source_root_local = "/glade/campaign"
+    source_root_globus = "/gpfs/csfs1"
+    if os.path.isdir(os.path.join(source_root_local,source_path)) and os.path.isdir(os.path.join(source_root_local,lnd_source_path)):
+        source_path = os.path.join(source_root_local,source_path)
+        lnd_source_path = os.path.join(source_root_local,lnd_source_path)
         for _file in glob.iglob(source_path+"/*"):
             safe_copy(_file, dest_path)
         for _file in glob.iglob(lnd_source_path+"/*"):

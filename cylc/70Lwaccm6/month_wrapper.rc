@@ -1,15 +1,15 @@
 #!Jinja2
 # This will run the hind cast for each month from intial to final cycle point
 # one year at a time, all months for a given year run simultaniously
-{% set mnames = ["jan"] %}
+{% set mnames = ["jan","feb","mar","apr","may","jun","jul","aug","sep","oct","nov","dec"] %}
 
 [cylc]
    cycle point format = %Y
    [[parameters]]
       mnum = 1..12
 [scheduling]
-   initial cycle point = 2007
-   final cycle point = 2007
+   initial cycle point = 2010
+   final cycle point = 2010
    [[dependencies]]
        [[[R1]]]
            graph = prep => month<mnum>
@@ -24,8 +24,11 @@
 {% endfor %}
 """
 {% for month in mnames %}
+   # Use the following to set the months to actually run or comment the if and endif to run all months
+   {% if month in ["sep","oct","nov","dec"] %}
    [[month_mnum{{"{0:02d}".format(loop.index)}}]]
    script = """
 cylc run --no-detach --set=YEAR=$CYLC_TASK_CYCLE_POINT --set=MONTH={{"{0:02d}".format(loop.index)}} {{month}}
 """
+  {% endif %}
 {% endfor %}

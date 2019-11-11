@@ -81,4 +81,4 @@ def add_to_transfer_request(transfer_data, src_path, dest_path):
 def complete_transfer_request(transfer_client, transfer_data):
     task_id = transfer_client.submit_transfer(transfer_data)['task_id']
     print("Task ID: {}".format(task_id))
-    return transfer_client.task_wait(task_id, timeout=120, polling_interval=10)
+    return transfer_client.task_wait(task_id, timeout=600, polling_interval=10)

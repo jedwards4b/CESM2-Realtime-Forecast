@@ -6,7 +6,7 @@
   cycle point format = CCYY-MM-DD
   [[parameters]]
     # The number of ensemble members can be changed here
-    member = 0..10
+    member = 0..4
   [[environment]]
     CYLC_TASK_CYCLE_MONTH = {{MONTH}}
 
@@ -20,8 +20,9 @@
   # run needs to finish, not nessasarily successfully for next step to start
     [[[R/W-1/P1W]]]
       graph = """
-        st_archive<member>[-P1W] => get_data => build_model => run_family:finish-all => dispose
-        run<member>:finish => st_archive<member> => postprocess<member>
+        st_archive<member>[-P1W] => get_data => build_model => run_family:finish-all 
+	postprocess_family:finish-all => dispose
+        run<member> => st_archive<member> => postprocess<member> 
 	     """
 [runtime]
   [[get_data]]
@@ -64,7 +65,8 @@ cd ${WORK}/cases/70Lwaccm6/70Lwaccm6.${CYLC_TASK_CYCLE_MONTH}.$(printf "%02d" ${
 #./xmlchange CONTINUE_RUN=TRUE  don't want this for this workflow
 """
     [[postprocess<member>]]
-    # Globus process, must run on host
+      inherit = postprocess_family
+    [[postprocess_family]]
       script = """
 module load ncl nco
 ${FCST_HOME}/bin/postprocess.py
