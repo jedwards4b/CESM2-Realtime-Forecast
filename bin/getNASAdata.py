@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 import os, sys
-_LIBDIR = os.path.join(os.sep+"glade","scratch","jedwards","cheyenne","cime-nightly-build","cime","scripts","Tools")
+cesmroot = os.environ.get('CESM_ROOT')
+_LIBDIR = os.path.join(cesmroot,"cime","scripts","Tools")
 sys.path.append(_LIBDIR)
 import datetime
 from standard_script_setup import *
@@ -45,11 +46,19 @@ def _main_func(description):
         fday = date.day
         lday = date.day
 
+    print( "Getting data for range {} to {}".format(fday, lday))
     for day in range(fday, lday+1):
         tdate = date.replace(day=day)
         jday = get_julian_day_of_year(tdate)
+        print("Getting data for year {} julian date {}".format(date.year, jday))
         dataroot = "https://goldsfs1.gesdisc.eosdis.nasa.gov/data/GEOS5/DFPITI3NVASM.5.12.4/{}/{:03d}/.hidden/".format(date.year,jday)
-        cmd = "wget -np -r -nH --directory-prefix=/glade/scratch/jedwards/NASAdata/ -A'GEOS.*' "+dataroot
+        cmd = "wget -nc -np -r -nH --directory-prefix=/glade/scratch/jedwards/NASAdata/ -A'GEOS.*.V01.nc4' "+dataroot
+        err, output, _ = run_cmd(cmd, combine_output=True, verbose=True)
+        expect(err == 0,"Could not connect to repo via '{}'\nThis is most likely either a proxy, or network issue.\nOutput:\n{}".format(cmd, output.encode('utf-8')))
+
+
+        dataroot = "https://goldsfs1.gesdisc.eosdis.nasa.gov/data/GEOS5/DFPITI3NXASM.5.12.4/{}/{:03d}/.hidden/".format(date.year,jday)
+        cmd = "wget -nc -np -r -nH --directory-prefix=/glade/scratch/jedwards/NASAdata/ -A'GEOS.*.V01.nc4' "+dataroot
         err, output, _ = run_cmd(cmd, combine_output=True, verbose=True)
         expect(err == 0,"Could not connect to repo via '{}'\nThis is most likely either a proxy, or network issue.\nOutput:\n{}".format(cmd, output.encode('utf-8')))
 

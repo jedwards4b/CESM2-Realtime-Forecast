@@ -1,4 +1,4 @@
-#!/usr/bin/env bash -l
+#!/bin/bash -l
 # wrapper to get daily CDAS data and convert to datm stream
 basedir=/glade/u/home/jedwards/sandboxes/CESM2-Realtime-Forecast/
 module load ncl

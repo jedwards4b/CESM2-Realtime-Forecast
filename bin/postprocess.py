@@ -72,7 +72,7 @@ def run_ncl_scripts():
 
 def send_data_to_campaignstore(source_path):
     dest_path = '/gpfs/csfs1/cesm/development/cross-wg/S2S/'
-    
+
     client = initialize_client()
     globus_transfer_data = get_globus_transfer_data_struct(client)
     tc = get_transfer_client(client, globus_transfer_data)
@@ -83,7 +83,7 @@ def send_data_to_campaignstore(source_path):
     activate_endpoint(tc, src_endpoint)
     activate_endpoint(tc, dest_endpoint)
     complete_transfer_request(tc, transfer_data)
-    
+
 def _main_func(description):
     date = parse_command_line(sys.argv, description)
     # TODO make these input vars
@@ -96,7 +96,7 @@ def _main_func(description):
     with Case(caseroot, read_only=True) as case:
         rundir = case.get_value("RUNDIR")
         dout_s_root = case.get_value("DOUT_S_ROOT")
-        
+
     # END TODO
     outfiles = run_ncl_scripts()
 
@@ -129,6 +129,6 @@ def _main_func(description):
         os.unlink(_file)
 #    send_data_to_campaignstore(dout_s_root+os.sep )
 
-        
+
 if __name__ == "__main__":
     _main_func(__doc__)
