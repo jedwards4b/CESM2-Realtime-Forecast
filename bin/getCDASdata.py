@@ -1,6 +1,8 @@
 #!/usr/bin/env python
 import os, sys
-_LIBDIR = os.path.join(os.sep+"glade","scratch","jedwards","cheyenne","cime-nightly-build","cime","scripts","Tools")
+cesmroot = os.environ.get('CESM_ROOT')
+_LIBDIR = os.path.join(cesmroot,"cime","scripts","Tools")
+
 sys.path.append(_LIBDIR)
 import datetime, tarfile
 from standard_script_setup import *
@@ -43,6 +45,8 @@ def fcst_files(members, fcst_time):
 
 def _main_func(description):
     date, fullmonth = parse_command_line(sys.argv, description)
+    cdas_root = os.path.join(os.environ.get("ARCHIVEROOT"),"cdas_data")
+    os.chdir(cdas_root)
     if fullmonth:
         fday = 1
         _, lday = monthrange(date.year, date.month)
@@ -59,7 +63,7 @@ def _main_func(description):
         for tarinfo in fcst_files(tar, fhr):
             oldfile = os.path.basename(tarinfo.name)
             stime = oldfile[7:9]
-            newfile = os.path.join("data_files","cdas1.{}{:02d}{}.sfluxgrb{}.grib2".format(date.strftime("%Y%m"),day,stime,fhr))
+            newfile = "cdas1.{}{:02d}{}.sfluxgrb{}.grib2".format(date.strftime("%Y%m"),day,stime,fhr)
             print("Rename {} to {}".format(oldfile, newfile))
             os.rename(oldfile, newfile)
         tar.close()
