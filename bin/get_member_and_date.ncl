@@ -21,5 +21,9 @@ end do
 cdate = stringtochar(date)
 mm = tostring(cdate(5:6))
 yyyy = tostring(cdate(0:3))
-outdate=tostring(cdate(8:9))+month_abbr(tointeger(mm))+yyyy
+day = "  "
+if (strlen(cdate) .gt. 7) then
+  day = tostring(cdate(8:9))
+end if
+outdate=day+month_abbr(tointeger(mm))+yyyy
 print ("Running for date "+outdate+" and member "+member)

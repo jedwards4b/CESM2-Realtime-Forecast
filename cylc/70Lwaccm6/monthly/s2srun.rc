@@ -37,7 +37,7 @@ cd ${FCST_HOME}/bin/
     [[[directives]]]
        --ntasks=1
        --cpus-per-task=8
-       --patition=dav
+       --partition=dav
        --time=01:00:00
        --account=NCGD0042
       

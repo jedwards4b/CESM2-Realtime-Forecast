@@ -23,9 +23,9 @@ begin
       maxday = fday
     end if
   end do
-  minob = (minday-1)*nhr+1
-  maxob = maxday*nhr
-
+  minob = (minday-1)*nhr
+  maxob = maxday*nhr-1
+  
   cmo = tointeger(mm)-1
   
   data = addfiles(fns,"r")
@@ -57,11 +57,10 @@ begin
     if(ivar.le.2)then
       strm = stream(ivar)
     end if
-
     tunits = "days since "+yyyy+"-"+mm+"-01 00:00:00"
     time = new( (/ndpm(cmo)*nhr/), "float")
     vdate = new( (/ndpm(cmo)*nhr/), "integer")
-    day = new( (/ndpm(cmo)*nhr/), "integer")
+    iday = new( (/ndpm(cmo)*nhr/), "integer")
     inc = 0
 
     if(strm.eq."Solar")then
@@ -77,12 +76,12 @@ begin
       vdate(idy) = ((((tointeger(yyyy+mm))*100)+inc)*100)+hcnt
       if(hcnt.eq.hr(0))then ; each time we hit a new day
         inc = inc + 1
-        day(idy:idy+3) = inc ; fill 4 time steps with same day number
+        iday(idy:idy+3) = inc ; fill 4 time steps with same day number
       end if
 
-      time(idy) = tofloat(cd_inv_calendar(tointeger(yyyy),tointeger(mm),day(idy),1.0*hcnt,0.,0.,tunits,0))
+      time(idy) = tofloat(cd_inv_calendar(tointeger(yyyy),tointeger(mm),iday(idy),1.0*hcnt,0.,0.,tunits,0))
       if(hcnt.eq.hr(3))then
-        hcnt = 0
+        hcnt = hr(0)
       else
         hcnt = hcnt + 6
       end if
@@ -228,6 +227,7 @@ begin
         cdf->FSDS = arr
       else
         cdf = addfile(nfn,"w")
+	printVarSummary(arr)
         cdf->FSDS(minob:maxob,:,:) = arr(minob:maxob,:,:)
       end if
       delete(arr)
@@ -257,7 +257,7 @@ begin
         cdf = addfile(nfn,"w")
         cdf->PRECTmms(minob:maxob,:,:) = arr(minob:maxob,:,:)
       end if
-
+      delete(arr)
     end if
 
     if(strm.eq."TPQWL")then
@@ -337,6 +337,7 @@ begin
       if (newfile .gt. 0) then
         cdf->$vnames(ivar)$ = arr
       else
+        printVarSummary(arr)
         cdf->$vnames(ivar)$(minob:maxob,:,:) = arr(minob:maxob,:,:)
       end if
       delete(arr)
@@ -348,7 +349,7 @@ begin
 
 
   delete(fns)
-  delete(day)
+  delete(iday)
   delete(time)
   delete(vdate)
 
