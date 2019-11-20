@@ -11,7 +11,7 @@ sys.path.append(_LIBDIR)
 _LIBDIR = os.path.join(cesmroot,"cime","scripts","lib")
 sys.path.append(_LIBDIR)
 
-import datetime, glob
+import datetime, glob, shutil
 import CIME.build as build
 from standard_script_setup import *
 from CIME.case             import Case
@@ -94,9 +94,11 @@ def build_base_case(date, baseroot, basecasename, basemonth,res, compset, overwr
                     sdrestdir, user_mods_dir, pecount=None):
 
     caseroot = os.path.join(baseroot,basecasename+"."+basemonth+".00")
-
+    if overwrite and os.path.isdir(caseroot):
+        shutil.rmtree(caseroot)
+            
     with Case(caseroot, read_only=False) as case:
-        if overwrite or not os.path.isdir(caseroot):
+        if not os.path.isdir(caseroot):
             case.create(os.path.basename(caseroot), cesmroot, compset, res,
                         run_unsupported=True, answer="r",walltime="04:00:00",
                         user_mods_dir=user_mods_dir, pecount=pecount, project="NCGD0042")
@@ -107,7 +109,7 @@ def build_base_case(date, baseroot, basecasename, basemonth,res, compset, overwr
             case.set_value("RUN_TYPE","hybrid")
             case.set_value("GET_REFCASE",False)
             case.set_value("RUN_REFDIR",sdrestdir)
-            case.set_value("RUN_REFCASE", "b.e21.{}.SD.{}.002.nudgedOcn".format(compset,res))
+            case.set_value("RUN_REFCASE", "b.e21.BWHIST.SD.{}.002.nudgedOcn".format(res))
             case.set_value("STOP_OPTION","ndays")
             case.set_value("STOP_N", 45)
             case.set_value("REST_OPTION","none")
@@ -133,7 +135,7 @@ def clone_base_case(date, caseroot, ensemble, sdrestdir, user_mods_dir, overwrit
         if ensemble > 1:
             caseroot = caseroot[:-nint] + member_string
         if overwrite and os.path.isdir(caseroot):
-            os.unlink(caseroot)
+            shutil.rmtree(caseroot)
         if not os.path.isdir(caseroot):
             with Case(cloneroot, read_only=False) as clone:
                 clone.create_clone(caseroot, keepexe=True,
@@ -151,10 +153,18 @@ def _main_func(description):
     # TODO make these input vars
     basecasename = "70Lwaccm6"
     basemonth = date[5:7]
+    baseyear = int(date[0:4])
     baseroot = os.path.join(os.getenv("WORK"),"cases",basecasename)
     res = "f09_g17"
-    compset = "BWHIST"
+
+    if baseyear < 2015:
+        compset = "BWHIST"
+    else:
+        compset = "BWSSP585"
+    print ("baseyear is {} basemonth is {}".format(baseyear,basemonth))
+    
     overwrite = False
+
     sdrestdir = os.path.join(os.getenv("SCRATCH"),"S2S_70LIC_globus","SDnudgedOcn","rest","{}".format(date))
     ensemble = 10
     user_mods_dir = os.path.join(s2sfcstroot,"user_mods",basecasename)

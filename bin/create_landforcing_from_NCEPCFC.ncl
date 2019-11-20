@@ -91,7 +91,7 @@ begin
     time@long_name = "observation time"
     time@units = tunits
     time@calendar = "noleap"
-    delete(time@_FillValue)
+;    delete(time@_FillValue)
 
     time!0 = "time"
     time&time = time
@@ -100,8 +100,10 @@ begin
     nct = dimsizes(data[:]->$invars(ivar)$(:,0,0))
 
     arrin = data[:]->$invars(ivar)$(:,::-1,:)
+    if (any(ismissing(arrin))) then
+      print(ivar+" contains missing values.")
+    end if		   
 
-    msv = arrin@_FillValue
     delete_VarAtts(arrin,-1)
 
     ; variables and attributes for all streams
@@ -128,8 +130,10 @@ begin
       if(nct.lt.nt)then
         print("NOTE! Number of time steps in data is less than a full month. Assuming we are at the end of the current record. Filling remaining times with missing values")
 
+	time(nct:nt-1) = default_fillvalue("float")
+
         arrtmp = f2fsh(arrin,(/nlat,nlon/))
-        arr = new( (/nt,nlat,nlon/), "float", msv)
+        arr = new( (/nt,nlat,nlon/), "float", default_fillvalue("float"))
         arr(minob:maxob,:,:) = arrtmp
         delete(arrtmp)
       else
@@ -205,8 +209,8 @@ begin
       arr@long_name = "total incident solar radiation"
       arr@units = "W/m^2"
       arr@mode = "time-dependent"
-      arr@_FillValue = 1.e+36
-      arr@missing_value = 1.e+36
+      arr@_FillValue = default_fillvalue("float")
+      arr@missing_value = default_fillvalue("float")
       arr!0 = "time"
       arr!1 = "lat"
       arr!2 = "lon"
@@ -239,8 +243,8 @@ begin
       arr@long_name = "PRECTmms total precipitation"
       arr@units = "mm H2O / sec"
       arr@mode = "time-dependent"
-      arr@_FillValue = 1.e+36
-      arr@missing_value = 1.e+36
+      arr@_FillValue = default_fillvalue("float")
+      arr@missing_value = default_fillvalue("float")
       arr!0 = "time"
       arr!1 = "lat"
       arr!2 = "lon"
@@ -276,8 +280,8 @@ begin
 
       ; file and variable attributes set
       arr@mode = "time-dependent"
-      arr@_FillValue = 1.e+36
-      arr@missing_value = 1.e+36
+      arr@_FillValue = default_fillvalue("float")
+      arr@missing_value = default_fillvalue("float")
       if(vnames(ivar).eq."FLDS")
         arr@long_name = "incident longwave radiation"
         arr@units = "W/m^2"
@@ -328,8 +332,8 @@ begin
       arr!1 = "lat"
       arr!2 = "lon"
       arr@mode = "time-dependent"
-      arr@_FillValue = 1.e+36
-      arr@missing_value = 1.e+36
+      arr@_FillValue = default_fillvalue("float")
+      arr@missing_value = default_fillvalue("float")
 
       arr&time = time
       arr&lat = LATIXY(:,0)
