@@ -16,7 +16,7 @@ sys.path.append(_LIBDIR)
 
 import datetime, random, threading, time
 from standard_script_setup import *
-from CIME.utils            import run_cmd, safe_copy
+from CIME.utils            import run_cmd, safe_copy, expect
 from argparse              import RawTextHelpFormatter
 #from globus_utils          import *
 
@@ -50,6 +50,7 @@ def get_rvals(date, ensemble):
         with open(rvals_file,"r") as fd:
             rawvals = fd.read().split(',')
         for rval in rawvals:
+            rval = rval.strip()
             if rval.startswith('['):
                 rval = int(rval[1:])
             elif rval.endswith(']'):
@@ -93,6 +94,7 @@ def create_cam_ic_perturbed(original, ensemble, date, baserundir, outroot="b.e21
     # first link the original ic file to the 0th ensemble member
     if os.path.exists(outfile):
         os.unlink(outfile)
+    expect(os.path.isfile(original),"ERROR file {} not found".format(original))
     print("Linking {} to {}".format(original, outfile))
     os.symlink(original, outfile)
 

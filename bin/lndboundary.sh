@@ -7,7 +7,7 @@ ncl ./bin/create_landforcing_from_NCEPCFC.ncl
 
 ./bin/update_land_streams.py --case/glade/scratch/ssfcst/I2000Clm50BgcCrop.002runContd/
 cd /glade/scratch/ssfcst/I2000Clm50BgcCrop.002runContd/
-./xmlchange STOP_N=1
+./xmlchange STOP_N=10
 ./xmlchange STOP_OPTION=ndays
 ./case.submit
 

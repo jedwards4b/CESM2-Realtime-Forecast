@@ -163,7 +163,7 @@ def _main_func(description):
         compset = "BWSSP585"
     print ("baseyear is {} basemonth is {}".format(baseyear,basemonth))
     
-    overwrite = False
+    overwrite = True
 
     sdrestdir = os.path.join(os.getenv("SCRATCH"),"S2S_70LIC_globus","SDnudgedOcn","rest","{}".format(date))
     ensemble = 10
