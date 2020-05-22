@@ -45,8 +45,8 @@ def parse_command_line(args, description):
 
 def get_rvals(date, ensemble):
     rvals_file = os.path.join(os.getenv("WORK"),"cases","70Lwaccm6","camic_"+date+".txt")
+    rvals = []
     if os.path.isfile(rvals_file):
-        rvals = []
         with open(rvals_file,"r") as fd:
             rawvals = fd.read().split(',')
         for rval in rawvals:
@@ -58,11 +58,16 @@ def get_rvals(date, ensemble):
             else:
                 rval = int(rval)
             rvals.append(rval)
-    else:
-        rvals = random.sample(range(500),k=ensemble//2)
+    if len(rvals) < ensemble//2:
+        newrvals = random.sample(range(500),k=ensemble//2)
+        for i in 0,len(rvals)-1:
+            if rvals[i] not in newrvals:
+                newrvals[i] = rvals[i]
         #save these rvals to a file
         with open(rvals_file,"w") as fd:
-            fd.write("{}".format(rvals))
+            fd.write("{}".format(newrvals))
+        rvals = newrvals
+    print "LEN of rvals is {}".format(len(rvals))
     return rvals
 
 def get_data_from_campaignstore(files, source_path, dest_path):
@@ -105,6 +110,7 @@ def create_cam_ic_perturbed(original, ensemble, date, baserundir, outroot="b.e21
 #    local_path = os.path.join(os.getenv("SCRATCH"),"S2Sfcst")
     perturb_files = []
     for i in range(1,ensemble, 2):
+        print "HERE rvals[{}] = {}".format(i//2,rvals[i//2])
         perturb_file = os.path.join("S2S_70LIC",
                                     "{}".format(month),
                                     "70Lwaccm6.cam.i.M{}.diff.{}.nc".format(month,rvals[i//2]))
@@ -144,7 +150,7 @@ def _main_func(description):
 
     # TODO make these input vars
     sdrestdir = os.path.join(os.getenv("SCRATCH"),"S2S_70LIC_globus","SDnudgedOcn","rest","{}".format(date))
-    ensemble = 10
+    ensemble = 20
     baserundir = os.path.join(os.getenv("SCRATCH"),"70Lwaccm6."+date[5:7]+".00","run.00")
     # END TODO
 

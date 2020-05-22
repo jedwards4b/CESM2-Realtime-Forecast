@@ -157,7 +157,7 @@ def _main_func(description):
     baseroot = os.path.join(os.getenv("WORK"),"cases",basecasename)
     res = "f09_g17"
 
-    if baseyear < 2015:
+    if baseyear < 2014 or (baseyear == 2014 and basemonth < 10):
         compset = "BWHIST"
     else:
         compset = "BWSSP585"
@@ -166,7 +166,7 @@ def _main_func(description):
     overwrite = True
 
     sdrestdir = os.path.join(os.getenv("SCRATCH"),"S2S_70LIC_globus","SDnudgedOcn","rest","{}".format(date))
-    ensemble = 10
+    ensemble = 21
     user_mods_dir = os.path.join(s2sfcstroot,"user_mods",basecasename)
     # END TODO
     print("basemonth = {}".format(basemonth))

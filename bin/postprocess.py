@@ -101,12 +101,12 @@ def _main_func(description):
     outfiles = run_ncl_scripts()
 
     # Copy data to ftp site
-    for file in outfiles:
-        fsplit = file.find("70Lwaccm6/")+10
-        fpath = os.path.dirname(file[fsplit-1:])
-        rsynccmd = "rsync -azvh --rsync-path=\"mkdir -p /ftp/pub/jedwards/70Lwaccm6/"+fpath+" && rsync\" "+file+" "+ftproot+fpath
-        print("copying file {} to ftp server location {}".format(file,fpath))
-        run_cmd(rsynccmd,verbose=True)
+#    for file in outfiles:
+#        fsplit = file.find("70Lwaccm6/")+10
+#        fpath = os.path.dirname(file[fsplit-1:])
+#        rsynccmd = "rsync -azvh --rsync-path=\"mkdir -p /ftp/pub/jedwards/70Lwaccm6/"+fpath+" && rsync\" "+file+" "+ftproot+fpath
+#        print("copying file {} to ftp server location {}".format(file,fpath))
+#        run_cmd(rsynccmd,verbose=True)
 
 
     # Clean up
@@ -114,14 +114,14 @@ def _main_func(description):
         for _file in glob.iglob(os.path.join(rundir,"*"+date+"*")):
             os.unlink(_file)
 
-    for _dir in ("cpl","esp", "glc", "wav", "rest"):
-        if os.path.isdir(os.path.join(dout_s_root,_dir)):
-            shutil.rmtree(os.path.join(dout_s_root,_dir))
+#    for _dir in ("cpl","esp", "glc", "wav", "rest"):
+#        if os.path.isdir(os.path.join(dout_s_root,_dir)):
+#            shutil.rmtree(os.path.join(dout_s_root,_dir))
     atmhistpath = os.path.join(dout_s_root,"atm","hist")
     icehistpath = os.path.join(dout_s_root,"ice","hist")
-    for histfile in os.listdir(atmhistpath):
-        if "h1" in histfile or "h4" in histfile:
-            os.unlink(os.path.join(atmhistpath,histfile))
+#    for histfile in os.listdir(atmhistpath):
+#        if "h1" in histfile or "h4" in histfile:
+#            os.unlink(os.path.join(atmhistpath,histfile))
     #Concatinate cice history into a single file
     fnameout = basecasename+"."+basemonth+"."+date+".{0:02d}".format(member)+".cice.h.nc"
     run_cmd("ncrcat * "+fnameout,from_dir=icehistpath)
