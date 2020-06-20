@@ -1,0 +1,1 @@
+./xmlchange CLM_NAMELIST_OPTS="use_init_interp=.true."
