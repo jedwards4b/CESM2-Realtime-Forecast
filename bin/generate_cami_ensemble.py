@@ -14,7 +14,7 @@ sys.path.append(_LIBDIR)
 _LIBDIR = os.path.join(cesmroot,"cime","scripts","lib")
 sys.path.append(_LIBDIR)
 
-import datetime, random, threading, time
+import datetime, random, threading, time, shutil
 from standard_script_setup import *
 from CIME.utils            import run_cmd, safe_copy, expect
 from argparse              import RawTextHelpFormatter
@@ -103,6 +103,10 @@ def create_cam_ic_perturbed(original, ensemble, date, baserundir, outroot="b.e21
         os.unlink(outfile)
     expect(os.path.isfile(original),"ERROR file {} not found".format(original))
     print("Linking {} to {}".format(original, outfile))
+    rundir = os.path.dirname(outfile)
+    if os.path.isdir(rundir):
+        shutil.rmtree(rundir)
+    os.makedirs(rundir)
     os.symlink(original, outfile)
 
     # for each pair of ensemble members create an ic file with same perturbation opposite sign

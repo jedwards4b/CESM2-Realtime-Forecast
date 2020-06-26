@@ -3,5 +3,30 @@
 !   namelist_var = new_namelist_value 
 ! Note - that it does not matter what namelist group the namelist_var belongs to
 !----------------------------------------------------------------------------------
-
- 
+histfreq = 'm','d','x','x','x'
+histfreq_n = 1,1,1,1,1
+f_aice = 'mdxxx'
+f_hi = 'mdxxx'
+f_hs = 'mdxxx'
+f_uvel = 'mdxxx'
+f_vvel = 'mdxxx'
+f_aicen = 'mdxxx'
+f_daidtt = 'mdxxx'
+f_daidtd = 'mdxxx'
+f_dvidtt = 'mdxxx'
+f_dvidtd = 'mdxxx'
+f_apeff_ai = 'mdxxx'
+f_meltb = 'mdxxx'
+f_meltt = 'mdxxx'
+f_melts = 'mdxxx'
+f_meltl = 'mdxxx'
+f_Tsfc = 'mdxxx' 
+f_congel = 'mdxxx'
+f_frazil = 'mdxxx'
+f_snoice = 'mdxxx'
+f_snowfrac = 'mdxxx'
+f_fswabs_ai = 'mdxxx'
+f_fswdn = 'mdxxx'
+f_fswthru = 'mdxxx'
+f_fhocn_ai = 'mdxxx'
+f_fsurf_ai = 'mdxxx'

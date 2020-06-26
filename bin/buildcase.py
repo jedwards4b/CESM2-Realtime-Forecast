@@ -89,6 +89,8 @@ def per_run_case_updates(case, date, sdrestdir, user_mods_dir, rundir):
     case.case_setup()
 
     stage_refcase(rundir, sdrestdir, date)
+    case.set_value("BATCH_SYSTEM", "none")
+    safe_copy(os.path.join(caseroot,"env_batch.xml"),os.path.join(caseroot,"LockedFiles","env_batch.xml"))
     # this doesnt appear to work correctly
 #    unlock_file("env_batch.xml",caseroot=caseroot)
 #    case.flush()

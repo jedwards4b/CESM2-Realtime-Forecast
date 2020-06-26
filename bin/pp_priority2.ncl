@@ -2,8 +2,8 @@ begin
 ; First index is intentionally blank
 load "get_member_and_date.ncl"
 
-histDir = getenv("ARCHIVEROOT")+"/archive/70Lwaccm6." + mm+ "."+ date + "." + member + "/atm/hist/"
-landDir = getenv("ARCHIVEROOT")+"/archive/70Lwaccm6." + mm+ "."+ date + "." + member + "/lnd/hist/"
+histDir = getenv("ARCHIVEROOT")+"/archive/cesm2cam6." + mm+ "."+ date + "." + member + "/atm/hist/"
+landDir = getenv("ARCHIVEROOT")+"/archive/cesm2cam6." + mm+ "."+ date + "." + member + "/lnd/hist/"
 
 ; -------------------------- READ IN H2 VARIABLES --------------------------
 h2files = systemfunc("ls " + histDir + "*cam.h2.*")
@@ -67,15 +67,17 @@ var = [/ huss_850,tasmax_2m,tasmin_2m,hfss_sfc,hfls_sfc,stx_sfc,sty_sfc,rad_sfc,
 varStrings = (/ "huss_850","tasmax_2m","tasmin_2m","hfss_sfc","hfls_sfc","stx_sfc","sty_sfc","rad_sfc","sic","cape","wap_500","psl","ua_100","va_100","uvas","snc","mrro","rzsm","mrso" /)
 do i = 0,ListCount(var)-1
         v:=linint2(xi,yi,var[i],True,xo,yo,0)
-        outDir = getenv("ARCHIVEROOT") + "/70Lwaccm6/p2/" + varStrings(i) + "/" + yyyy + "/" + mm + "/"
+        outDir = getenv("ARCHIVEROOT") + "/cesm2cam6/p2/" + varStrings(i) + "/" + yyyy + "/" + mm + "/"
 
-        fout = outDir + varStrings(i) + "_70Lwaccm6_" + outdate + "_00z_d01_d46_m" + member + ".nc"
+        fout = outDir + varStrings(i) + "_cesm2cam6_" + outdate + "_00z_d01_d46_m" + member + ".nc"
         if (.not. fileexists(outDir)) then
           system("mkdir -p "+outDir)
         end if
         if (fileexists(fout)) then
           system("/bin/rm -f " + fout)   ; remove any pre-existing file
         end if
+        setfileoption("nc", "Format", "NetCDF4")
+	setfileoption("nc", "CompressionLevel", 1)
         ncdf = addfile(fout ,"c")  ; open output netCDF file
         filedimdef(ncdf,"time",-1,True)
 
