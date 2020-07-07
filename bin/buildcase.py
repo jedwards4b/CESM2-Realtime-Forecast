@@ -53,7 +53,7 @@ def stage_refcase(rundir, refdir, date):
             if 'cice.r' in newfile:
                 newfile = "b.e21.f09_g17.cice.r.{}-00000.nc".format(date)
             elif 'I2000' in newfile:
-                newfile = newfile.replace('I2000Clm50BgcCrop.002run','b.e21.f09_g17')
+                newfile = newfile.replace('I2000Clm50BgcCrop.002runContd','b.e21.f09_g17')
             newfile = os.path.join(rundir,newfile)            
             if not "cam.i" in newfile:
                 if os.path.lexists(newfile):
@@ -100,7 +100,7 @@ def per_run_case_updates(case, date, sdrestdir, user_mods_dir, rundir):
 def build_base_case(date, baseroot, basecasename, basemonth,res, compset, overwrite,
                     sdrestdir, user_mods_dir, pecount=None):
 
-    caseroot = os.path.join(baseroot,basecasename+"."+basemonth+".00")
+    caseroot = os.path.join(baseroot,basecasename+".{:02d}".format(basemonth)+".00")
     if overwrite and os.path.isdir(caseroot):
         shutil.rmtree(caseroot)
             
@@ -174,7 +174,7 @@ def _main_func(description):
     # TODO make these input vars
 #    basecasename = "70Lwaccm6"
     basecasename = "cesm2cam6"
-    basemonth = date[5:7]
+    basemonth = int(date[5:7])
     baseyear = int(date[0:4])
     baseroot = os.path.join(os.getenv("WORK"),"cases",basecasename)
     res = "f09_g17"
