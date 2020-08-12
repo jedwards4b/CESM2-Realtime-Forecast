@@ -36,6 +36,7 @@ def parse_command_line(args, description):
 
     if args.member:
         member = int(args.member)
+        os.environ["CYLC_TASK_PARAM_member"] = "{0:02d}".format(member)
     else:
         member = int(os.getenv("CYLC_TASK_PARAM_member"))
 
@@ -44,6 +45,7 @@ def parse_command_line(args, description):
             date = datetime.datetime.strptime(args.date, '%Y-%m-%d')
         except ValueError:
             raise ValueError("Incorrect data format, should be YYYY-MM-DD or YYYY-MM")
+        os.environ["CYLC_TASK_CYCLE_POINT"] = args.date
     elif cdate:
         date = datetime.datetime.strptime(cdate, '%Y-%m-%d')
     else:
@@ -55,7 +57,7 @@ def parse_command_line(args, description):
 def run_ncl_scripts():
     scripts = ["pp_priority2.ncl","pp_priority1.ncl","pp_priority3.ncl","pp_h1vertical.ncl"]
     #, "pp_h4vertical.ncl"]
-    #    scripts = ["pp_priority2.ncl"]
+    # scripts = ["pp_h1vertical.ncl"]
 
     outfiles = []
     processes = []
@@ -118,9 +120,8 @@ def _main_func(description):
             dout_s_root = case.get_value("DOUT_S_ROOT")
             dout_s_root = dout_s_root[:-13] + date + ".{0:02d}".format(curmem)
 
-
+        print("HERE rundir {} dout_s_root {}".format(rundir,dout_s_root))
         outfiles = run_ncl_scripts()
-
         # Copy data to ftp site
         #    for file in outfiles:
         #        fsplit = file.find("70Lwaccm6/")+10

@@ -7,7 +7,7 @@ lev_p = todouble((/5,10,20,30,50,70,100,200,300,500,700,850,925,1000/))
 ;varStrings = (/ "U","V","T","OMEGA","Z3","Q","UQ","VQ","O3" /)
 varStrings = (/ "U","V","T","OMEGA","Z3","Q","UQ","VQ","RELHUM" /)
 ; -------------------------------- SPECIFY FILES -------------------------------
-
+print("HERE mm="+mm+" date="+date+" member="+member)
 histDir = getenv("ARCHIVEROOT")+"/archive/cesm2cam6." + mm+ "."+date + "." + member + "/atm/hist/"
 hfiles = systemfunc("ls " + histDir + "*cam.h1.*")
 f = addfiles(hfiles, "r")

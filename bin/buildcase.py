@@ -76,7 +76,7 @@ def per_run_case_updates(case, date, sdrestdir, user_mods_dir, rundir):
     case.set_value("RUN_STARTDATE",date)
     case.set_value("RUN_REFDIR",sdrestdir)
     case.set_value("REST_OPTION",'none')
-    case.set_value("PROJECT","CESM0011")
+    case.set_value("PROJECT","P03010041")
 #    dout_s_root = case.get_value("DOUT_S_ROOT")
 #    dout_s_root = os.path.join(os.path.dirname(dout_s_root),casename)
 #    if dout_s_root.startswith("/glade/scratch"):
@@ -186,7 +186,7 @@ def _main_func(description):
         else:
             compset = "BWSSP585"
     else:
-        if baseyear < 2014 or (baseyear == 2014 and basemonth < 10):
+        if baseyear < 2014 or (baseyear == 2014 and basemonth < 12):
             compset = "BHIST"
         else:
             compset = "BSSP585"
