@@ -53,7 +53,9 @@ def stage_refcase(rundir, refdir, date):
             if 'cice.r' in newfile:
                 newfile = "b.e21.f09_g17.cice.r.{}-00000.nc".format(date)
             elif 'I2000' in newfile:
-                newfile = newfile.replace('I2000Clm50BgcCrop.002runContd','b.e21.f09_g17')
+                newfile = newfile.replace("I2000Clm50BgcCrop.002runRealtime","b.e21.f09_g17")
+                newfile = newfile.replace("I2000Clm50BgcCrop.002runContd","b.e21.f09_g17")
+                newfile = newfile.replace("I2000Clm50BgcCrop.002run","b.e21.f09_g17")
             newfile = os.path.join(rundir,newfile)            
             if not "cam.i" in newfile:
                 if os.path.lexists(newfile):
@@ -186,7 +188,7 @@ def _main_func(description):
         else:
             compset = "BWSSP585"
     else:
-        if baseyear < 2014 or (baseyear == 2014 and basemonth < 12):
+        if baseyear < 2014 or (baseyear == 2014 and basemonth < 11):
             compset = "BHIST"
         else:
             compset = "BSSP585"

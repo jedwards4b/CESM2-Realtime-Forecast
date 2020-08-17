@@ -12,8 +12,8 @@
 
 [scheduling]
   # Change the run start and end dates here
-  initial cycle point = {{YEAR}}-{{MONTH}}-12
-  final cycle point = {{YEAR}}-{{MONTH}}-31
+  initial cycle point = {{YEAR}}-{{MONTH}}-21
+  final cycle point = {{YEAR}}-{{MONTH}}-25
 
   [[dependencies]]
   # Weekly Cycling on monday, new date will submit when st_archive is complete for each member
@@ -100,7 +100,7 @@ cd ${WORK}/cases/cesm2cam6/cesm2cam6.${CYLC_TASK_CYCLE_MONTH}.$(printf "%02d" ${
       # Retry each run up to 2 times with different fv_nsplit values
       # execution retry delays = 2*PT6S
       batch system = pbs
-      batch submit command template = qsub -q regular -l walltime=01:00:00 -A P03010041 '%(job)s'
+      batch submit command template = qsub -q regular -l walltime=02:00:00 -A P03010041 '%(job)s'
     [[[directives]]]
        -r = n
        -j = oe
