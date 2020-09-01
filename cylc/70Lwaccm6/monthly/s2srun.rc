@@ -7,14 +7,14 @@
   [[parameters]]
     # The number of ensemble members can be changed here
 #    member = 0..4
-    member = 5..20
+    member = 0..21
   [[environment]]
     CYLC_TASK_CYCLE_MONTH = {{MONTH}}
 
 [scheduling]
   # Change the run start and end dates here
-  initial cycle point = {{YEAR}}-{{MONTH}}-05
-  final cycle point = {{YEAR}}-{{MONTH}}-07
+  initial cycle point = {{YEAR}}-{{MONTH}}-29
+  final cycle point = {{YEAR}}-{{MONTH}}-31
 
   [[dependencies]]
   # Weekly Cycling on monday, new date will submit when st_archive is complete for each member
@@ -30,8 +30,8 @@
     script = """
 module load ncl nco
 cd ${FCST_HOME}/bin/
-./getinitialdata.py
-./generate_cami_ensemble.py
+./getinitialdata.py --model 70Lwaccm6
+./generate_cami_ensemble.py --model 70Lwaccm6
 """
     [[[job]]]
       batch system = slurm
@@ -47,7 +47,7 @@ cd ${FCST_HOME}/bin/
   [[build_model]]
     script = """
 cd ${FCST_HOME}/bin/
-./buildcase.py
+./buildcase.py --model 70Lwaccm6
 """
     [[[job]]]
       batch system = pbs
@@ -71,11 +71,11 @@ cd ${WORK}/cases/70Lwaccm6/70Lwaccm6.${CYLC_TASK_CYCLE_MONTH}.$(printf "%02d" ${
     [[postprocess_family]]
       script = """
 module load ncl nco
-${FCST_HOME}/bin/postprocess.py
+${FCST_HOME}/bin/postprocess.py --model 70Lwaccm6
 """
     [[[job]]]
       batch system = pbs
-      batch submit command template = qsub -q economy -l walltime=02:00:00 -A P93300007 '%(job)s'
+      batch submit command template = qsub -q regular -l walltime=02:00:00 -A P93300007 '%(job)s'
     [[[directives]]]
        -r = n
        -j = oe
@@ -100,7 +100,7 @@ cp ${FCST_HOME}/user_mods/70Lwaccm6.base/user_nl_cam.${CYLC_TASK_TRY_NUMBER} use
       # Retry each run up to 2 times with different fv_nsplit values
       execution retry delays = 2*PT6S
       batch system = pbs
-      batch submit command template = qsub    -q economy -l walltime=06:00:00 -A P93300007 '%(job)s'
+      batch submit command template = qsub    -q regular -l walltime=06:00:00 -A P93300007 '%(job)s'
     [[[directives]]]
        -r = n
        -j = oe

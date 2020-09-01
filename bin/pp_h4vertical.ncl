@@ -6,7 +6,8 @@ varStrings = (/ "U_24_COS", "U_24_SIN", "U_12_COS", "U_12_SIN", "V_24_COS", "V_2
 
 ; -------------------------------- SPECIFY H FILES -------------------------------
 
-histDir = getenv("ARCHIVEROOT") + "/archive/cesm2cam6." + mm + "." + date + "." + member + "/atm/hist/"
+histDir = getenv("DOUT_S_ROOT") + "/atm/hist/"
+waccm = isStrSubset(getenv("DOUT_S_ROOT"),"70Lwaccm6")
 hfiles = systemfunc("ls " + histDir + "*cam.h4.*")
 fin = addfile(hfiles,"r")
 
@@ -23,9 +24,13 @@ lev_p@positive  = "down"
 PS = fin->PS	
 
   do i = 0,dimsizes(varStrings)-1
-    outDir = getenv("ARCHIVEROOT") + "/cesm2cam6/" + varStrings(i) + "/" + yyyy + "/" + mm + "/"
-
-    fout = outDir + varStrings(i) + "_cesm2cam6_" + outdate + "_00z_d01_d46_m" + member + ".nc"
+    if (waccm) then
+      outDir = getenv("ARCHIVEROOT") + "/70Lwaccm6/" + varStrings(i) + "/" + yyyy + "/" + mm + "/"
+      fout = outDir + varStrings(i) + "_70Lwaccm6_" + outdate + "_00z_d01_d46_m" + member + ".nc"
+    else
+      outDir = getenv("ARCHIVEROOT") + "/cesm2cam6v2/" + varStrings(i) + "/" + yyyy + "/" + mm + "/"
+      fout = outDir + varStrings(i) + "_cesm2cam6v2_" + outdate + "_00z_d01_d46_m" + member + ".nc"
+    endif
     if (.not. fileexists(outDir)) then
       system("mkdir -p "+outDir)
     end if

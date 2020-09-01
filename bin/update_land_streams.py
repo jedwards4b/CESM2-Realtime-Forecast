@@ -38,8 +38,8 @@ def _main_func(description):
     casename, _ = parse_command_line(sys.argv, description)
     caseroot = os.path.abspath(casename)
 
-    forcing_dir = "/glade/p/nsc/ncgd0042/ssfcst/forcing_files/"
 #    forcing_dir = "/glade/collections/nmme/ncgd0022/jcaron/CFSv2/forcing_files/"
+    forcing_dir = "/glade/scratch/ssfcst/forcing_files/"
     forcing_files = {"Precip": glob.glob(forcing_dir+"*Prec*.nc"),
                      "Solar": glob.glob(forcing_dir+"*Solar*.nc"),
                      "TPQW" : glob.glob(forcing_dir+"*TPQW*.nc")}
@@ -69,7 +69,7 @@ def _main_func(description):
                     fout.write(line)
                     if "<filePath>" in line:
                         skip_line=True
-                        fout.write("/glade/p/nsc/ncgd0042/ssfcst/forcing_files/\n")
+                        fout.write("/glade/scratch/ssfcst/forcing_files/\n")
 
 if __name__ == "__main__":
     _main_func(__doc__)

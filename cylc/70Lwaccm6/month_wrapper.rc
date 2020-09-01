@@ -8,8 +8,8 @@
    [[parameters]]
       mnum = 1..12
 [scheduling]
-   initial cycle point = 2019
-   final cycle point = 2019
+   initial cycle point = 2020
+   final cycle point = 2020
    [[dependencies]]
        [[[R1]]]
            graph = prep => month<mnum>
@@ -34,7 +34,7 @@
 """
 {% for month in mnames %}
    # Use the following to set the months to actually run or comment the if and endif to run all months
-    {% if month in ["jan"] %}
+    {% if month in ["sep"] %}
    [[month_mnum{{"{0:02d}".format(loop.index)}}]]
    script = """
 cylc run --no-detach --set=YEAR=$CYLC_TASK_CYCLE_POINT --set=MONTH={{"{0:02d}".format(loop.index)}} {{month}}

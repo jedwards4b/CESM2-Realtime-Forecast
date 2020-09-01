@@ -27,6 +27,8 @@ def parse_command_line(args, description):
     parser.add_argument("--date",
                         help="Specify a start Date")
 
+    parser.add_argument("--model",help="Specify a case (cesm2cam6, 70Lwaccm6)", default="cesm2cam6")
+
     args = CIME.utils.parse_args_and_handle_standard_logging_options(args, parser)
     cdate = os.environ.get("CYLC_TASK_CYCLE_POINT")
 
@@ -41,11 +43,13 @@ def parse_command_line(args, description):
         date = datetime.date.today()
         date = date.replace(day=date.day-1)
 
-    return date.strftime("%Y-%m-%d")
+    return date.strftime("%Y-%m-%d"), args.model
 
-def get_rvals(date, ensemble):
-#    rvals_file = os.path.join(os.getenv("WORK"),"cases","70Lwaccm6","camic_"+date+".txt")
-    rvals_file = os.path.join(os.getenv("WORK"),"cases","CESM2","camic_"+date+".txt")
+def get_rvals(date, ensemble, model):
+    if model == "70Lwaccm6":
+        rvals_file = os.path.join(os.getenv("WORK"),"cases","70Lwaccm6","camic_"+date+".txt")
+    else:
+        rvals_file = os.path.join(os.getenv("WORK"),"cases","CESM2","camic_"+date+".txt")
     rvals = []
     if os.path.isfile(rvals_file):
         with open(rvals_file,"r") as fd:
@@ -72,30 +76,8 @@ def get_rvals(date, ensemble):
     print "LEN of rvals is {}".format(len(rvals))
     return rvals
 
-def get_data_from_campaignstore(files, source_path, dest_path):
-    if os.path.isdir(source_path):
-        for _file in glob.iglob(source_path+"*"):
-            safe_copy(_file, dest_path)
-        return
-#    print("Initiating globus transfer")
-#    client = initialize_client()
-#    globus_transfer_data = get_globus_transfer_data_struct(client)
-#    tc = get_transfer_client(client, globus_transfer_data)
-#    dest_endpoint = get_endpoint_id(tc,"NCAR Campaign Storage")
-#    src_endpoint = get_endpoint_id(tc,"NCAR GLADE")
-#    transfer_data = get_globus_transfer_object(tc, src_endpoint, dest_endpoint, 'S2S data transfer')
-#    dotrans = False
-#    for _file in files:
-#        if not os.path.isfile(os.path.join(dest_path,_file)):
-#            transfer_data = add_to_transfer_request(transfer_data, os.path.join(source_path, _file), os.path.join(dest_path,_file))
-#            dotrans = True
-#    if dotrans:
-#        activate_endpoint(tc, src_endpoint)
-#        activate_endpoint(tc, dest_endpoint)
-#        complete_transfer_request(tc, transfer_data)
-
-def create_cam_ic_perturbed(original, ensemble, date, baserundir, outroot="b.e21.f09_g17.cam.i.", factor=0.15):
-    rvals = get_rvals(date, ensemble)
+def create_cam_ic_perturbed(original, ensemble, date, baserundir, model, outroot="b.e21.f09_g17.cam.i.", factor=0.15):
+    rvals = get_rvals(date, ensemble, model)
 
     outfile = os.path.join(baserundir,outroot+date+"-00000.nc")
     # first link the original ic file to the 0th ensemble member
@@ -111,25 +93,26 @@ def create_cam_ic_perturbed(original, ensemble, date, baserundir, outroot="b.e21
 
     # for each pair of ensemble members create an ic file with same perturbation opposite sign
     month = date[5:7]
-#    collections_path = '/gpfs/csfs1/cesm/collections/S2Sfcst/'
-#    local_path = '/glade/campaign/cesm/collections/S2Sfcst/'
-#    local_path = os.path.join(os.getenv("SCRATCH"),"S2Sfcst")
-    local_path = "/glade/campaign/cesm/development/cross-wg/S2S/CESM2/CAMI/RP"
+
+    if model == "70Lwaccm6":
+        local_path = "/glade/campaign/cesm/collections/S2Sfcst"
+    else:
+        local_path = "/glade/campaign/cesm/development/cross-wg/S2S/CESM2/CAMI/RP"
     perturb_files = []
     for i in range(1,ensemble, 2):
         print "HERE rvals[{}] = {}".format(i//2,rvals[i//2])
-#        perturb_file = os.path.join("S2S_70LIC",
-#                                    "{}".format(month),
-#                                    "70Lwaccm6.cam.i.M{}.diff.{}.nc".format(month,rvals[i//2]))
-        perturb_file = os.path.join("{}".format(month),
-                                    "CESM2.cam.i.M{}.diff.{}.nc".format(month,rvals[i//2]))
+        if model == "70Lwaccm6":
+            perturb_file = os.path.join("S2S_70LIC",
+                                        "{}".format(month),
+                                        "70Lwaccm6.cam.i.M{}.diff.{}.nc".format(month,rvals[i//2]))
+        else:
+            perturb_file = os.path.join("{}".format(month),
+                                        "CESM2.cam.i.M{}.diff.{}.nc".format(month,rvals[i//2]))
         dirname = os.path.dirname(os.path.join(local_path,perturb_file))
         if not os.path.isdir(dirname):
             print("Creating directory {}".format(dirname))
             os.makedirs(dirname)
         perturb_files.append(perturb_file)
-#    get_data_from_campaignstore(perturb_files, collections_path, local_path)
-
 
     for i in range(1,ensemble, 2):
         perturb_file = os.path.join(local_path,perturb_files[i//2-1])
@@ -157,19 +140,21 @@ def create_perturbed_init_file(original, perturb_file, outfile, weight):
 
 
 def _main_func(description):
-    date = parse_command_line(sys.argv, description)
+    date, model = parse_command_line(sys.argv, description)
 
-    # TODO make these input vars
-
-    sdrestdir = os.path.join(os.getenv("SCRATCH"),"CESM2","Ocean","rest","{}".format(date))
     ensemble = 10
-#    baserundir = os.path.join(os.getenv("SCRATCH"),"70Lwaccm6."+date[5:7]+".00","run.00")
-    baserundir = os.path.join(os.getenv("SCRATCH"),"cesm2cam6."+date[5:7]+".00","run.00")
-    # END TODO
+    if model == "cesm2cam6":
+        sdrestdir = os.path.join(os.getenv("SCRATCH"),"CESM2","Ocean","rest","{}".format(date))
+        baserundir = os.path.join(os.getenv("SCRATCH"),"cesm2cam6."+date[5:7]+".00","run.00")
+        caminame = os.path.join(sdrestdir,"b.e21.f09_g17.cam.i.{date}-00000.nc".format(date=date))
+        outroot = "b.e21.f09_g17.cam.i."
+    else:
+        baserundir = os.path.join(os.getenv("SCRATCH"),"70Lwaccm6."+date[5:7]+".00","run.00")
+        sdrestdir = os.path.join(os.getenv("SCRATCH"),"S2S_70LIC_globus","SDnudgedOcn","rest","{}".format(date))
+        caminame = os.path.join(sdrestdir,"b.e21.BWHIST.SD.f09_g17.002.nudgedOcn.cam.i.{date}-00000.nc".format(date=date))
+        outroot = "b.e21.BWHIST.SD.f09_g17.002.nudgedOcn.cam.i."
 
-#    caminame = os.path.join(sdrestdir,"b.e21.BWHIST.SD.f09_g17.002.nudgedOcn.cam.i.{date}-00000.nc".format(date=date))
-    caminame = os.path.join(sdrestdir,"b.e21.f09_g17.cam.i.{date}-00000.nc".format(date=date))
-    create_cam_ic_perturbed(caminame,ensemble, date,baserundir)
+    create_cam_ic_perturbed(caminame,ensemble, date,baserundir, model, outroot=outroot)
 
 if __name__ == "__main__":
     _main_func(__doc__)

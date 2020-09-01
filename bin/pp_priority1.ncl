@@ -2,8 +2,8 @@ begin
 ; First index is intentionally blank
 load "get_member_and_date.ncl"
 
-histDir = getenv("ARCHIVEROOT")+"/archive/cesm2cam6." + mm+ "."+date + "." + member + "/atm/hist/"
-
+histDir = getenv("DOUT_S_ROOT") + "/atm/hist/"
+waccm = isStrSubset(getenv("DOUT_S_ROOT"),"70Lwaccm6")
 ; -------------------------- READ IN H2 VARIABLES --------------------------
 h2files = systemfunc("ls " + histDir + "*cam.h2.*")
 f = addfiles(h2files, "r")
@@ -36,9 +36,13 @@ var = [/ rlut, pr, tas_2m, ts, ua_200, ua_850, va_200, va_850, zg_200, zg_500 /]
 varStrings = (/ "rlut", "pr", "tas_2m", "ts", "ua_200", "ua_850", "va_200", "va_850", "zg_200", "zg_500" /)
   do i = 0,ListCount(var)-1
 	v:=linint2(xi,yi,var[i],True,xo,yo,0)
-	outDir = getenv("ARCHIVEROOT") + "/cesm2cam6/p1/" + varStrings(i) + "/" + yyyy + "/" + mm + "/"
-
-	fout = outDir + varStrings(i) + "_cesm2cam6_" + outdate + "_00z_d01_d46_m" + member + ".nc"
+	if (waccm) then
+	  outDir = getenv("ARCHIVEROOT") + "/70Lwaccm6/p1/" + varStrings(i) + "/" + yyyy + "/" + mm + "/"
+  	  fout = outDir + varStrings(i) + "_70Lwaccm6_" + outdate + "_00z_d01_d46_m" + member + ".nc"
+        else
+	  outDir = getenv("ARCHIVEROOT") + "/cesm2cam6v2/p1/" + varStrings(i) + "/" + yyyy + "/" + mm + "/"
+  	  fout = outDir + varStrings(i) + "_cesm2cam6v2_" + outdate + "_00z_d01_d46_m" + member + ".nc"
+        end if
 	if (.not. fileexists(outDir)) then
           system("mkdir -p "+outDir)
         end if

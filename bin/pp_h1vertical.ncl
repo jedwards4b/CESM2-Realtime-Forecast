@@ -8,7 +8,7 @@ lev_p = todouble((/5,10,20,30,50,70,100,200,300,500,700,850,925,1000/))
 varStrings = (/ "U","V","T","OMEGA","Z3","Q","UQ","VQ","RELHUM" /)
 ; -------------------------------- SPECIFY FILES -------------------------------
 print("HERE mm="+mm+" date="+date+" member="+member)
-histDir = getenv("ARCHIVEROOT")+"/archive/cesm2cam6." + mm+ "."+date + "." + member + "/atm/hist/"
+histDir = getenv("DOUT_S_ROOT")+ "/atm/hist/"
 hfiles = systemfunc("ls " + histDir + "*cam.h1.*")
 f = addfiles(hfiles, "r")
 ListSetType(f, "cat")
@@ -21,14 +21,22 @@ lev_p&lev_p     =  lev_p                   ; create coordinate variable
 lev_p@long_name = "pressure"               ; attach some attributes
 lev_p@units     = "hPa"
 lev_p@positive  = "down"
+waccm = isStrSubset(getenv("DOUT_S_ROOT"),"70Lwaccm6")
 
+end if
   do i = 0,dimsizes(varStrings)-1
-        outDir = getenv("ARCHIVEROOT")+"/cesm2cam6/" + varStrings(i) + "/" + yyyy + "/" + mm + "/"
+        if (waccm) then
+          outDir = getenv("ARCHIVEROOT")+"/70Lwaccm6/" + varStrings(i) + "/" + yyyy + "/" + mm + "/"	
+          fout = outDir + varStrings(i) + "_70Lwaccm6_" + outdate + "00z_d01_d46_m" + member + ".nc"
+        else
+          outDir = getenv("ARCHIVEROOT")+"/cesm2cam6v2/" + varStrings(i) + "/" + yyyy + "/" + mm + "/"
+  	  fout = outDir + varStrings(i) + "_cesm2cam6v2_" + outdate + "00z_d01_d46_m" + member + ".nc"
+        endif
 	v = f[:]->$varStrings(i)$
 	PS = f[:]->PS
 	vnew = vinth2p(v,hyam,hybm,lev_p,PS,1,P0mb,1,False)
 	copy_VarAtts(v,vnew)
-	fout = outDir + varStrings(i) + "_cesm2cam6_" + outdate + "00z_d01_d46_m" + member + ".nc"
+
 	if (.not. fileexists(outDir)) then
           system("mkdir -p "+outDir)
         end if
@@ -42,6 +50,5 @@ lev_p@positive  = "down"
 
         ncdf->$varStrings(i)$=vnew
   end do
-
 end
 

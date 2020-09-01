@@ -5,7 +5,8 @@ begin
   ; NOTE still need to generalize with perl script or csh call for any year,month
   ; combination
   ndpm = (/31,28,31,30,31,30,31,31,30,31,30,31/) ; no leap
-  npath = "/glade/p/nsc/ncgd0042/ssfcst/cdas_data/"
+  ; npath = "/glade/p/nsc/ncgd0042/ssfcst/cdas_data/"
+  npath = "/glade/scratch/ssfcst/cdas_data/"
 
   fns = systemfunc("ls "+npath+"*das*."+yyyy+mm+"*.sfluxgrbf06.grib2")
 
@@ -14,7 +15,15 @@ begin
   nf = dimsizes(fns)
   nhr = 4
   do f = 0, nf-1
-    fday = tointeger(ss_extract(fns(f),52,53))
+
+;    blah = ss_extract(fns(f),45,46)
+;    print("yyyy is "+yyyy)
+;    print("mm is "+mm)
+;    print("blah is "+blah)
+;    print("fns(f) is "+fns(f))
+
+;    fday = tointeger(ss_extract(fns(f),52,53)) ; I think maybe the rda filenames changed? sasha, aug 24 2020
+    fday = tointeger(ss_extract(fns(f),45,46))
     print("fday is "+fday+" fns "+fns(f))
     if (fday .lt. minday) then
       minday = fday
@@ -47,7 +56,8 @@ begin
   ; is either TPQWL, Precip, or Solar.
   ;------------------------------------------------------------------------------
 
-  nfd = "/glade/p/nsc/ncgd0042/ssfcst/forcing_files/"
+;  nfd = "/glade/p/nsc/ncgd0042/ssfcst/forcing_files/"
+  nfd = "/glade/scratch/ssfcst/forcing_files/"
   nfpre = "clmforc.NCEPCFSv2.c2019.0.2d.576x1152."
 
 ; begin with first of 3 streams
@@ -120,7 +130,8 @@ begin
     else
       ; beginning in 2011, grid changes to higher res. read in desired lat, lon
       ; for regridding
-      fnd = "/glade/p/nsc/ncgd0042/ssfcst/cdas_data/dims.nc"
+;      fnd = "/glade/p/nsc/ncgd0042/ssfcst/cdas_data/dims.nc"
+      fnd = "/glade/scratch/ssfcst/cdas_data/dims.nc"
       datd = addfile(fnd,"r")
       latin = datd->lat
       lonin = datd->lon

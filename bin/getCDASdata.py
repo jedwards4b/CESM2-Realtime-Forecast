@@ -45,7 +45,8 @@ def fcst_files(members, fcst_time):
 
 def _main_func(description):
     date, fullmonth = parse_command_line(sys.argv, description)
-    cdas_root = os.path.join(os.environ.get("ARCHIVEROOT"),"cdas_data")
+#    cdas_root = os.path.join(os.environ.get("ARCHIVEROOT"),"cdas_data")
+    cdas_root = os.path.join(os.sep+"glade","scratch","ssfcst","cdas_data")
     os.chdir(cdas_root)
     if fullmonth:
         fday = 1
