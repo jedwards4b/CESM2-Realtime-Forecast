@@ -75,7 +75,7 @@ ${FCST_HOME}/bin/postprocess.py --model 70Lwaccm6
 """
     [[[job]]]
       batch system = pbs
-      batch submit command template = qsub -q regular -l walltime=02:00:00 -A P93300007 '%(job)s'
+      batch submit command template = qsub -q premium -l walltime=02:00:00 -A P93300007 '%(job)s'
     [[[directives]]]
        -r = n
        -j = oe
@@ -100,7 +100,7 @@ cp ${FCST_HOME}/user_mods/70Lwaccm6.base/user_nl_cam.${CYLC_TASK_TRY_NUMBER} use
       # Retry each run up to 2 times with different fv_nsplit values
       execution retry delays = 2*PT6S
       batch system = pbs
-      batch submit command template = qsub    -q regular -l walltime=06:00:00 -A P93300007 '%(job)s'
+      batch submit command template = qsub    -q premium -l walltime=06:00:00 -A P93300007 '%(job)s'
     [[[directives]]]
        -r = n
        -j = oe
@@ -108,6 +108,6 @@ cp ${FCST_HOME}/user_mods/70Lwaccm6.base/user_nl_cam.${CYLC_TASK_TRY_NUMBER} use
        -S = /bin/bash
        # dont forget to change this line if you change pelayout
        # How can we connect this to the pelayout?
-       -l = select=17:ncpus=36:mpiprocs=36:ompthreads=1
+       -l = select=33:ncpus=36:mpiprocs=36:ompthreads=1
     [[[events]]]
 	handler events = retry, failed

@@ -1,7 +1,7 @@
 #!Jinja2
 # This will run the hind cast for each month from intial to final cycle point
 # one year at a time, all months for a given year run simultaniously
-{% set mnames = ["jan","feb","mar","apr","may","jun","jul","aug","sep","oct","nov","dec"] %}
+{% set mnames = ["JAN","FEB","MAR","APR","MAY","JUN","JUL","AUG","SEP","OCT","NOV","DEC"] %}
 
 [cylc]
    cycle point format = %Y
@@ -34,7 +34,7 @@
 """
 {% for month in mnames %}
    # Use the following to set the months to actually run or comment the if and endif to run all months
-    {% if month in ["sep"] %}
+    {% if month in ["aug"] %}
    [[month_mnum{{"{0:02d}".format(loop.index)}}]]
    script = """
 cylc run --no-detach --set=YEAR=$CYLC_TASK_CYCLE_POINT --set=MONTH={{"{0:02d}".format(loop.index)}} {{month}}

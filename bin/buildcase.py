@@ -138,12 +138,13 @@ def build_base_case(date, baseroot, basecasename, basemonth,res, compset, overwr
                 case.set_value("RUN_REFCASE", "b.e21.BWHIST.SD.{}.002.nudgedOcn".format(res))
             else:
                 case.set_value("RUN_REFCASE", "b.e21.f09_g17")
+                case.set_value("OCN_TRACER_MODULES","iage")
+                case.set_value("OCN_CHL_TYPE","diagnostic")
+
             case.set_value("STOP_OPTION","ndays")
             case.set_value("STOP_N", 45)
             case.set_value("REST_OPTION","none")
-
-            case.set_value("OCN_TRACER_MODULES","iage")
-            case.set_value("OCN_CHL_TYPE","diagnostic")
+            
             case.set_value("CCSM_BGC","CO2A")
             case.set_value("EXTERNAL_WORKFLOW",True)
             case.set_value("CLM_NAMELIST_OPTS", "use_init_interp=.true.")
@@ -203,10 +204,11 @@ def _main_func(description):
     overwrite = True
     if waccm:
         sdrestdir = os.path.join(os.getenv("SCRATCH"),"S2S_70LIC_globus","SDnudgedOcn","rest","{}".format(date))
+        ensemble = 20
     else:
         sdrestdir = os.path.join(os.getenv("SCRATCH"),"CESM2","Ocean","rest","{}".format(date))
+        ensemble = 10
 
-    ensemble = 10
     user_mods_dir = os.path.join(s2sfcstroot,"user_mods",basecasename)
 
     # END TODO
