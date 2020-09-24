@@ -4,17 +4,13 @@ module load ncl
 cd CESM2-Realtime-Forecast
 
 sg_year=2020
-sg_month=08
+sg_month=09
 
-#for sg_year in {2020..2021}; do
-#	for sg_month in {01..12}; do
-		sg_date=$sg_year-$sg_month
-		echo $sg_date
-		./bin/getCDASdata.py --date $sg_date
-		export CYLC_TASK_CYCLE_POINT=$sg_date
-		ncl ./bin/create_landforcing_from_NCEPCFC.ncl
-#	done
-#done
+sg_date=$sg_year-$sg_month
+echo $sg_date
+./bin/getCDASdata.py --date $sg_date
+export CYLC_TASK_CYCLE_POINT=$sg_date
+ncl ./bin/create_landforcing_from_NCEPCFC.ncl
 
 #./bin/getCDASdata.py
 #export CYLC_TASK_CYCLE_POINT=`date +%Y-%m-%d -d yesterday`
@@ -26,4 +22,6 @@ sg_month=08
 #./xmlchange STOP_N=1
 #./xmlchange STOP_OPTION=ndays
 #./case.submit
+
+echo "DONE"
 

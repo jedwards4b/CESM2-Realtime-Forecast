@@ -69,7 +69,7 @@ def stage_refcase(rundir, refdir, date, basecasename):
 
 def per_run_case_updates(case, date, sdrestdir, user_mods_dir, rundir):
     caseroot = case.get_value("CASEROOT")
-    basecasename = os.path.basename(caseroot)[:-3]
+    basecasename = os.path.basename(caseroot)[:-6]
     member = os.path.basename(caseroot)[-2:]
 
     unlock_file("env_case.xml",caseroot=caseroot)
@@ -119,6 +119,17 @@ def build_base_case(date, baseroot, basecasename, basemonth,res, compset, overwr
             case.set_value("EXEROOT",case.get_value("EXEROOT", resolved=True))
             case.set_value("RUNDIR",case.get_value("RUNDIR",resolved=True)+".00")
 
+            case.set_value("RUN_TYPE","hybrid")
+            case.set_value("GET_REFCASE",False)
+            case.set_value("RUN_REFDIR",sdrestdir)
+            if basecasename == "70Lwaccm6":
+                case.set_value("RUN_REFCASE", "b.e21.BWHIST.SD.{}.002.nudgedOcn".format(res))
+                case.set_value("OCN_TRACER_MODULES","")
+                case.set_value("NTHRDS", 1)
+            else:
+                case.set_value("RUN_REFCASE", "b.e21.f09_g17")
+                case.set_value("OCN_TRACER_MODULES","iage")
+                case.set_value("OCN_CHL_TYPE","diagnostic")
             # pelayout for cesm2cam6 case
 #            case.set_value("NTASKS_ATM",1152)
 #            case.set_value("NTASKS_CPL",1152)
@@ -131,15 +142,6 @@ def build_base_case(date, baseroot, basecasename, basemonth,res, compset, overwr
 #            case.set_value("ROOTPE_OCN",1152)
 #            case.set_value("ROOTPE_WAV",1206)
 
-            case.set_value("RUN_TYPE","hybrid")
-            case.set_value("GET_REFCASE",False)
-            case.set_value("RUN_REFDIR",sdrestdir)
-            if basecasename == "70Lwaccm6":
-                case.set_value("RUN_REFCASE", "b.e21.BWHIST.SD.{}.002.nudgedOcn".format(res))
-            else:
-                case.set_value("RUN_REFCASE", "b.e21.f09_g17")
-                case.set_value("OCN_TRACER_MODULES","iage")
-                case.set_value("OCN_CHL_TYPE","diagnostic")
 
             case.set_value("STOP_OPTION","ndays")
             case.set_value("STOP_N", 45)

@@ -50,7 +50,7 @@ def _main_func(description):
             forcing_files[ftype] = sorted(forcing_files[ftype], reverse=True)
             streamfile = os.path.join(rundir,"datm.streams.txt.CLMCRUNCEP."+ftype)
             newfile = os.path.join(caseroot, "user_"+os.path.basename(streamfile))
-
+            #print("New forcing_files from {} to {}".format(forcing_files["Solar"][0],forcing_files["Solar"][-1]))
             with open(streamfile) as fin, open(newfile,"w") as fout:
                 input_lines = fin.readlines()
                 skip_line = False
@@ -61,7 +61,7 @@ def _main_func(description):
                         continue
                     if "domain.lnd" in line:
                         line = "domain.ncepCFSv2.c2019.0.2d.nc\n"
-                    if "clmforc.cruncep" in line:
+                    if "clmforc.cruncep" in line or "clmforc.NCEPCFSv2" in line:
                         while forcing_files[ftype]:
                             newline = os.path.basename(forcing_files[ftype].pop())
                             fout.write(newline+"\n")

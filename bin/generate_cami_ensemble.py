@@ -134,7 +134,10 @@ def create_perturbed_init_file(original, perturb_file, outfile, weight):
     if not os.path.isdir(os.path.dirname(outfile)):
         os.makedirs(os.path.dirname(outfile))
     safe_copy(original, outfile)
-    cmd = ncflint+" -O -C -v lat,lon,slat,slon,lev,ilev,hyai,hybi,hyam,hybm,US,VS,T,Q,PS -w {},1.0 {} {} {}".format(weight, perturb_file, original, outfile)    
+    if "BWHIST" in original:
+        cmd = ncflint + " -A -v US,VS,T,Q,PS -w {},1.0 {} {} {}".format(weight, perturb_file, original, outfile)    
+    else:
+        cmd = ncflint+" -O -C -v lat,lon,slat,slon,lev,ilev,hyai,hybi,hyam,hybm,US,VS,T,Q,PS -w {},1.0 {} {} {}".format(weight, perturb_file, original, outfile)    
     run_cmd(cmd, verbose=True)
     os.rename(outfile, outfile.replace("-tmp.nc","-00000.nc"))
 

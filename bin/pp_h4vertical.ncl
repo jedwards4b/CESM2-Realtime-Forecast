@@ -30,7 +30,7 @@ PS = fin->PS
     else
       outDir = getenv("ARCHIVEROOT") + "/cesm2cam6v2/" + varStrings(i) + "/" + yyyy + "/" + mm + "/"
       fout = outDir + varStrings(i) + "_cesm2cam6v2_" + outdate + "_00z_d01_d46_m" + member + ".nc"
-    endif
+    end if
     if (.not. fileexists(outDir)) then
       system("mkdir -p "+outDir)
     end if
@@ -47,6 +47,7 @@ PS = fin->PS
     filedimdef(ncdf,"time",-1,True)
 
     ncdf->$varStrings(i)$=vnew
+    print("Completed file: "+fout)
   end do
 
 end

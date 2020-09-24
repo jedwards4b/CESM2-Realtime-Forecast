@@ -2685,10 +2685,11 @@ subroutine dyn_run(ptop, ndt, te0, dyn_state, dyn_in, dyn_out, rc)
       enddo
    end if
    ! This will decrease large nsplit values to defaults over the first few days.
-   if(mod(step_count,48)==0) then
+   if(mod(step_count,24)==0) then
       dyn_state%nsplit = max(16, dyn_state%nsplit/2)
-      dyn_state%nspltrac = max(4, dyn_state%nspltrac/2)
-      dyn_state%nspltvrm = max(4, dyn_state%nspltvrm/2)
+      dyn_state%nspltrac = max(4, dyn_state%nsplit/2)
+      dyn_state%nspltvrm = max(4, dyn_state%nsplit/2)
+      if(masterproc) write(iulog,*) 'fv_nsplit = ',dyn_state%nsplit
    endif
    step_count = step_count+1
 
