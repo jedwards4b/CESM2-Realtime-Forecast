@@ -4,7 +4,7 @@ module load ncl
 cd CESM2-Realtime-Forecast
 
 sg_year=2020
-sg_month=09
+sg_month=10
 
 sg_date=$sg_year-$sg_month
 echo $sg_date

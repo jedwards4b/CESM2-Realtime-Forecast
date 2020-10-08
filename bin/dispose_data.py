@@ -90,13 +90,6 @@ def _main_func(description):
 #            for histfile in os.listdir(atmhistpath):
 #                if "h1" in histfile or "h4" in histfile:
 #                    os.unlink(os.path.join(atmhistpath,histfile))
-        #Concatinate cice history into a single file
-        if os.path.isdir(icehistpath):
-            fnameout = basecasename+"."+basemonth+"."+date+"."+member+".cice.h.nc"
-            run_cmd("ncrcat * "+fnameout,from_dir=icehistpath)
-            for _file in glob.iglob(os.path.join(icehistpath,"*ice.h.*.nc")):
-                os.unlink(_file)
-        
 #            send_data_to_campaignstore(dout_s_root+os.sep )
         
         

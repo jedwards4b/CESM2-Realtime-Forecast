@@ -116,6 +116,7 @@ def _main_func(description):
     print("Running for members {} to {}".format(firstmember, lastmember))
     for curmem in range(firstmember, lastmember+1):
         print("Running postprocessing for member {} on date {}".format(curmem, date))
+        os.environ["CYLC_TASK_PARAM_member"] = "{0:02d}".format(curmem)
         caseroot = os.path.join(baseroot,basecasename+"."+basemonth+".{0:02d}".format(curmem))
 
         with Case(caseroot, read_only=True) as case:
@@ -133,7 +134,7 @@ def _main_func(description):
                 # path for hindcasts
                 # rsynccmd = "rsync -azvh --rsync-path=\"mkdir -p /ftp/pub/jedwards/70Lwaccm6/"+fpath+" && rsync\" "+_file+" "+ftproot+fpath
                 # path for realtime
-                rsynccmd = "rsync -azvh {} {}/realtime/{}".format(_file, ftproot,os.path.basename(_file))
+                rsynccmd = "rsync -azvh --rsync-path=\"mkdir -p /ftp/pub/jedwards/70Lwaccm6/realtime && rsync\" {} {}/realtime/{}".format(_file, ftproot,os.path.basename(_file))
                 print("copying file {} to ftp server location {}".format(_file,ftproot+"/realtime/"))
                 run_cmd(rsynccmd,verbose=True)
 
@@ -164,9 +165,10 @@ def _main_func(description):
         print("ICE PATH")
         print(outdir)
         print("Combining cice files into {} in {}".format(fnameout,icehistpath))
+        
         if glob.iglob(os.path.join(icehistpath,"*.cice.h.*.nc")):
             run_cmd("ncrcat -4 -L 1 *.cice.h.*.nc -O {}".format(os.path.join(outdir,fnameout)),from_dir=icehistpath,verbose=True)
-            for _file in glob.iglob(os.path.join(icehistpath,"*ice.h1.*.nc")):
+            for _file in glob.iglob(os.path.join(icehistpath,"*ice.h.*.nc")):
                 os.unlink(_file)
         fnameout = fnameout.replace("cice.hd.nc","pop.h.nday1.nc") 
 

@@ -3,9 +3,9 @@ load "get_member_and_date.ncl"
 
 ; ------------------------ SPECIFY LEVELS and VARIABLES ------------------------ 
 ;lev_p = todouble((/0.0001,0.001,0.01,0.1,0.5,1,2,3,5,10,20,30,50,70,100,200,300,500,700,850,925,1000/))
-lev_p = todouble((/5,10,20,30,50,70,100,200,300,500,700,850,925,1000/))
-;varStrings = (/ "U","V","T","OMEGA","Z3","Q","UQ","VQ","O3" /)
-varStrings = (/ "U","V","T","OMEGA","Z3","Q","UQ","VQ","RELHUM" /)
+;lev_p = todouble((/5,10,20,30,50,70,100,200,300,500,700,850,925,1000/))
+;varStrings = (/ "U","V","T","OMEGA","Z3","Q","UQ","VQ" /)
+;varStrings = (/ "U","V","T","OMEGA","Z3","Q","UQ","VQ","RELHUM","O3" /)
 ; -------------------------------- SPECIFY FILES -------------------------------
 print("HERE mm="+mm+" date="+date+" member="+member)
 histDir = getenv("DOUT_S_ROOT")+ "/atm/hist/"
@@ -16,12 +16,19 @@ ListSetType(f, "cat")
 hyam=f[0]->hyam
 hybm=f[0]->hybm
 P0mb=0.01*f[0]->P0
+waccm = isStrSubset(getenv("DOUT_S_ROOT"),"70Lwaccm6")
+if (waccm) then
+  lev_p = todouble((/0.0001,0.001,0.01,0.1,0.5,1,2,3,5,10,20,30,50,70,100,200,300,500,700,850,925,1000/))
+  varStrings = (/ "U","V","T","OMEGA","Z3","Q","UQ","VQ","O3","RELHUM" /)
+else
+  lev_p = todouble((/5,10,20,30,50,70,100,200,300,500,700,850,925,1000/))
+  varStrings = (/ "U","V","T","OMEGA","Z3","Q","UQ","VQ" /)
+end if
 lev_p!0         = "lev_p"                  ; variable/dim name 
 lev_p&lev_p     =  lev_p                   ; create coordinate variable
 lev_p@long_name = "pressure"               ; attach some attributes
 lev_p@units     = "hPa"
 lev_p@positive  = "down"
-waccm = isStrSubset(getenv("DOUT_S_ROOT"),"70Lwaccm6")
 
   do i = 0,dimsizes(varStrings)-1
         if (waccm) then
