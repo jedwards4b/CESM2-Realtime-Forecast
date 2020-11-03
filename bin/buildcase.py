@@ -83,7 +83,7 @@ def per_run_case_updates(case, date, sdrestdir, user_mods_dir, rundir):
     case.set_value("RUN_STARTDATE",date)
     case.set_value("RUN_REFDIR",sdrestdir)
     case.set_value("REST_OPTION",'none')
-    case.set_value("PROJECT","CESM0011")
+    case.set_value("PROJECT","P93300007")
 #    dout_s_root = case.get_value("DOUT_S_ROOT")
 #    dout_s_root = os.path.join(os.path.dirname(dout_s_root),casename)
 #    if dout_s_root.startswith("/glade/scratch"):

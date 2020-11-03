@@ -22,7 +22,7 @@ if (waccm) then
   varStrings = (/ "U","V","T","OMEGA","Z3","Q","UQ","VQ","O3","RELHUM" /)
 else
   lev_p = todouble((/5,10,20,30,50,70,100,200,300,500,700,850,925,1000/))
-  varStrings = (/ "U","V","T","OMEGA","Z3","Q","UQ","VQ" /)
+  varStrings = (/ "U","V","T","OMEGA","Z3","Q","UQ","VQ","RELHUM" /)
 end if
 lev_p!0         = "lev_p"                  ; variable/dim name 
 lev_p&lev_p     =  lev_p                   ; create coordinate variable

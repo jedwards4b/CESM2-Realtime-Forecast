@@ -33,15 +33,15 @@ yi = f[0]->lat
 xo = fspan(0., 359., 360)
 yo = fspan(-90., 90.,181)
 var = [/ rlut, pr, tas_2m, ts, ua_200, ua_850, va_200, va_850, zg_200, zg_500 /]
-varStrings = (/ "rlut", "pr", "tas_2m", "ts", "ua_200", "ua_850", "va_200", "va_850", "zg_200", "zg_500" /)
+varStrings = (/ "rlut", "pr_sfc", "tas_2m", "ts", "ua_200", "ua_850", "va_200", "va_850", "zg_200", "zg_500" /)
   do i = 0,ListCount(var)-1
 	v:=linint2(xi,yi,var[i],True,xo,yo,0)
 	if (waccm) then
 	  outDir = getenv("ARCHIVEROOT") + "/70Lwaccm6/p1/" + varStrings(i) + "/" + yyyy + "/" + mm + "/"
-  	  fout = outDir + varStrings(i) + "_70Lwaccm6_" + outdate + "_00z_d01_d46_m" + member + ".nc"
+    	  fout = outDir + varStrings(i) + "_70Lwaccm6_" + outdate + "_00z_d01_d46_m" + member + ".nc"
         else
 	  outDir = getenv("ARCHIVEROOT") + "/cesm2cam6v2/p1/" + varStrings(i) + "/" + yyyy + "/" + mm + "/"
-  	  fout = outDir + varStrings(i) + "_cesm2cam6v2_" + outdate + "_00z_d01_d46_m" + member + ".nc"
+          fout = outDir + varStrings(i) + "_cesm2cam6v2_" + outdate + "_00z_d01_d46_m" + member + ".nc"
         end if
 	if (.not. fileexists(outDir)) then
           system("mkdir -p "+outDir)
