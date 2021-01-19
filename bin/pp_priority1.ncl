@@ -61,7 +61,7 @@ varStrings = (/ "rlut", "pr_sfc", "tas_2m", "ts", "ua_200", "ua_850", "va_200", 
 	v&lat = yo
 	v&lon = xo
         copy_VarAtts(var[i],v)
-	if(varStrings(i) .eq. "pr") then
+	if(varStrings(i) .eq. "pr_sfc") then
 		v@long_name="Total (convective and large-scale) precipitation rate (liq + ice)"
 		v@units="kg/m2/s"
 	end if

@@ -6,14 +6,15 @@
   cycle point format = CCYY-MM-DD
   [[parameters]]
     # The number of ensemble members can be changed here
-    member = 0..10
+#    member = 0..10
+    member = 5..5
   [[environment]]
     CYLC_TASK_CYCLE_MONTH = {{MONTH}}
 
 [scheduling]
   # Change the run start and end dates here
   initial cycle point = {{YEAR}}-{{MONTH}}-09
-  final cycle point = {{YEAR}}-{{MONTH}}-29
+  final cycle point = {{YEAR}}-{{MONTH}}-11
 
   [[dependencies]]
   # Weekly Cycling on monday, new date will submit when st_archive is complete for each member

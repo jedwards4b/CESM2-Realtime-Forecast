@@ -73,8 +73,8 @@ def get_data_from_campaignstore(date, model):
         for _file in glob.iglob(lnd_source_path+"/*"):
             safe_copy(_file, dest_path)
     else:
-        print "path {} {}".format(os.path.join(source_root_local,source_path),os.path.join(source_root_local,\
-lnd_source_path))
+        print( "path {} {}".format(os.path.join(source_root_local,source_path),os.path.join(source_root_local,\
+lnd_source_path)))
         return
                               
     if model == "cesm2cam6":

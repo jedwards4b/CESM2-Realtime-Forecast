@@ -33,6 +33,8 @@ def parse_command_line(args, description):
 
     parser.add_argument("--model",help="Specify a case (cesm2cam6, 70Lwaccm6)", default="cesm2cam6")
 
+    parser.add_argument("--sendtoftp",help="Send output to ftp server", default=False, action='store_true')
+
     args = CIME.utils.parse_args_and_handle_standard_logging_options(args, parser)
     cdate = os.environ.get("CYLC_TASK_CYCLE_POINT")
 
@@ -54,7 +56,7 @@ def parse_command_line(args, description):
         date = datetime.date.today()
         date = date.replace(day=date.day-1)
 
-    return date.strftime("%Y-%m-%d"), member, args.model
+    return date.strftime("%Y-%m-%d"), member, args.model, args.sendtoftp
 
 def run_ncl_scripts(basecasename):
     scripts = ["pp_priority2.ncl","pp_priority1.ncl","pp_priority3.ncl","pp_h1vertical.ncl"]
@@ -99,7 +101,7 @@ def send_data_to_campaignstore(source_path):
     complete_transfer_request(tc, transfer_data)
 
 def _main_func(description):
-    date, member, basecasename = parse_command_line(sys.argv, description)
+    date, member, basecasename, sendtoftp = parse_command_line(sys.argv, description)
 
     basemonth = date[5:7]
     baseroot = os.path.join(os.getenv("WORK"),"cases",basecasename)
@@ -127,7 +129,7 @@ def _main_func(description):
         #print("HERE rundir {} dout_s_root {}".format(rundir,dout_s_root))
         outfiles = run_ncl_scripts(basecasename)
         # Copy data to ftp site
-        if basecasename == "70Lwaccm6":
+        if basecasename == "70Lwaccm6" and sendtoftp:
             for _file in outfiles:
                 fsplit = _file.find("70Lwaccm6/")+10
                 fpath = os.path.dirname(_file[fsplit-1:])

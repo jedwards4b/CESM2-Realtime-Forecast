@@ -4,11 +4,12 @@ cesmroot = os.environ.get('CESM_ROOT')
 _LIBDIR = os.path.join(cesmroot,"cime","scripts","Tools")
 
 sys.path.append(_LIBDIR)
+from datetime import datetime as dt
 import datetime, tarfile
 from standard_script_setup import *
-from CIME.utils            import run_cmd, expect
-from argparse              import RawTextHelpFormatter
-from calendar              import monthrange
+from CIME.utils import run_cmd, expect
+from argparse import RawTextHelpFormatter
+from calendar import monthrange
 
 def parse_command_line(args, description):
     parser = argparse.ArgumentParser(description=description,
@@ -17,7 +18,7 @@ def parse_command_line(args, description):
     parser.add_argument("--date",
                         help="Specify a date for data retreval")
     args = CIME.utils.parse_args_and_handle_standard_logging_options(args, parser)
-    fullmonth = False
+    fullmonth = True
     if args.date:
         try:
             date = datetime.datetime.strptime(args.date, '%Y-%m-%d')
@@ -28,9 +29,8 @@ def parse_command_line(args, description):
             except ValueError:
                 raise ValueError("Incorrect data format, should be YYYY-MM-DD or YYYY-MM")
     else:
-        date = datetime.date.today()
-        date = date.replace(day=date.day-1)
-
+#       date = datetime.date.today() - datetime.timedelta(days=1)
+	date = datetime.datetime.strptime(dt.today().strftime('%Y-%m'),'%Y-%m')
 
     return date, fullmonth
 
