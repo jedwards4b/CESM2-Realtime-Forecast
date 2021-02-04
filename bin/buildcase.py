@@ -153,7 +153,7 @@ def build_base_case(date, baseroot, basecasename, basemonth,res, compset, overwr
 
         rundir = case.get_value("RUNDIR")
         per_run_case_updates(case, date, sdrestdir, user_mods_dir, rundir)
-        build.case_build(caseroot, case=case)
+        build.case_build(caseroot, case=case, save_build_provenance=False)
 
         return caseroot
 

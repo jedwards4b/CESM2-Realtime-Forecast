@@ -34,7 +34,7 @@
 """
 {% for month in mnames %}
    # Use the following to set the months to actually run or comment the if and endif to run all months
-    {% if month in ["JAN"] %}
+    {% if month in ["FEB"] %}
    [[month_mnum{{"{0:02d}".format(loop.index)}}]]
    script = """
 cylc run --no-detach --set=YEAR=$CYLC_TASK_CYCLE_POINT --set=MONTH={{"{0:02d}".format(loop.index)}} {{month}}

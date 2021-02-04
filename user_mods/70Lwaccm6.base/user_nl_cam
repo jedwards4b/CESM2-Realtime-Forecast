@@ -18,3 +18,16 @@
   fincl6 = ' '
   fincl7 = ' '
   fincl8 = ' '
+
+&epp_ionization_nl
+ epp_all_filepath               = '/glade/p/cesmdata/cseg/inputdata/atm/cam/solar/SolarForcing2006-2014avg_c180917.nc'
+ epp_all_varname                = 'epp_ion_rates'
+/
+&solar_data_opts
+ solar_data_type                = 'FIXED'
+ solar_data_ymd         = 20100101
+ solar_htng_spctrl_scl          = .true.
+ solar_irrad_data_file          = '/glade/p/cesmdata/cseg/inputdata/atm/cam/solar/SolarForcing2006-2014avg_c180917.nc'
+ solar_parms_data_file          = '/glade/p/cesmdata/cseg/inputdata/atm/cam/solar/SolarForcing2006-2014avg_c180917.nc'
+/
+

@@ -10,8 +10,8 @@ ncl ./bin/create_landforcing_from_NCEPCFC.ncl
 ./bin/update_land_streams.py --case /glade/scratch/ssfcst/I2000Clm50BgcCrop.002runRealtime/
 
 # -------- attempt to get around the issue for now (Dec. 1, 2020, sasha glanville)
-#sg_year=2020
-#sg_month=12
+#sg_year=2021
+#sg_month=01
 #sg_date=$sg_year-$sg_month
 #echo $sg_date
 #./bin/getCDASdata.py --date $sg_date
