@@ -17,3 +17,4 @@
 ! For example, rather than set username to 'foo' in user_nl_cpl, call
 ! ./xmlchange USER=foo
 !------------------------------------------------------------------------
+histaux_l2x1yrg = .true.

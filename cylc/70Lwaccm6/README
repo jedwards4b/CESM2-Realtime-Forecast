@@ -1,2 +1,0 @@
-The file suite.rc should always be a link to one of the other files in this directory.
-It will be what is used when you use cylc to generate a new suite.

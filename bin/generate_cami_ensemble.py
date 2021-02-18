@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 import os, sys
-cesmroot = os.environ.get('CESM_ROOT')
+#cesmroot = os.getenv("CESM_ROOT")
+cesmroot = "/glade/work/nanr/cesm_tags/cesm2.1.4-SMYLE/"
 s2sfcstroot = os.path.join(os.path.dirname(os.path.join(os.path.abspath(__file__))), os.path.pardir)
 
 if cesmroot is None:
@@ -27,7 +28,7 @@ def parse_command_line(args, description):
     parser.add_argument("--date",
                         help="Specify a start Date")
 
-    parser.add_argument("--model",help="Specify a case (cesm2cam6, 70Lwaccm6)", default="cesm2cam6")
+    parser.add_argument("--model",help="Specify a case (cesm2cam6, cesm2smyle)", default="cesm2smyle")
 
     args = CIME.utils.parse_args_and_handle_standard_logging_options(args, parser)
     cdate = os.environ.get("CYLC_TASK_CYCLE_POINT")
@@ -46,10 +47,8 @@ def parse_command_line(args, description):
     return date.strftime("%Y-%m-%d"), args.model
 
 def get_rvals(date, ensemble, model):
-    if model == "70Lwaccm6":
-        rvals_file = os.path.join(os.getenv("WORK"),"cases","70Lwaccm6","camic_"+date+".txt")
-    else:
-        rvals_file = os.path.join(os.getenv("WORK"),"cases","CESM2","camic_"+date+".txt")
+    #rvals_file = os.path.join(os.getenv("WORK"),"cases","cesm2smyle","camic_"+date+".txt")
+    rvals_file = os.path.join("/glade/work/nanr/CESM2-SMYLE","cases","camic_"+date+".txt")
     rvals = []
     if os.path.isfile(rvals_file):
         with open(rvals_file,"r") as fd:
@@ -76,7 +75,8 @@ def get_rvals(date, ensemble, model):
     print "LEN of rvals is {}".format(len(rvals))
     return rvals
 
-def create_cam_ic_perturbed(original, ensemble, date, baserundir, model, outroot="b.e21.f09_g17.cam.i.", factor=0.15):
+#def create_cam_ic_perturbed(original, ensemble, date, baserundir, model, outroot="b.e21.f09_g17.cam.i.", factor=0.15):
+def create_cam_ic_perturbed(original, ensemble, date, baserundir, model, outroot="b.e21.SMYLE_IC.pert.f09_g17.cam.i.", factor=0.15):
     rvals = get_rvals(date, ensemble, model)
 
     outfile = os.path.join(baserundir,outroot+date+"-00000.nc")
@@ -93,18 +93,18 @@ def create_cam_ic_perturbed(original, ensemble, date, baserundir, model, outroot
 
     # for each pair of ensemble members create an ic file with same perturbation opposite sign
     month = date[5:7]
+    year  = date[0:3]
 
-    if model == "70Lwaccm6":
-        local_path = "/glade/campaign/cesm/collections/S2Sfcst"
+    if model == "cesm2smyle":
+        local_path = "/glade/campaign/cesm/collections/cesm2-smyle"
     else:
         local_path = "/glade/campaign/cesm/development/cross-wg/S2S/CESM2/CAMI/RP"
     perturb_files = []
     for i in range(1,ensemble, 2):
         print "HERE rvals[{}] = {}".format(i//2,rvals[i//2])
-        if model == "70Lwaccm6":
-            perturb_file = os.path.join("S2S_70LIC",
-                                        "{}".format(month),
-                                        "70Lwaccm6.cam.i.M{}.diff.{}.nc".format(month,rvals[i//2]))
+        if model == "cesm2smyle":
+            perturb_file = os.path.join("{}".format(month),
+                                        "CESM2.cam.i.M{}.diff.{}.nc".format(month,rvals[i//2]))
         else:
             perturb_file = os.path.join("{}".format(month),
                                         "CESM2.cam.i.M{}.diff.{}.nc".format(month,rvals[i//2]))
@@ -146,17 +146,22 @@ def _main_func(description):
     date, model = parse_command_line(sys.argv, description)
 
     ensemble = 10
-    if model == "cesm2cam6":
-        sdrestdir = os.path.join(os.getenv("SCRATCH"),"CESM2","Ocean","rest","{}".format(date))
-        baserundir = os.path.join(os.getenv("SCRATCH"),"cesm2cam6."+date[5:7]+".00","run.00")
-        caminame = os.path.join(sdrestdir,"b.e21.f09_g17.cam.i.{date}-00000.nc".format(date=date))
-        outroot = "b.e21.f09_g17.cam.i."
+    if model == "cesm2smyle":
+        #sdrestdir = os.path.join(os.getenv("SCRATCH"),"SMYLE","inputdata","cesm2_init","b.e21.SMYLE_IC.f09_g17."+date[:7]+".01")
+        #sdrestdir = os.path.join(os.getenv("SCRATCH"),"SMYLE","inputdata","cesm2_init","b.e21.SMYLE_IC.f09_g17."+date[:7]+".01","{}".format(date))
+        sdrestdir = os.path.join("/glade/scratch/nanr/","SMYLE","inputdata","cesm2_init","b.e21.SMYLE_IC.f09_g17."+date[0:7]+".01","{}".format(date))
+        #baserundir = os.path.join(os.getenv("SCRATCH"),"SMYLE","rundir","b.e21.SMYLE.f09_g17."+date[:7]+".001","run.01")
+        #baserundir = os.path.join(os.getenv("SCRATCH"),"b.e21.SMYLE.f09_g17."+date[:7]+".001","run.01")
+        baserundir = os.path.join("/glade/scratch/nanr/","SMYLE","b.e21.SMYLE.f09_g17."+date[0:7]+".001","run.01")
+        #baserundir = os.path.join(os.getenv("SCRATCH"),"cesm2cam6."+date[5:7]+".01","run.01")
+        caminame = os.path.join(sdrestdir,"b.e21.SMYLE_IC.f09_g17.{}.01.cam.i.{date}-00000.nc".format(date[:7],date=date))
+        outroot = "b.e21.SMYLE_IC.pert.f09_g17.cam.i."
     else:
         ensemble = 20
-        baserundir = os.path.join(os.getenv("SCRATCH"),"70Lwaccm6."+date[5:7]+".00","run.00")
+        baserundir = os.path.join(os.getenv("SCRATCH"),"cesm2smyle."+date[5:7]+".00","run.00")
         sdrestdir = os.path.join(os.getenv("SCRATCH"),"S2S_70LIC_globus","SDnudgedOcn","rest","{}".format(date))
-        caminame = os.path.join(sdrestdir,"b.e21.BWHIST.SD.f09_g17.002.nudgedOcn.cam.i.{date}-00000.nc".format(date=date))
-        outroot = "b.e21.BWHIST.SD.f09_g17.002.nudgedOcn.cam.i."
+        caminame = os.path.join(sdrestdir,"b.e21.SMYLE_IC.f09_g17.001.cam.i.{date}-00000.nc".format(date=date))
+        outroot = "b.e21.f09_g17.cam.i."
 
     create_cam_ic_perturbed(caminame,ensemble, date,baserundir, model, outroot=outroot)
 
