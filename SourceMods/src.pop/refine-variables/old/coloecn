@@ -1,0 +1,16 @@
+grep '^HMXL_DR_2' ecosys_diagnostics
+grep '^SSS' ecosys_diagnostics
+grep '^SST' ecosys_diagnostics
+grep '^SST2' ecosys_diagnostics
+grep '^XMXL_2' ecosys_diagnostics
+grep '^diatC_zint_100m' ecosys_diagnostics
+grep '^diazC_zint_100m' ecosys_diagnostics
+grep '^DpCO2_2' ecosys_diagnostics
+grep '^ECOSYS_IFRAC_2' ecosys_diagnostics
+grep '^ECOSYS_XKW_2' ecosys_diagnostics
+grep '^FG_CO2_2' ecosys_diagnostics
+grep '^photoC_diat_zint_2' ecosys_diagnostics
+grep '^photoC_diaz_zint_2' ecosys_diagnostics
+grep '^photoC_sp_zint_2' ecosys_diagnostics
+grep '^spC_zint_100m' ecosys_diagnostics
+grep '^STF_O2_2' ecosys_diagnostics

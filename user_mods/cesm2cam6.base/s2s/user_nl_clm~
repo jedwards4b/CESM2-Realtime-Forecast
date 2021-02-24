@@ -1,0 +1,4 @@
+  hist_empty_htapes  = .true.
+  hist_fincl1 = 'TLAI', 'NPP', 'GPP', 'AR', 'ER', 'NBP', 'QVEGT', 'CPHASE', 'TWS', 'QRUNOFF', 'H2OSOI','FSNO','H2OSNO','H2OCAN','SOILICE','QOVER','SOILWATER_10CM','SNOWDP','SOILLIQ'
+  hist_mfilt = 46
+  hist_nhtfrq = -24

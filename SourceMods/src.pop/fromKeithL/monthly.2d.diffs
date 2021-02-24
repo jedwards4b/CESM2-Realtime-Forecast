@@ -1,0 +1,64 @@
+7d6
+< ATM_ALT_CO2
+13,16d11
+< calcToSed_ALT_CO2
+< CFC_ATM_PRESS
+< CFC_IFRAC
+< CFC_XKW
+18d12
+< CO2STAR_ALT_CO2
+20d13
+< DCO2STAR_ALT_CO2
+22d14
+< diatC_zint_100m_2
+28d19
+< diazC_zint_100m_2
+45,51d35
+< FRACR_BIN_01
+< FRACR_BIN_02
+< FRACR_BIN_03
+< FRACR_BIN_04
+< FRACR_BIN_05
+< FRACR_BIN_06
+< FvICE_ALK_ALT_CO2
+54d37
+< FvPER_ALK_ALT_CO2
+80d62
+< Jint_100m_ALK_ALT_CO2
+82d63
+< Jint_100m_DIC_ALT_CO2
+87a69,71
+> MOC
+> N_HEAT
+> N_SALT
+91d74
+< PH_ALT_CO2
+104,109d86
+< QSW_BIN_01
+< QSW_BIN_02
+< QSW_BIN_03
+< QSW_BIN_04
+< QSW_BIN_05
+< QSW_BIN_06
+120,122d96
+< SF6_ATM_PRESS
+< SF6_IFRAC
+< SF6_XKW
+128d101
+< spC_zint_100m_2
+132a106,107
+> sp_loss_doc_zint_100m
+> sp_loss_poc_zint_100m
+134a110
+> sp_loss_zint_100m
+135a112,113
+> sp_N_lim_Cweight_avg_100m
+> sp_P_lim_Cweight_avg_100m
+140d117
+< STF_ALK_ALT_CO2
+144d120
+< STF_SF6
+153d128
+< tend_zint_100m_ALK_ALT_CO2
+155d129
+< tend_zint_100m_DIC_ALT_CO2

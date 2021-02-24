@@ -1,0 +1,30 @@
+rm ecosys-smylen collecn colmecn colnecn coloecn colpecn
+./cpProg-ecosys.pl < coll > collecn; chmod u+x collecn; ./collecn >> ecosys-smylen
+./cpProg-ecosys.pl < colm > colmecn; chmod u+x colmecn; ./colmecn >> ecosys-smylen
+./cpProg-ecosys.pl < coln > colnecn; chmod u+x colnecn; ./colnecn >> ecosys-smylen
+./cpProg-ecosys.pl < colo > coloecn; chmod u+x coloecn; ./coloecn >> ecosys-smylen
+./cpProg-ecosys.pl < colp > colpecn; chmod u+x colpecn; ./colpecn >> ecosys-smylen
+
+!! ======================
+!! tavg files
+!!  https://jupyterhub.ucar.edu/dav/user/nanr/notebooks/ncar-python-tutorial/notebooks/find-pop-vars.ipynb
+!! ./coll	!! monthly (1)
+!! ./colm	!! monthly (1)
+!! ./colo	!! daily (2)
+!! ======================
+output:  ncoll.txt
+output:  ncolm.txt
+output:  ncolo.txt
+
+cat ncol*.txt | sort > tavg-smylen	(80 vars)
+
+Then edit by hand
+
+Then add these variables by hand.  They are used for the pop.h.once. file
+
+3  VDC_BCK
+3  VVC_BCK
+
+
+
+
