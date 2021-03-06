@@ -80,3 +80,6 @@
 2  SST2
 3  VDC_BCK
 3  VVC_BCK
+## Manually adding
+1  KPP_SRC_SALT
+1  KPP_SRC_TEMP

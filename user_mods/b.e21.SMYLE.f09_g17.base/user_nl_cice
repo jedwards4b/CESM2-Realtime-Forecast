@@ -4,6 +4,12 @@
 ! Note - that it does not matter what namelist group the namelist_var belongs to
 !----------------------------------------------------------------------------------
 
+!! =================
+!! SMYLE - Ice albedo
+!! =================
+r_snw = 1.5
+dt_mlt = 1.0
+
 histfreq = 'm','d','x','x','x'
 histfreq_n = 1,1,1,1,1
 f_CMIP = 'mdxxx'

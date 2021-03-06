@@ -29,20 +29,20 @@ set lecosys_tavg_alt_co2 = $3
 if ($lecosys_tavg_all == ".false.") then
 
   cat >! $CASEBUILD/popconf/ecosys.tavg.nml << EOF
-tavg_freq_opt             = 'nday'   'nyear'
-tavg_freq                 =  1       1
-tavg_file_freq_opt        = 'nmonth' 'nyear'
-tavg_file_freq            =  1       1
-tavg_start_opt            = 'nstep'  'nstep'
-tavg_start                =  0       0
-tavg_fmt_in               = 'nc'     'nc'
-tavg_fmt_out              = 'nc'     'nc'
-ltavg_has_offset_date     = .false.  .false.
-tavg_offset_years         =  1       1
-tavg_offset_months        =  1       1
-tavg_offset_days          =  2       2
-ltavg_one_time_header     = .false.  .false.
-tavg_stream_filestrings   = 'ecosys.nday1' 'ecosys.nyear1'
+tavg_freq_opt             = 'nday'
+tavg_freq                 =  1
+tavg_file_freq_opt        = 'nmonth'
+tavg_file_freq            =  1
+tavg_start_opt            = 'nstep'
+tavg_start                =  0
+tavg_fmt_in               = 'nc'
+tavg_fmt_out              = 'nc'
+ltavg_has_offset_date     = .false.
+tavg_offset_years         =  1
+tavg_offset_months        =  1
+tavg_offset_days          =  2
+ltavg_one_time_header     = .false.
+tavg_stream_filestrings   = 'ecosys.nday1'
 EOF
 
 else
@@ -61,7 +61,7 @@ set MARBL_args = "$MARBL_args -o $CASEBUILD/popconf/marbl_diagnostics_operators"
 # By default, POP uses low -> annual, medium -> monthly, and high -> daily
 # You can change the low and high frequency streams in the block above
 # To change the medium frequency stream, edit ocn.base.tavg.csh
-set MARBL_args = "$MARBL_args --low_frequency_stream $s3 "
+# set MARBL_args = "$MARBL_args --low_frequency_stream $s3 "
 set MARBL_args = "$MARBL_args --medium_frequency_stream $s1"
 set MARBL_args = "$MARBL_args --midhigh_frequency_stream $s4"
 set MARBL_args = "$MARBL_args --high_frequency_stream $s2"

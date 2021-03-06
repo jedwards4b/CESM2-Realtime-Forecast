@@ -1,9 +1,9 @@
-#! /usr/bin/env python
+#! /usr/bin/env python3
 import os, sys, glob, shutil, subprocess
 import distutils.dir_util
 import json
 
-# Get the casename 
+# Get the casename
 for i in range(0, len(sys.argv)):
     if '-case' in sys.argv[i]:
         case_root = sys.argv[i+1]
@@ -18,7 +18,7 @@ for i in range(0, len(sys.argv)):
 #############################################################################
 
 # Toggle to copy user name lists from the specified directory
-cp_namelist = False 
+cp_namelist = False
 namelist_root = ''
 
 # Toggle to copy user Source Mods from the specified directory
@@ -66,10 +66,16 @@ pp_xml={
        'STANDARDIZE_TIMESERIES': 'TRUE',
        'TIMESERIES_OUTPUT_ROOTDIR': '/gpfs/fs1/collections/cdg/timeseries-cmip6/'+case_root.split('/')[-1],
        'USER_NAME': 'nanr',
-       'GLOBAL_WEBHOST': 'burnt.cgd.ucar.edu',
-       'GLOBAL_WEBLOGIN': 'cmip6',
-       'GLOBAL_REMOTE_WEBDIR': '/project/diagnostics/external/'+compset+'/'+casename
        }
+#pp_xml={
+       #'GENERATE_TIMESERIES': 'TRUE',
+       #'STANDARDIZE_TIMESERIES': 'TRUE',
+       #'TIMESERIES_OUTPUT_ROOTDIR': '/gpfs/fs1/collections/cdg/timeseries-cmip6/'+case_root.split('/')[-1],
+       #'USER_NAME': 'nanr',
+       #'GLOBAL_WEBHOST': 'burnt.cgd.ucar.edu',
+       #'GLOBAL_WEBLOGIN': 'cmip6',
+       #'GLOBAL_REMOTE_WEBDIR': '/project/diagnostics/external/'+compset+'/'+casename
+       #}
 
 
 def main(argv=None):
@@ -95,153 +101,160 @@ def create(cesm_code_base, testing=True, command=None):
     cdir = os.getcwd()
 
     for i in range(ensemble_start,ensemble_end+1):
-	n = str(i).zfill(3)
+        n = str(i).zfill(3)
 
-	print '############################################'
-	print ''
-	print '   Create CESM Case '+n
-        print '   Using code base: '+cesm_code_base
-	print ''
-	print '############################################'
-	print ''
-	os.chdir(cesm_code_base+'/cime/scripts/')
+        print ('############################################')
+        print ('')
+        print ('   Create CESM Case '+n)
+        print ('   Using code base: '+cesm_code_base)
+        print ('')
+        print ('############################################')
+        print ('')
+        os.chdir(cesm_code_base+'/cime/scripts/')
         if command == None:
             new_case = ' '.join(sys.argv)
         else:
             new_case = command
-	new_case = new_case.replace(os.path.basename(__file__),'create_newcase')
-	for i in range(0, len(sys.argv)):
-	    if '-case' in sys.argv[i]:
-		case_root = sys.argv[i+1]
+        new_case = new_case.replace(os.path.basename(__file__),'create_newcase')
+        for i in range(0, len(sys.argv)):
+            if '-case' in sys.argv[i]:
+                case_root = sys.argv[i+1]
         new_case = new_case.replace(case_root, case_root+'.'+n)
        #new_case = new_case.replace(case_root, case_root+n)
-	case_root = case_root+'.'+n
-	err=os.system(new_case)
-	if err!=0:
-	    print '\033[91m','Error: Failed to create new CESM case.','\033[0m'
-	    print '\033[91m','Tried running: ',new_case,'\033[0m'
-	    sys.exit()
-	os.chdir(case_root)
+        case_root = case_root+'.'+n
+        err=os.system(new_case)
+        if err!=0:
+            print ('\033[91m','Error: Failed to create new CESM case.','\033[0m')
+            print ('\033[91m','Tried running: ',new_case,'\033[0m')
+            sys.exit()
+        os.chdir(case_root)
         case_root = os.getcwd()
         if first:
             first_case_root = case_root
             ensemble_path = case_root[:-4]
             first = False
 
-	if os.path.isfile(os.environ['POSTPROCESS_PATH']+'/cesm-env2/bin/activate_this.py'):
-	    print '############################################'
-	    print ''
-	    print '   Create CESM Postprocessing '+n
-            print '   Using '+os.environ['POSTPROCESS_PATH']+'/cesm-env2'
-	    print ''
-	    print '############################################'
-	    print ''
-	    # Save old values
-	    old_os_path = os.environ['PATH']
-	    old_sys_path = list(sys.path)
-	    old_sys_prefix = sys.prefix
-	    activate_file = os.environ['POSTPROCESS_PATH']+'/cesm-env2/bin/activate_this.py'
-	    execfile(activate_file, dict(__file__=activate_file))
-	    err=os.system('create_postprocess -caseroot '+case_root)
-	    if err!=0:
-		print '\033[91m','Error: Failed to create post processing','\033[0m'                            
-		print '\033[91m','Tried running: ','create_postprocess -caseroot '+case_root,'\033[0m'
-		sys.exit()
+        if os.path.isfile(os.environ['POSTPROCESS_PATH']+'/cesm-env2/bin/activate_this.py'):
+            print ('############################################')
+            print ('')
+            print ('   Create CESM Postprocessing '+n)
+            print ('   Using '+os.environ['POSTPROCESS_PATH']+'/cesm-env2')
+            print ('')
+            print ('############################################')
+            print ('')
+            # Save old values
+            old_os_path = os.environ['PATH']
+            old_sys_path = list(sys.path)
+            old_sys_prefix = sys.prefix
+            #activate_file = os.environ['POSTPROCESS_PATH']+'/cesm-env2/bin/activate_this.py'
+            #activate_file = os.environ['POSTPROCESS_PATH']+'/cesm-env2/bin/activate_this.py'
+            #execfile(activate_file, dict(__file__=activate_file))
+            #exec(open(activate_file).read())
+            
+            create_postprocess = os.environ['POSTPROCESS_PATH']+'/cesm-env2/bin/create_postprocess'
+            err=os.system(create_postprocess + ' -caseroot '+case_root)
+            #err=os.system('create_postprocess -caseroot '+case_root)
+            if err!=0:
+                print ('\033[91m','Error: Failed to create post processing','\033[0m')
+                print ('\033[91m','Tried running: ','create_postprocess -caseroot '+case_root,'\033[0m')
+                sys.exit()
 
             case_name = os.path.basename(os.path.normpath(case_root))
 
             exp_name = 'smyle'
 
-	    # Get old values back
-	    os.environ['PATH'] = old_os_path
-	    sys.prefix = old_sys_prefix
-	    sys.path[:0] = old_sys_path
-	else:
-	    print '\033[91m','Warning: Cannot add postprocessing to Cylc workflow because the package cannot be found.','\033[0m'
-	    print '\033[91m','Execting: ',os.environ['POSTPROCESS_PATH']+'/cesm-env2/bin/activate_this.py','\033[0m'
+            # Get old values back
+            os.environ['PATH'] = old_os_path
+            sys.prefix = old_sys_prefix
+            sys.path[:0] = old_sys_path
+        else:
+            print ('\033[91m','Warning: Cannot add postprocessing to Cylc workflow because the package cannot be found.','\033[0m')
+            print ('\033[91m','Execting: ',os.environ['POSTPROCESS_PATH']+'/cesm-env2/bin/activate_this.py','\033[0m')
 
 
-	print '############################################'
-	print ''
-	print '   Set XML Variables '+n
-	print ''
-	print '############################################'
-	print ''
-	for k,v in cesm_xml.iteritems():
-	    print 'Setting ',k,' to ',v
-	    err=os.system('./xmlchange '+k+'='+v)
-	    if err!=0:
-		print '\033[91m','Error: Failed to change an xml variable','\033[0m'
-		print '\033[91m','Tried running: ','./xmlchange '+k+'='+v,'\033[0m'
-		sys.exit()
-	if os.path.isdir(case_root+'/postprocess/'):
-	    os.chdir(case_root+'/postprocess/')
+        print ('############################################')
+        print ('')
+        print ('   Set XML Variables '+n)
+        print ('')
+        print ('############################################')
+        print ('')
+        for k in cesm_xml:
+            v=cesm_xml[k]
+            print ('Setting ',k,' to ',v)
+            err=os.system('./xmlchange '+k+'='+v)
+            if err!=0:
+                print ('\033[91m','Error: Failed to change an xml variable','\033[0m')
+                print ('\033[91m','Tried running: ','./xmlchange '+k+'='+v,'\033[0m')
+                sys.exit()
+        if os.path.isdir(case_root+'/postprocess/'):
+            os.chdir(case_root+'/postprocess/')
             #pp_xml['CONFORM_OUTPUT_DIR'] = '/glade/collections/cdg/cmip6/'+str(db_info["case_id"])+"/"
             #pp_xml['CONFORM_OUTPUT_DIR'] = '/glade/scratch/cmip6/archive/CMIP6_DATA/'+case_root.split('/')[-1]
-	    for k,v in pp_xml.iteritems():
+            for k in pp_xml:
+                v=pp_xml[k]
                 if 'TIMESERIES_OUTPUT_ROOTDIR' in k:
                     v = v+'.'+n
                 elif 'GLOBAL_REMOTE_WEBDIR' in k:
                     v = v+'.'+n+'/'
-		print 'Setting ',k,' to ',v
-		err=os.system('./pp_config --set '+k+'='+v)
-		if err!=0:
-		    print '\033[91m','Error: Failed to change a post processing xml variable','\033[0m'
-		    print '\033[91m','Tried running: ','./pp_config --set '+k+'='+v,'\033[0m'
-		    sys.exit()
+                print ('Setting ',k,' to ',v)
+                err=os.system('./pp_config --set '+k+'='+v)
+                if err!=0:
+                    print ('\033[91m','Error: Failed to change a post processing xml variable','\033[0m')
+                    print ('\033[91m','Tried running: ','./pp_config --set '+k+'='+v,'\033[0m')
+                    sys.exit()
 
-	if cp_namelist == True or cp_namelist == 'TRUE' or cp_namelist == 'true':
-	    print '############################################'
-	    print ''
-	    print '   Copy user_namelists '+n
-	    print ''
-	    print '############################################'
-	    print ''
-	    os.chdir(case_root)
-	    for f in glob.glob(namelist_root+n+'/user_nl_*'):
-		fn = os.path.basename(f)
-		shutil.copyfile(f,case_root+'/'+fn)
-		print 'Copied: ', f, ' to ', case_root+'/'+fn
-	    err=os.system('./preview_namelists')
-	    if err!=0:
-		print '\033[91m','Error: Failed in call to preview_namelist','\033[0m'
-		sys.exit() 
+        if cp_namelist == True or cp_namelist == 'TRUE' or cp_namelist == 'true':
+            print ('############################################')
+            print ('')
+            print ('   Copy user_namelists '+n)
+            print ('')
+            print ('############################################')
+            print ('')
+            os.chdir(case_root)
+            for f in glob.glob(namelist_root+n+'/user_nl_*'):
+                fn = os.path.basename(f)
+                shutil.copyfile(f,case_root+'/'+fn)
+                print ('Copied: ', f, ' to ', case_root+'/'+fn)
+            err=os.system('./preview_namelists')
+            if err!=0:
+                print ('\033[91m','Error: Failed in call to preview_namelist','\033[0m')
+                sys.exit()
 
         if cp_sourceMods == True or cp_sourceMods == 'TRUE' or cp_sourceMods == 'true':
-            print '############################################'
-            print ''
-            print '   Copy sourceMods'
-            print ''
-            print '############################################'
-            print ''
+            print ('############################################')
+            print ('')
+            print ('   Copy sourceMods')
+            print ('')
+            print ('############################################')
+            print ('')
             os.chdir(case_root)
             distutils.dir_util.copy_tree(sourceMods_dir+n,case_root+'/SourceMods/')
-            print 'Copied: ', sourceMods_dir+n, ' to ', case_root+'/SourceMods/'
+            print ('Copied: ', sourceMods_dir+n, ' to ', case_root+'/SourceMods/')
 
 
-	print '############################################'
-	print ''
-	print '   Run case.setup '+n
-	print ''
-	print '############################################'
-	print ''
-	os.chdir(case_root)
-	err=os.system('./case.setup')
-	if err!=0:
-	    print '\033[91m','Error: Failed in call to case.setup','\033[0m'
-	    sys.exit()
+        print ('############################################')
+        print ('')
+        print ('   Run case.setup '+n)
+        print ('')
+        print ('############################################')
+        print ('')
+        os.chdir(case_root)
+        err=os.system('./case.setup')
+        if err!=0:
+            print ('\033[91m','Error: Failed in call to case.setup','\033[0m')
+            sys.exit()
 
         os.chdir(case_root+'/postprocess/')
         conform = subprocess.check_output('./pp_config -value -caseroot '+case_root+'/postprocess/'+' --get STANDARDIZE_TIMESERIES', shell=True)
 
     # Toggle to build the case
     build = 'False' #True or False
-    print '############################################'
-    print ''
-    print '   Setup Cylc Automation'
-    print ''
-    print '############################################'
-    print ''
+    print ('############################################')
+    print ('')
+    print ('   Setup Cylc Automation')
+    print ('')
+    print ('############################################')
+    print ('')
     # os.chdir(cdir+'/src/')
     os.chdir('/glade/u/home/nanr/CESM-WF/src/')
     case_name = os.path.basename(os.path.normpath(first_case_root))
@@ -272,23 +285,23 @@ def create(cesm_code_base, testing=True, command=None):
         outf.close()
 
 
-    
-	print '##########################################################################'
-	print ''
-	print '   New CESM case created with Post Processing and Cylc Suite Enabled in'
-	print '     '+first_case_root+'-'+case_root
-	print '  '
-	print '   Next steps: '
-	if build == False or build == 'FALSE' or build == 'false':
-	    print '               - build the cases'
-	print '               - open this file to make sure the workflow looks as expected: '+suite_location+'/'+case_name_base+'.'+uid+'/workflow.png'
-	print '                  - if the workflow is not what you expect, cd into your new case directory, modify cesm xml env, and run: '
-	print '                    '+cdir+'/src/CESM_Cylc_setup -c '+ cesm_code_base+'/cime/'+' -p '+suite_location+'/'+case_name_base+'.'+uid+' -s '+case_name_base+'.'+uid+'.suite'+' -d '+ensemble_path+' -u '+svn_username+' -1 '+str(ensemble_start)+' -2 '+str(ensemble_end)+' -g workflow.png'+' -e '+email+' -m '+ppmach+' -q '+queue
-	print '               - execute: gcylc '+case_name_base+'.'+uid+'.suite.cmip6'
-	print ''
-        print '   These instructions have also been written to '+first_case_root+"/Cylc.Instructions.txt"
-	print '#########################################################################'
-	print ''
+
+        print ('##########################################################################')
+        print ('')
+        print ('   New CESM case created with Post Processing and Cylc Suite Enabled in')
+        print ('     '+first_case_root+'-'+case_root)
+        print ('  ')
+        print ('   Next steps: ')
+        if build == False or build == 'FALSE' or build == 'false':
+            print ('               - build the cases')
+        print ('               - open this file to make sure the workflow looks as expected: '+suite_location+'/'+case_name_base+'.'+uid+'/workflow.png')
+        print ('                  - if the workflow is not what you expect, cd into your new case directory, modify cesm xml env, and run: ')
+        print ('                    '+cdir+'/src/CESM_Cylc_setup -c '+ cesm_code_base+'/cime/'+' -p '+suite_location+'/'+case_name_base+'.'+uid+' -s '+case_name_base+'.'+uid+'.suite'+' -d '+ensemble_path+' -u '+svn_username+' -1 '+str(ensemble_start)+' -2 '+str(ensemble_end)+' -g workflow.png'+' -e '+email+' -m '+ppmach+' -q '+queue)
+        print ('               - execute: gcylc '+case_name_base+'.'+uid+'.suite.cmip6')
+        print ('')
+        print ('   These instructions have also been written to '+first_case_root+"/Cylc.Instructions.txt")
+        print ('#########################################################################')
+        print ('')
 
 if __name__ == '__main__':
     main()

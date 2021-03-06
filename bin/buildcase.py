@@ -117,13 +117,16 @@ def build_base_case(date, baseroot, basecasename, basemonth,res, compset, overwr
         if not os.path.isdir(caseroot):
             case.create(os.path.basename(caseroot), cesmroot, compset, res,
                         run_unsupported=True, answer="r",walltime="12:00:00",
-                        user_mods_dir=user_mods_dir, pecount=pecount, project="NCGD0047")
+                        user_mods_dir=user_mods_dir, pecount=pecount, project="NCGD0047", workflowid="timeseries")
             # make sure that changing the casename will not affect these variables
-            case.set_value("EXEROOT",case.get_value("EXEROOT", resolved=True))
             case.set_value("CIME_OUTPUT_ROOT","/glade/scratch/$USER/SMYLE")
-            case.set_value("RUNDIR",case.get_value("RUNDIR",resolved=True)+".01")
+            case.set_value("EXEROOT",case.get_value("EXEROOT", resolved=True))
+            case.set_value("RUNDIR",case.get_value("RUNDIR",resolved=True)+".001")
+            case.set_value("CAM_CONFIG_OPTS",case.get_value("CAM_CONFIG_OPTS")+" -cosp ")
 
             case.set_value("RUN_TYPE","hybrid")
+            #case.set_value("JOB_QUEUE","economy",subgroup="case.run")
+            case.set_value("JOB_QUEUE","economy")
             case.set_value("GET_REFCASE",False)
             case.set_value("RUN_REFDIR",sdrestdir)
             case.set_value("RUN_REFCASE", "b.e21.SMYLE_IC.f09_g17.{}.01".format(date[:7]))
@@ -154,13 +157,13 @@ def build_base_case(date, baseroot, basecasename, basemonth,res, compset, overwr
 
         rundir = case.get_value("RUNDIR")
         per_run_case_updates(case, date, sdrestdir, user_mods_dir, rundir)
-        #build.case_build(caseroot, case=case)
+        build.case_build(caseroot, case=case)
 
         return caseroot
 
 def clone_base_case(date, caseroot, ensemble, sdrestdir, user_mods_dir, overwrite):
 
-    startval = "02"
+    startval = "002"
     nint = len(startval)
     cloneroot = caseroot
     for i in range(int(startval), int(startval)+ensemble):
@@ -189,7 +192,8 @@ def _main_func(description):
 
     basemonth = int(date[5:7])
     baseyear = int(date[0:4])
-    baseroot = os.path.join(os.getenv("WORK"),"CESM2-SMYLE","cases")
+    baseroot = os.path.join(os.getenv("WORK"),"cases")
+    #baseroot = os.path.join(os.getenv("WORK"),"CESM2-SMYLE","cases")
     #usecase  = os.getenv("USECASE")
     #baseroot = os.path.join(os.getenv("WORK"),"CESM2-SMYLE","cases",basecasename)
     res = "f09_g17"
@@ -206,8 +210,8 @@ def _main_func(description):
     #sdrestdir = os.path.join(os.getenv("SCRATCH"),"SMYLE","inputdata","cesm2_init","b.e21.SMYLE_IC.f09_g16","{}".format(date))
     #sdrestdir = os.path.join("/glade/scratch/nanr","SMYLE","inputdata","cesm2_init","b.e21.SMYLE_IC.f09_g16","1958")
     sdrestdir = os.path.join(os.getenv("SCRATCH"),"SMYLE","inputdata","cesm2_init","b.e21.SMYLE_IC.f09_g17."+date[0:7]+".01","{}".format(date))
-    baserundir = os.path.join(os.getenv("SCRATCH"),"SMYLE","rundir","b.e21.SMYLE.f09_g17."+date[0:7]+".001","run.01")
-    ensemble = 4
+    #baserundir = os.path.join(os.getenv("SCRATCH"),"SMYLE","rundir","b.e21.SMYLE.f09_g17."+date[0:7]+".001","run.01")
+    ensemble = 9
 
     #user_mods_dir = os.path.join(s2sfcstroot,"user_mods",basecasename)
     user_mods_dir = os.path.join(s2sfcstroot,"user_mods","cesm2smyle")

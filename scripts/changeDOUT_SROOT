@@ -1,0 +1,67 @@
+#!/bin/csh -fx
+### set env variables
+module load ncl nco
+
+set COMPSET = BSMYLE
+set MACHINE = cheyenne
+set RESOLN = f09_g17
+set RESUBMIT = 0
+set STOP_N=24
+set STOP_OPTION=nmonths
+set PROJECT=NCGD0047
+
+setenv BASEROOT /glade/work/nanr/CESM2-SMYLE/cases/
+
+set syr = 1959
+set eyr = 1959
+#set syr = 1959
+#set eyr = 1959
+#set syr = 2007
+#set eyr = 2007
+
+@ ib = $syr
+@ ie = $eyr
+
+foreach year ( `seq $ib $ie` )
+#foreach mon ( 02 05 08 11 )
+foreach mon ( 11 )
+
+
+set REFCASE  = b.e21.SMYLE_IC.f09_g17.${year}-${mon}.01
+set REFPERT  = b.e21.SMYLE_IC.pert.f09_g17
+set REFROOT  = /glade/scratch/nanr/SMYLE/inputdata/cesm2_init/${REFCASE}/${year}-${mon}-01/
+set PERTROOT = /glade/scratch/nanr/SMYLE/inputdata/cesm2_init/${REFCASE}/
+
+#setenv CASEROOT /glade/p/cesm/espwg/CESM2-SMYLE/cases/$CASE
+setenv INITDIR  /glade/scratch/nanr/SMYLE/
+setenv DPDIR    /glade/scratch/nanr/SMYLE/
+setenv SHORTCASE b.e21.BSMYLE.f09_g17.${year}-${mon}
+
+# case name counter
+set smbr =   1
+set embr =  10
+
+@ mb = $smbr
+@ me = $embr
+
+foreach mbr ( `seq $mb $me` )
+
+if ($mbr < 10) then
+        set CASE = b.e21.BSMYLE.f09_g17.${year}-${mon}.00${mbr}
+else
+        set CASE = b.e21.BSMYLE.f09_g17.${year}-${mon}.0${mbr}
+endif
+
+echo 'Year   = ' $year
+echo 'Member = ' $mbr
+echo 'Case   = ' $CASE
+
+
+  setenv CASEROOT  $BASEROOT$CASE
+  cd $CASEROOT/postprocess
+  ./pp_config --set DOUT_S_ROOT=$DPDIR/archive/$CASE
+
+end             # member loop
+
+exit
+

@@ -1,10 +1,20 @@
 #! /bin/csh -fxv 
 
+setenv CESM2_TOOLS_ROOT /glade/work/nanr/cesm_tags/CASE_tools/cesm2-smyle/
+setenv CESMROOT /glade/work/nanr/cesm_tags/cesm2.1.4-SMYLE
+
+
 #foreach  year ( 1954 1964 1974 1984 1994 2004 )
 set syr = 1959
 set eyr = 1970
 #set syr = 2007
 #set eyr = 2007
+#set syr = 1958
+#set eyr = 1970
+set syr = 1971
+set eyr = 2000
+set syr = 2001
+set eyr = 2014
 
 @ ib = $syr
 @ ie = $eyr
@@ -15,6 +25,8 @@ foreach year ( `seq $ib $ie` )
 foreach mon ( 11 )
 
 set case = b.e21.SMYLE_IC.f09_g17.${year}-${mon}.01
+
+
 #set icdir = /glade/p/cesm/cseg/inputdata/ccsm4_init/{$case} 
 set Picdir = /glade/scratch/nanr/SMYLE/inputdata/cesm2_init/{$case}/
 set icdir  = /glade/scratch/nanr/SMYLE/inputdata/cesm2_init/{$case}/${year}-${mon}-01
@@ -24,6 +36,10 @@ endif
 if (! -d ${icdir}) then
  mkdir ${icdir}
 endif
+
+
+set doThis99 = 1
+if ($doThis99 == 1) then
 
 # atm, lnd initial conditions
 set atmcase =  JRA55_0.9x1.25_L32
@@ -99,7 +115,7 @@ cp $ocndir/${popwwfname}  $icdir/${popwwfout}
 
 ncatted -a OriginalFile,global,a,c,$icefname    $icdir/$icefout
 ncatted -a OriginalFile,global,a,c,$poprfname   $icdir/$poprfout
-ncatted -a OriginalFile,global,a,c,$poprofname  $icdir/$poprofout
+#ncatted -a OriginalFile,global,a,c,$poprofname  $icdir/$poprofout
 ncatted -a OriginalFile,global,a,c,$poprhfname  $icdir/$poprhfout
 
 # create rpointer files
@@ -119,6 +135,15 @@ echo "RESTART_FMT=nc"                          >> ${icdir}/rpointer.ocn.restart
 endif	# doThis2
 
 #!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+endif	# doThis99
+
+# ==================================
+# generate perturbed cam.i.restarts
+# ==================================
+setenv CYLC_TASK_CYCLE_POINT ${year}-${mon}-01
+cd ${CESM2_TOOLS_ROOT}/restarts/
+./generate_cami_ensemble_offline.py
 
 end
 end
