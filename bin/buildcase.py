@@ -25,7 +25,6 @@ def parse_command_line(args, description):
     CIME.utils.setup_standard_logging_options(parser)
     parser.add_argument("--date",
                         help="Specify a start Date")
-    #parser.add_argument("--model",help="Specify a caseroot (cesm2cam6, b.e21.SMYLE.f09_g17.)", default="b.e21.SMYLE.f09_g17")
     parser.add_argument("--model",help="Specify a case (cesm2cam6, cesm2smyle)", default="cesm2smyle")
 
     args = CIME.utils.parse_args_and_handle_standard_logging_options(args, parser)
@@ -48,8 +47,6 @@ def parse_command_line(args, description):
 def stage_refcase(rundir, refdir, date, basecasename):
     if not os.path.isdir(rundir):
         os.makedirs(rundir)
-    #if basecasename == "b.e21.SMYLE.f09_g17":
-    #if model == "cesm2smyle":
     nfname = "b.e21.SMYLE_IC.f09_g17"
     #else:
     #   nfname = "b.e21.f09_g17"
@@ -186,7 +183,7 @@ def clone_base_case(date, caseroot, ensemble, sdrestdir, user_mods_dir, overwrit
 def _main_func(description):
     #date, basecasename = parse_command_line(sys.argv, description)
     date, model = parse_command_line(sys.argv, description)
-    basecasename = "b.e21.SMYLE.f09_g17"
+    basecasename = "b.e21.BSMYLE.f09_g17"
 
     # TODO make these input vars
 
@@ -207,13 +204,9 @@ def _main_func(description):
     print ("baseyear is {} basemonth is {}".format(baseyear,basemonth))
     
     overwrite = True
-    #sdrestdir = os.path.join(os.getenv("SCRATCH"),"SMYLE","inputdata","cesm2_init","b.e21.SMYLE_IC.f09_g16","{}".format(date))
-    #sdrestdir = os.path.join("/glade/scratch/nanr","SMYLE","inputdata","cesm2_init","b.e21.SMYLE_IC.f09_g16","1958")
     sdrestdir = os.path.join(os.getenv("SCRATCH"),"SMYLE","inputdata","cesm2_init","b.e21.SMYLE_IC.f09_g17."+date[0:7]+".01","{}".format(date))
-    #baserundir = os.path.join(os.getenv("SCRATCH"),"SMYLE","rundir","b.e21.SMYLE.f09_g17."+date[0:7]+".001","run.01")
     ensemble = 9
 
-    #user_mods_dir = os.path.join(s2sfcstroot,"user_mods",basecasename)
     user_mods_dir = os.path.join(s2sfcstroot,"user_mods","cesm2smyle")
 
     # END TODO

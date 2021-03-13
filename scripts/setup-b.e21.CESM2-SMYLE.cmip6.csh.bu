@@ -18,12 +18,19 @@ set PROJECT=NCGD0047
 
 setenv BASEROOT /glade/work/nanr/CESM2-SMYLE/cases/
 
-set syr = 1959
-set eyr = 1959
-#set syr = 1959
-#set eyr = 1959
-#set syr = 2007
-#set eyr = 2007
+set syr = 1963
+set eyr = 1963
+set syr = 1964
+set eyr = 1964
+set syr = 1965
+set eyr = 1965
+set syr = 1966
+set eyr = 1966
+set syr = 1967
+set eyr = 1967
+# ...
+set syr = 1991
+set eyr = 1991
 
 @ ib = $syr
 @ ie = $eyr
@@ -36,16 +43,12 @@ foreach mon ( 11 )
 set REFCASE  = b.e21.SMYLE_IC.f09_g17.${year}-${mon}.01
 set REFPERT  = b.e21.SMYLE_IC.pert.f09_g17
 set REFROOT  = /glade/scratch/nanr/SMYLE/inputdata/cesm2_init/${REFCASE}/${year}-${mon}-01/
-set PERTROOT = ${REFROOT}
+set PERTROOT = /glade/scratch/nanr/SMYLE/inputdata/cesm2_init/${REFCASE}/
 
 #setenv CASEROOT /glade/p/cesm/espwg/CESM2-SMYLE/cases/$CASE
 setenv INITDIR  /glade/scratch/nanr/SMYLE/
 setenv DPDIR    /glade/scratch/nanr/SMYLE/
 setenv SHORTCASE b.e21.BSMYLE.f09_g17.${year}-${mon}
-
-# generate perturbed cam.i.restarts
-cd ${CESM2_TOOLS_ROOT}/bin/
-./generate_cami_ensemble_offline.py
 
 cd ~nanr/CESM-WF/
 ./create_cylc_cesm2-smyle-ensemble-cmip6 --case $BASEROOT$SHORTCASE --res $RESOLN  --compset $COMPSET --project $PROJECT 
@@ -79,7 +82,7 @@ echo 'Case   = ' $CASE
   setenv CASEROOT  $BASEROOT$CASE
   cd $CASEROOT
   if ($mbr == $smbr) then
-    set masterroot = $CASEROOT
+    set mastercase = $CASE
   endif
   ./xmlchange CIME_OUTPUT_ROOT=/glade/scratch/$USER/SMYLE 
   ./xmlchange OCN_TRACER_MODULES="iage cfc ecosys"
@@ -89,6 +92,7 @@ echo 'Case   = ' $CASE
   ./xmlchange RUN_STARTDATE=${year}-${mon}-01
   ./xmlchange GET_REFCASE=FALSE
   ./xmlchange PROJECT=NCGD0047
+  ./xmlchange JOB_QUEUE=economy --subgroup case.run
   ./xmlchange --append CAM_CONFIG_OPTS=-cosp
 
   ./xmlchange NTASKS_ICE=36
@@ -118,9 +122,6 @@ echo 'Case   = ' $CASE
   ./xmlchange STOP_OPTION=$STOP_OPTION
   ./xmlchange RESUBMIT=$RESUBMIT
 
-  if ($mbr > 1) then
-	./xmlchange EXEROOT="/glade/scratch/nanr/SMYLE/b.e21.BSMYLE.f09_g17.${year}-${mon}.001/bld/"
-  endif
 
 echo " Copy Restarts -------------"
 if (! -d $RUNDIR) then
@@ -154,8 +155,19 @@ echo " Add cam.i.perturbation Restarts -------------"
 #echo $RUNDIR
 
 # ./preview_namelists
+  if ($mbr == $smbr) then
+ 	#./case.setup --reset; ./case.setup
+ 	./case.setup --reset; ./case.setup; qcmd -- ./case.build >& bld.`date +%m%d-%H%M`
+  else
+ 	./case.setup --reset; ./case.setup
+	./xmlchange EXEROOT=$DPDIR/$mastercase/bld/
+	./xmlchange BUILD_COMPLETE=TRUE
+  endif
 
-# ./case.build >& bld.`date +%m%d-%H%M`
+# ====== fix env_postprocess.xml
+  cd postprocess
+  ./pp_config --set DOUT_S_ROOT=$DPDIR/archive/$CASE
+
 end             # member loop
 
 exit

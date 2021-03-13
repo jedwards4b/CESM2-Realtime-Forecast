@@ -158,22 +158,10 @@ def _main_func(description):
     date, model = parse_command_line(sys.argv, description)
 
     ensemble = 10
-    if model == "cesm2smyle":
-        #sdrestdir = os.path.join(os.getenv("SCRATCH"),"SMYLE","inputdata","cesm2_init","b.e21.SMYLE_IC.f09_g17."+date[:7]+".01")
-        #sdrestdir = os.path.join(os.getenv("SCRATCH"),"SMYLE","inputdata","cesm2_init","b.e21.SMYLE_IC.f09_g17."+date[:7]+".01","{}".format(date))
-        sdrestdir = os.path.join("/glade/scratch/nanr/","SMYLE","inputdata","cesm2_init","b.e21.SMYLE_IC.f09_g17."+date[0:7]+".01","{}".format(date))
-        #baserundir = os.path.join(os.getenv("SCRATCH"),"SMYLE","rundir","b.e21.SMYLE.f09_g17."+date[:7]+".001","run.01")
-        #baserundir = os.path.join(os.getenv("SCRATCH"),"b.e21.SMYLE.f09_g17."+date[:7]+".001","run.01")
-        baserundir = os.path.join("/glade/scratch/nanr/","SMYLE","b.e21.SMYLE.f09_g17."+date[0:7]+".001","run.001")
-        #baserundir = os.path.join(os.getenv("SCRATCH"),"cesm2cam6."+date[5:7]+".01","run.01")
-        caminame = os.path.join(sdrestdir,"b.e21.SMYLE_IC.f09_g17.{}.01.cam.i.{date}-00000.nc".format(date[:7],date=date))
-        outroot = "b.e21.SMYLE_IC.pert.f09_g17.cam.i."
-    else:
-        ensemble = 20
-        baserundir = os.path.join(os.getenv("SCRATCH"),"cesm2smyle."+date[5:7]+".00","run.00")
-        sdrestdir = os.path.join(os.getenv("SCRATCH"),"S2S_70LIC_globus","SDnudgedOcn","rest","{}".format(date))
-        caminame = os.path.join(sdrestdir,"b.e21.SMYLE_IC.f09_g17.001.cam.i.{date}-00000.nc".format(date=date))
-        outroot = "b.e21.f09_g17.cam.i."
+    sdrestdir = os.path.join("/glade/scratch/nanr/","SMYLE","inputdata","cesm2_init","b.e21.SMYLE_IC.f09_g17."+date[0:7]+".01","{}".format(date))
+    baserundir = os.path.join("/glade/scratch/nanr/","SMYLE","b.e21.BSMYLE.f09_g17."+date[0:7]+".001","run.001")
+    caminame = os.path.join(sdrestdir,"b.e21.SMYLE_IC.f09_g17.{}.01.cam.i.{date}-00000.nc".format(date[:7],date=date))
+    outroot = "b.e21.SMYLE_IC.pert.f09_g17.cam.i."
 
     create_cam_ic_perturbed(caminame,ensemble, date,baserundir, model, outroot=outroot)
 

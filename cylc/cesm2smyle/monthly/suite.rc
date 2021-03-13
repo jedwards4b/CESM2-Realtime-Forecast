@@ -19,8 +19,8 @@
 
 [scheduling]
   # Change the run start and end dates here
-    initial cycle point = "2006-11-01"
-    final cycle point = "2006-11-01"
+    initial cycle point = "2007-11-01"
+    final cycle point = "2007-11-01"
 
     # must start Feb 01, any year:
     # initial cycle point constraints = "0201T00"
@@ -75,11 +75,8 @@ cd ${FCST_HOME}/bin/
 
   [[st_archive<member>]]
     script = """
-#cd ${WORK}/cases/b.e21.SMYLE.f09_g17.1958-11.$(printf "%03d" ${CYLC_TASK_PARAM_member+1})
-#cd ${WORK}/cases/b.e21.SMYLE.f09_g17.1958-11.$(printf "%03d" ${CYLC_TASK_PARAM_member}+1)
-cd ${WORK}/cases/b.e21.SMYLE.f09_g17.${CYLC_TASK_CYCLE_DATE}.$(printf "%03d" ${CYLC_TASK_PARAM_member})
+cd ${WORK}/cases/b.e21.BSMYLE.f09_g17.${CYLC_TASK_CYCLE_DATE}.$(printf "%03d" ${CYLC_TASK_PARAM_member})
 ./case.submit --job case.st_archive
-#./xmlchange CONTINUE_RUN=TRUE  don't want this for this workflow
 """
     [[[environment]]]
       #CYLC_TASK_CYCLE_MONTH = $(cylc cyclepoint --template=%m)
@@ -88,7 +85,7 @@ cd ${WORK}/cases/b.e21.SMYLE.f09_g17.${CYLC_TASK_CYCLE_DATE}.$(printf "%03d" ${C
       inherit = postprocess_family
     [[postprocess_family]]
       script = """
-cd ${WORK}/cases/b.e21.SMYLE.f09_g17.${CYLC_TASK_CYCLE_DATE}.$(printf "%03d" ${CYLC_TASK_PARAM_member})
+cd ${WORK}/cases/b.e21.BSMYLE.f09_g17.${CYLC_TASK_CYCLE_DATE}.$(printf "%03d" ${CYLC_TASK_PARAM_member})
 unset PYTHONPATH
 source $POSTPROCESS_PATH/cesm-env2/bin/activate
 $POSTPROCESS_PATH/cesm-env2/bin/create_postprocess -caseroot `pwd`
@@ -116,13 +113,7 @@ ${FCST_HOME}/bin/postprocess.py
        inherit = run_family
     [[run_family]]
     script = """
-#cd ${WORK}/cases/b.e21.SMYLE.f09_g17.1958-11.$(printf "%03d" ${CYLC_TASK_PARAM_member})
-cd ${WORK}/cases/b.e21.SMYLE.f09_g17.${CYLC_TASK_CYCLE_DATE}.$(printf "%03d" ${CYLC_TASK_PARAM_member})
-#cd ${WORK}/cases/b.e21.SMYLE_IC.f09_g17.${date}.$(printf "%02d" ${CYLC_TASK_PARAM_member})
-#caseroot = os.path.join(baseroot,basecasename+"."+date[:7]+".001")
-#cd ${WORK}/cases/cesm2smyle/cesm2cam6.${CYLC_TASK_CYCLE_MONTH}.$(printf "%02d" ${CYLC_TASK_PARAM_member})
-# USE This to change dynamics subcycle
-#cp ${FCST_HOME}/user_mods/cesm2cam6.base/user_nl_cam.${CYLC_TASK_TRY_NUMBER} user_nl_cam
+cd ${WORK}/cases/b.e21.BSMYLE.f09_g17.${CYLC_TASK_CYCLE_DATE}.$(printf "%03d" ${CYLC_TASK_PARAM_member})
 ./case.submit --job case.run
 """
     [[[environment]]]

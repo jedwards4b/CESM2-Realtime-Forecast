@@ -29,8 +29,8 @@ set eyr = 1966
 set syr = 1967
 set eyr = 1967
 # ...
-set syr = 1991
-set eyr = 1991
+set syr = 1994
+set eyr = 1994
 
 @ ib = $syr
 @ ie = $eyr
@@ -45,6 +45,7 @@ set REFPERT  = b.e21.SMYLE_IC.pert.f09_g17
 set REFROOT  = /glade/scratch/nanr/SMYLE/inputdata/cesm2_init/${REFCASE}/${year}-${mon}-01/
 set PERTROOT = /glade/scratch/nanr/SMYLE/inputdata/cesm2_init/${REFCASE}/
 set EXEROOT  = /glade/scratch/nanr/SMYLE/b.e21.BSMYLE.f09_g17.1978-11.001/bld/
+set mastercase = b.e21.BSMYLE.f09_g17.1980-11.001
 
 #setenv CASEROOT /glade/p/cesm/espwg/CESM2-SMYLE/cases/$CASE
 setenv INITDIR  /glade/scratch/nanr/SMYLE/
@@ -82,9 +83,9 @@ echo 'Case   = ' $CASE
   setenv RUNDIR   /$DPDIR/$CASE/run
   setenv CASEROOT  $BASEROOT$CASE
   cd $CASEROOT
-  if ($mbr == $smbr) then
-    set mastercase = $CASE
-  endif
+  #if ($mbr == $smbr) then
+    #set mastercase = $CASE
+  #endif
   ./xmlchange CIME_OUTPUT_ROOT=/glade/scratch/$USER/SMYLE 
   ./xmlchange OCN_TRACER_MODULES="iage cfc ecosys"
 
@@ -157,8 +158,10 @@ echo " Add cam.i.perturbation Restarts -------------"
 
 # ./preview_namelists
   if ($mbr == $smbr) then
- 	#./case.setup --reset; ./case.setup
- 	./case.setup --reset; ./case.setup; qcmd -- ./case.build >& bld.`date +%m%d-%H%M`
+ 	./case.setup --reset; ./case.setup
+ 	#./case.setup --reset; ./case.setup; qcmd -- ./case.build >& bld.`date +%m%d-%H%M`
+	./xmlchange EXEROOT=$DPDIR/$mastercase/bld/
+	./xmlchange BUILD_COMPLETE=TRUE
   else
  	./case.setup --reset; ./case.setup
 	./xmlchange EXEROOT=$DPDIR/$mastercase/bld/
