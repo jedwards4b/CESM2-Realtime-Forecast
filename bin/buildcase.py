@@ -62,7 +62,7 @@ def stage_refcase(rundir, refdir, date, basecasename):
         else:
             newfile = os.path.basename(reffile)
             #newfile = "{}.cice.r.{}-00000.nc".format(nfname,date)
-            newfile = os.path.join(rundir,newfile)            
+            newfile = os.path.join(rundir,newfile)
             if not "cam.i" in newfile:
                 if os.path.lexists(newfile):
                     os.unlink(newfile)
@@ -107,12 +107,12 @@ def per_run_case_updates(case, date, sdrestdir, user_mods_dir, rundir):
 
 
 def build_base_case(date, baseroot, basecasename, basemonth,res, compset, overwrite,
-                    sdrestdir, user_mods_dir, pecount=None):
+                    sdrestdir, user_mods_dir, pecount=None, exeroot=None):
     caseroot = os.path.join(baseroot,basecasename+"."+date[:7]+".001")
     #caseroot = os.path.join(baseroot,basecasename+".{}".format(date[:7])+".00")
     if overwrite and os.path.isdir(caseroot):
         shutil.rmtree(caseroot)
-            
+
     with Case(caseroot, read_only=False) as case:
         if not os.path.isdir(caseroot):
             case.create(os.path.basename(caseroot), cesmroot, compset, res,
@@ -120,7 +120,11 @@ def build_base_case(date, baseroot, basecasename, basemonth,res, compset, overwr
                         user_mods_dir=user_mods_dir, pecount=pecount, project="NCGD0047", workflowid="timeseries")
             # make sure that changing the casename will not affect these variables
             case.set_value("CIME_OUTPUT_ROOT","/glade/scratch/$USER/SMYLE")
-            case.set_value("EXEROOT",case.get_value("EXEROOT", resolved=True))
+            if exeroot and os.path.exists(os.path.join(exeroot,"cesm.exe")):
+                case.set_value("EXEROOT",exeroot)
+            else:
+                case.set_value("EXEROOT",case.get_value("EXEROOT", resolved=True))
+
             case.set_value("RUNDIR",case.get_value("RUNDIR",resolved=True)+".001")
             case.set_value("CAM_CONFIG_OPTS",case.get_value("CAM_CONFIG_OPTS")+" -cosp ")
 
@@ -150,14 +154,15 @@ def build_base_case(date, baseroot, basecasename, basemonth,res, compset, overwr
             case.set_value("STOP_OPTION","nmonths")
             case.set_value("STOP_N", 24)
             case.set_value("REST_OPTION","none")
-            
+
             case.set_value("CCSM_BGC","CO2A")
             case.set_value("EXTERNAL_WORKFLOW",True)
             case.set_value("CLM_NAMELIST_OPTS", "use_init_interp=.true.")
 
         rundir = case.get_value("RUNDIR")
         per_run_case_updates(case, date, sdrestdir, user_mods_dir, rundir)
-        build.case_build(caseroot, case=case)
+        if not exeroot:
+            build.case_build(caseroot, case=case)
 
         return caseroot
 
@@ -203,9 +208,9 @@ def _main_func(description):
             compset = "BSMYLE"
         else:
             compset = "BSMYLESSP370"
-        
+
     print ("baseyear is {} basemonth is {}".format(baseyear,basemonth))
-    
+
     overwrite = True
     #sdrestdir = os.path.join(os.getenv("SCRATCH"),"SMYLE","inputdata","cesm2_init","b.e21.SMYLE_IC.f09_g16","{}".format(date))
     #sdrestdir = os.path.join("/glade/scratch/nanr","SMYLE","inputdata","cesm2_init","b.e21.SMYLE_IC.f09_g16","1958")
