@@ -1,6 +1,0 @@
-diff ecosys.nday1.actualsort ecosys.nday1.expectedsort > ecosys.nday1.diffs
-diff ecosys.nyear1.actualsort ecosys.nyear1.expectedsort > ecosys.nyear1.diffs
-diff monthly.2d.actualsort monthly.2d.expectedsort	> monthly.2d.diffs
-diff monthly.3d_full.actualsort monthly.3d_full.expectedsort > monthly.3d.diffs
-diff monthly.z_t_150m.actualsort monthly.z_t_150m.expectedsort > monthly.z_t_150m.diffs
-diff nday1.actualsort nday1.expectedsort > nday1.diffs

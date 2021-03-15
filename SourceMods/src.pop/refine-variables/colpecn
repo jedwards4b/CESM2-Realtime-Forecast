@@ -1,7 +1,0 @@
-grep '^DIA_IMPVF_O2 :' ecosys_diagnostics
-grep '^KPP_SRC_O2 :' ecosys_diagnostics
-grep '^RF_TEND_O2 :' ecosys_diagnostics
-grep '^TEND_O2 :' ecosys_diagnostics
-grep '^UE_O2 :' ecosys_diagnostics
-grep '^VN_O2 :' ecosys_diagnostics
-grep '^WT_O2 :' ecosys_diagnostics

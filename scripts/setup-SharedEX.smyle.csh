@@ -29,8 +29,8 @@ set eyr = 1966
 set syr = 1967
 set eyr = 1967
 # ...
-set syr = 1994
-set eyr = 1994
+set syr = 1997
+set eyr = 1997
 
 @ ib = $syr
 @ ie = $eyr
@@ -114,11 +114,7 @@ echo 'Case   = ' $CASE
   cp $CESM2_TOOLS_ROOT/SourceMods/src.cam/* $CASEROOT/SourceMods/src.cam/
   cp $CESM2_TOOLS_ROOT/SourceMods/src.clm/* $CASEROOT/SourceMods/src.clm/
 
-  cp $CESM2_TOOLS_ROOT/user_nl_files/user_nl_cam $CASEROOT/
-  cp $CESM2_TOOLS_ROOT/user_nl_files/user_nl_clm $CASEROOT/
-  cp $CESM2_TOOLS_ROOT/user_nl_files/user_nl_cpl $CASEROOT/
-  cp $CESM2_TOOLS_ROOT/user_nl_files/user_nl_cice $CASEROOT/
-
+  cp $CESM2_TOOLS_ROOT/user_nl_files/user_nl_* $CASEROOT/
 
   ./xmlchange STOP_N=$STOP_N
   ./xmlchange STOP_OPTION=$STOP_OPTION

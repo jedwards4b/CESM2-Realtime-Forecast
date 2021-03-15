@@ -3,6 +3,11 @@
 setenv CESM2_TOOLS_ROOT /glade/work/nanr/cesm_tags/CASE_tools/cesm2-smyle/
 setenv CESMROOT /glade/work/nanr/cesm_tags/cesm2.1.4-SMYLE
 
+if ($HOST != casper10) then
+echo "ERROR:  Must be run on Casper"
+exit
+endif
+
 
 #foreach  year ( 1954 1964 1974 1984 1994 2004 )
 set syr = 1959
@@ -16,7 +21,7 @@ set eyr = 2000
 set syr = 2001
 set eyr = 2014
 set syr = 2015
-set eyr = 2019
+set eyr = 2018
 
 @ ib = $syr
 @ ie = $eyr

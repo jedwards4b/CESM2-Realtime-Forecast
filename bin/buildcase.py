@@ -67,16 +67,21 @@ def stage_refcase(rundir, refdir, date, basecasename):
 
 def per_run_case_updates(case, date, sdrestdir, user_mods_dir, rundir):
     caseroot = case.get_value("CASEROOT")
-    basecasename = os.path.basename(caseroot)[:-6]
-    member = os.path.basename(caseroot)[-2:]
+    #basecasename = os.path.basename(caseroot)[:-15]
+    #basecasename = os.path.basename(caseroot)[:-6]
+    basecasename = os.path.basename(caseroot)[:-4]
+    #member = os.path.basename(caseroot)[-2:]
+    member = os.path.basename(caseroot)[-3:]
 
     unlock_file("env_case.xml",caseroot=caseroot)
-    casename = basecasename+"."+date+"."+member
+    #casename = basecasename+"."+date+"."+member
+    casename = basecasename+"."+member
     case.set_value("CASE",casename)
     case.flush()
     lock_file("env_case.xml",caseroot=caseroot)
 
     case.set_value("CONTINUE_RUN",False)
+    case.set_value("BUILD_COMPLETE",True)
     case.set_value("RUN_REFDATE",date)
     case.set_value("RUN_STARTDATE",date)
     case.set_value("RUN_REFDIR",sdrestdir)
@@ -104,7 +109,7 @@ def per_run_case_updates(case, date, sdrestdir, user_mods_dir, rundir):
 
 
 def build_base_case(date, baseroot, basecasename, basemonth,res, compset, overwrite,
-                    sdrestdir, user_mods_dir, pecount=None, exeroot=None):
+                    sdrestdir, user_mods_dir, pecount=None, exeroot="/glade/scratch/nanr/SMYLE/b.e21.BSMYLE.f09_g17.1980-11.001/bld/"):
     caseroot = os.path.join(baseroot,basecasename+"."+date[:7]+".001")
     #caseroot = os.path.join(baseroot,basecasename+".{}".format(date[:7])+".00")
     if overwrite and os.path.isdir(caseroot):
