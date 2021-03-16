@@ -4,6 +4,7 @@ module load ncl nco
 
 setenv CESM2_TOOLS_ROOT /glade/work/nanr/cesm_tags/CASE_tools/cesm2-smyle/
 setenv CESMROOT /glade/work/nanr/cesm_tags/cesm2.1.4-SMYLE
+setenv PROJECT NCGD0047
 
 setenv POSTPROCESS_PATH /glade/u/home/mickelso/CESM_postprocessing_3/
 setenv POSTPROCESS_PATH_GEYSER /glade/u/home/mickelso/CESM_postprocessing_3/
@@ -17,12 +18,13 @@ set STOP_OPTION=nmonths
 set PROJECT=NCGD0047
 
 setenv BASEROOT /glade/work/nanr/CESM2-SMYLE/cases/
+setenv BASEROOT /glade/p/cesm/espwg/CESM2-SMYLE/cases/
 
 set syr = 1963
 set eyr = 1963
 # ...
-set syr = 2006
-set eyr = 2006
+set syr = 2007
+set eyr = 2007
 
 @ ib = $syr
 @ ie = $eyr
@@ -40,8 +42,8 @@ set EXEROOT  = /glade/scratch/nanr/SMYLE/b.e21.BSMYLE.f09_g17.1978-11.001/bld/
 set mastercase = b.e21.BSMYLE.f09_g17.1980-11.001
 
 #setenv CASEROOT /glade/p/cesm/espwg/CESM2-SMYLE/cases/$CASE
-setenv INITDIR  /glade/scratch/nanr/SMYLE/
-setenv DPDIR    /glade/scratch/nanr/SMYLE/
+setenv INITDIR  /glade/scratch/$USER/SMYLE/
+setenv DPDIR    /glade/scratch/$USER/SMYLE/
 setenv SHORTCASE b.e21.BSMYLE.f09_g17.${year}-${mon}
 
 cd ~nanr/CESM-WF/

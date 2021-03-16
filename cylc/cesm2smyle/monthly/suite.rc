@@ -96,7 +96,7 @@ ${FCST_HOME}/bin/postprocess.py
       CYLC_TASK_CYCLE_DATE = $(cylc cyclepoint --template=%Y-%m)
     [[[job]]]
       batch system = pbs
-      batch submit command template = qsub -q regular -l walltime=01:00:00 -A NCGD0047 '%(job)s'
+      batch submit command template = qsub -q regular -l walltime=02:00:00 -A NCGD0047 '%(job)s'
     [[[directives]]]
        -r = n
        -j = oe
