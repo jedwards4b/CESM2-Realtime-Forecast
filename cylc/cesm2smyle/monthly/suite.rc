@@ -6,21 +6,24 @@
   cycle point format = CCYY-MM-DD
   [[parameters]]
     # The number of ensemble members can be changed here
-    member = 1..10
+    # member = 1..10
+    member = 1..20
+    # member = 11..20
   [[environment]]
     #CYLC_TASK_CYCLE_MONTH = "11"
     FCST_HOME = "/glade/work/nanr/cesm_tags/CASE_tools/cesm2-smyle/"
     CESM_ROOT = "/glade/work/nanr/cesm_tags/cesm2.1.4-SMYLE/"
-    WORK      = "/glade/work/nanr/CESM2-SMYLE"
+    #WORK      = "/glade/work/nanr/CESM2-SMYLE"
     SCRATCH   = "/glade/scratch/nanr/"
     USECASE   = "cesm2smyle"
     REFDIR    = "/glade/scratch/nanr/SMYLE/inputdata/cesm2_init/"
     POSTPROCESS_PATH = "/glade/work/jedwards/sandboxes/CESM_postprocessing"
+    SMYLE_ROOT = "/glade/p/cesm/espwg/CESM2-SMYLE"
 
 [scheduling]
   # Change the run start and end dates here
-    initial cycle point = "2009-11-01"
-    final cycle point = "2009-11-01"
+    initial cycle point = "2014-11-01"
+    final cycle point = "2014-11-01"
 
     # must start Feb 01, any year:
     # initial cycle point constraints = "0201T00"
@@ -55,7 +58,8 @@ cd ${FCST_HOME}/bin/
        --partition=dav
        --time=01:00:00
        --account=NCGD0047
-
+    [[[environment]]]
+       SMYLE_ROOT = "/glade/p/cesm/espwg/CESM2-SMYLE"
 
   [[build_model]]
     script = """

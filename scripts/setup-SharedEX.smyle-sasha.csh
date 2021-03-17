@@ -38,8 +38,8 @@ set REFCASE  = b.e21.SMYLE_IC.f09_g17.${year}-${mon}.01
 set REFPERT  = b.e21.SMYLE_IC.pert.f09_g17
 set REFROOT  = /glade/scratch/nanr/SMYLE/inputdata/cesm2_init/${REFCASE}/${year}-${mon}-01/
 set PERTROOT = /glade/scratch/nanr/SMYLE/inputdata/cesm2_init/${REFCASE}/
-set EXEROOT  = /glade/scratch/nanr/SMYLE/b.e21.BSMYLE.f09_g17.1978-11.001/bld/
-set mastercase = b.e21.BSMYLE.f09_g17.1980-11.001
+#set EXEROOT  = /glade/scratch/nanr/SMYLE/b.e21.BSMYLE.f09_g17.1978-11.001/bld/
+set masterroot = /glade/scratch/sglanvil/SMYLE/b.e21.BSMYLE.f09_g17.2008.001/bld/
 
 #setenv CASEROOT /glade/p/cesm/espwg/CESM2-SMYLE/cases/$CASE
 setenv INITDIR  /glade/scratch/$USER/SMYLE/
@@ -148,13 +148,12 @@ echo " Add cam.i.perturbation Restarts -------------"
 
 # ./preview_namelists
   if ($mbr == $smbr) then
- 	./case.setup --reset; ./case.setup
- 	#./case.setup --reset; ./case.setup; qcmd -- ./case.build >& bld.`date +%m%d-%H%M`
-	./xmlchange EXEROOT=$DPDIR/$mastercase/bld/
+	./case.setup --reset ; ./case.setup
+	./xmlchange EXEROOT=$masterroot
 	./xmlchange BUILD_COMPLETE=TRUE
   else
- 	./case.setup --reset; ./case.setup
-	./xmlchange EXEROOT=$DPDIR/$mastercase/bld/
+	./case.setup --reset ; ./case.setup
+	./xmlchange EXEROOT=$masterroot
 	./xmlchange BUILD_COMPLETE=TRUE
   endif
 

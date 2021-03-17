@@ -60,7 +60,10 @@ def stage_refcase(rundir, refdir, date, basecasename):
             newfile = os.path.basename(reffile)
             #newfile = "{}.cice.r.{}-00000.nc".format(nfname,date)
             newfile = os.path.join(rundir,newfile)
-            if not "cam.i" in newfile:
+            if "cam.i" in newfile:
+                if not "001" in newfile:
+                    os.symlink(reffile,newfile.replace(".nc","-original.nc"))
+            else:
                 if os.path.lexists(newfile):
                     os.unlink(newfile)
                 os.symlink(reffile, newfile)
@@ -199,17 +202,15 @@ def _main_func(description):
 
     basemonth = int(date[5:7])
     baseyear = int(date[0:4])
-    baseroot = os.path.join(os.getenv("WORK"),"cases")
+    baseroot = os.path.join(os.getenv("SMYLE_ROOT"),"cases")
+    #baseroot = os.path.join(os.getenv("WORK"),"cases")
     #baseroot = os.path.join(os.getenv("WORK"),"CESM2-SMYLE","cases")
     #usecase  = os.getenv("USECASE")
     #baseroot = os.path.join(os.getenv("WORK"),"CESM2-SMYLE","cases",basecasename)
     res = "f09_g17"
     waccm = False
     if model == "cesm2smyle":
-        if baseyear < 2014 or (baseyear == 2014 and basemonth < 10):
-            compset = "BSMYLE"
-        else:
-            compset = "BSMYLESSP370"
+       compset = "BSMYLE"
 
     print ("baseyear is {} basemonth is {}".format(baseyear,basemonth))
 

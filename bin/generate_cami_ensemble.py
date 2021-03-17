@@ -48,7 +48,9 @@ def parse_command_line(args, description):
 
 def get_rvals(date, ensemble, model):
     #rvals_file = os.path.join(os.getenv("WORK"),"cases","cesm2smyle","camic_"+date+".txt")
-    rvals_file = os.path.join("/glade/work/nanr/CESM2-SMYLE","cases","camic_"+date+".txt")
+    #rvals_file = os.path.join("/glade/work/nanr/CESM2-SMYLE","cases","camic_"+date+".txt")
+    #rvals_file = os.path.join(os.environ.get("SMYLE_ROOT"),"cases","camic_"+date+".txt")
+    rvals_file = os.path.join(os.getenv("SMYLE_ROOT"),"cases","camic_"+date+".txt")
     rvals = []
     if os.path.isfile(rvals_file):
         with open(rvals_file,"r") as fd:
@@ -84,12 +86,14 @@ def create_cam_ic_perturbed(original, ensemble, date, baserundir, model, outroot
     if os.path.exists(outfile):
         os.unlink(outfile)
     expect(os.path.isfile(original),"ERROR file {} not found".format(original))
-    print("Linking {} to {}".format(original, outfile))
+    #print("Linking {} to {}".format(original, outfile))
     rundir = os.path.dirname(outfile)
+    print("Linking {} to {}".format(original, os.path.join(rundir,os.path.basename(original))))
     if os.path.isdir(rundir):
         shutil.rmtree(rundir)
     os.makedirs(rundir)
-    os.symlink(original, outfile)
+    #os.symlink(original, outfile)
+    os.symlink(original, os.path.join(rundir,os.path.basename(original)))
 
     # for each pair of ensemble members create an ic file with same perturbation opposite sign
     month = date[5:7]
@@ -115,10 +119,12 @@ def create_cam_ic_perturbed(original, ensemble, date, baserundir, model, outroot
             os.makedirs(dirname)
         perturb_files.append(perturb_file)
 
+    pertroot = os.path.join("/glade/scratch/nanr/SMYLE/inputdata/cesm2_init","b.e21.SMYLE_IC.f09_g17."+date[0:7]+".01","pert.01")
+
     for i in range(1,ensemble, 2):
         perturb_file = os.path.join(local_path,perturb_files[i//2-1])
-        outfile1 = os.path.join(baserundir[:-2]+"{:02d}".format(i), outroot+date+"-tmp.nc")
-        outfile2 = os.path.join(baserundir[:-2]+"{:02d}".format(i+1), outroot+date+"-tmp.nc")
+        outfile1 = os.path.join(pertroot[:-2]+"{:02d}".format(i), outroot+date+"-tmp.nc")
+        outfile2 = os.path.join(pertroot[:-2]+"{:02d}".format(i+1), outroot+date+"-tmp.nc")
         print("Creating perturbed init file {}".format(outfile1))
         t = threading.Thread(target=create_perturbed_init_file,args=(original, perturb_file, outfile1, factor))
         t.start()
@@ -128,16 +134,26 @@ def create_cam_ic_perturbed(original, ensemble, date, baserundir, model, outroot
         time.sleep(1)
     #for perturb_file in perturb_files:
     for i in range(1,ensemble, 2):
-        outfile1 = os.path.join(baserundir[:-2]+"{:02d}".format(i), outroot+date+"-00000.nc")
-        outfile2 = os.path.join(baserundir[:-2]+"{:02d}".format(i+1), outroot+date+"-00000.nc")
+        outfile1 = os.path.join(pertroot[:-2]+"{:02d}".format(i), outroot+date+"-00000.nc")
+        outfile2 = os.path.join(pertroot[:-2]+"{:02d}".format(i+1), outroot+date+"-00000.nc")
         #os.link(os.path.join(local_path,perturb_file),os.path.join(local_path,original))
         #print("{} {} ".format(os.path.join(local_path,original),os.path.join(local_path,perturb_file)))
         #os.symlink(os.path.join(local_path,original),os.path.join(local_path,perturb_file))
 
         print("{} {} ".format(outfile1, os.path.join(os.path.dirname(outfile1),os.path.basename(original))))
         print("{} {} ".format(outfile2, os.path.join(os.path.dirname(outfile2),os.path.basename(original))))
-        os.symlink(outfile1, os.path.join(os.path.dirname(outfile1),os.path.basename(original)))
-        os.symlink(outfile2, os.path.join(os.path.dirname(outfile2),os.path.basename(original)))
+        outdir1 = baserundir[:-3]+"{:03d}".format(i)
+        outdir2 = baserundir[:-3]+"{:03d}".format(i+1)
+        for outdir in (outdir1,outdir2):
+           if not os.path.isdir(outdir):
+              os.mkdir(outdir)
+        if i != 1:
+           os.symlink(outfile1, os.path.join(outdir1,os.path.basename(original)))
+        os.symlink(outfile2, os.path.join(outdir2,os.path.basename(original)))
+          #os.symlink(outfile1, os.path.join(baserundir[:-3]+"{:03d}".format(i),os.path.basename(original)))
+        #os.symlink(outfile2, os.path.join(baserundir[:-3]+"{:03d}".format(i+1),os.path.basename(original)))
+        #os.symlink(outfile1, os.path.join(os.path.dirname(outfile1),os.path.basename(original)))
+        #os.symlink(outfile2, os.path.join(os.path.dirname(outfile2),os.path.basename(original)))
         #os.symlink(outfile2, os.path.basename(original))
     
 
@@ -157,7 +173,7 @@ def create_perturbed_init_file(original, perturb_file, outfile, weight):
 def _main_func(description):
     date, model = parse_command_line(sys.argv, description)
 
-    ensemble = 10
+    ensemble = 20
     sdrestdir = os.path.join("/glade/scratch/nanr/","SMYLE","inputdata","cesm2_init","b.e21.SMYLE_IC.f09_g17."+date[0:7]+".01","{}".format(date))
     baserundir = os.path.join("/glade/scratch/nanr/","SMYLE","b.e21.BSMYLE.f09_g17."+date[0:7]+".001","run.001")
     caminame = os.path.join(sdrestdir,"b.e21.SMYLE_IC.f09_g17.{}.01.cam.i.{date}-00000.nc".format(date[:7],date=date))
