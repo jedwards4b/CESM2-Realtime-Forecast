@@ -28,8 +28,8 @@ def parse_command_line(args, description):
 
     parser.add_argument("--ensemble-start",default=1,
                         help="Specify the first ensemble member")
-    parser.add_argument("--ensemble-size",default=10,
-                        help="Specify the ensemble size")
+    parser.add_argument("--ensemble-end",default=10,
+                        help="Specify the last ensemble member")
 
     parser.add_argument("--date",
                         help="Specify a start Date")
@@ -49,7 +49,7 @@ def parse_command_line(args, description):
         date = datetime.date.today()
         date = date.replace(day=date.day-1)
 
-    return date.strftime("%Y-%m-%d"), args.model, int(args.ensemble_start), int(args.ensemble_size)
+    return date.strftime("%Y-%m-%d"), args.model, int(args.ensemble_start), int(args.ensemble_end)
     #return date.strftime("%Y-%m-%d"), args.basecasename
 
 def stage_refcase(rundir, refdir, date, basecasename):
@@ -179,12 +179,12 @@ def build_base_case(date, baseroot, basecasename, basemonth,res, compset, overwr
 
         return caseroot
 
-def clone_base_case(date, caseroot, ensemble_start, ensemble_size, sdrestdir, user_mods_dir, overwrite):
+def clone_base_case(date, caseroot, ensemble_start, ensemble_end, sdrestdir, user_mods_dir, overwrite):
 
     cloneroot = caseroot
-    for i in range(enemble_start+1, ensemble_start+ensemble_size):
+    for i in range(enemble_start+1, ensemble_end):
         member_string = '{{0:0{0:d}d}}'.format(nint).format(i)
-        if ensemble > 1:
+        if ensemble_end > ensemble_start:
             caseroot = caseroot[:-nint] + member_string
         if overwrite and os.path.isdir(caseroot):
             shutil.rmtree(caseroot)
@@ -201,7 +201,7 @@ def clone_base_case(date, caseroot, ensemble_start, ensemble_size, sdrestdir, us
 
 def _main_func(description):
     #date, basecasename = parse_command_line(sys.argv, description)
-    date, model, ensemble_start, ensemble_size = parse_command_line(sys.argv, description)
+    date, model, ensemble_start, ensemble_end = parse_command_line(sys.argv, description)
     basecasename = "b.e21.BSMYLE.f09_g17"
 
     # TODO make these input vars
@@ -229,7 +229,7 @@ def _main_func(description):
     print("basemonth = {}".format(basemonth))
     caseroot = build_base_case(date, baseroot, basecasename, basemonth, res,
                             compset, overwrite, sdrestdir, user_mods_dir+'.base', pecount="S")
-    clone_base_case(date, caseroot, ensemble_start, ensemble_size, sdrestdir, user_mods_dir, overwrite)
+    clone_base_case(date, caseroot, ensemble_start, ensemble_end, sdrestdir, user_mods_dir, overwrite)
 
 if __name__ == "__main__":
     _main_func(__doc__)

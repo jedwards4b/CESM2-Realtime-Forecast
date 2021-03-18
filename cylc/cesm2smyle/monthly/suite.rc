@@ -1,14 +1,12 @@
 #!Jinja2
+
+{% set ensemble_start = 1 %}
+{% set ensemble_end   = 10 %}
 [meta]
   title = CESM CYLC workflow for ensemble from cesm2cam6v2.MM.00 to cesm2cam6v2.MM.3
 [cylc]
   UTC mode = True
   cycle point format = CCYY-MM-DD
-  [[parameters]]
-    # The number of ensemble members can be changed here
-    # member = 1..10
-    member = 1..20
-    # member = 11..20
   [[environment]]
     #CYLC_TASK_CYCLE_MONTH = "11"
     FCST_HOME = "/glade/work/nanr/cesm_tags/CASE_tools/cesm2-smyle/"
@@ -19,6 +17,12 @@
     REFDIR    = "/glade/scratch/nanr/SMYLE/inputdata/cesm2_init/"
     POSTPROCESS_PATH = "/glade/work/jedwards/sandboxes/CESM_postprocessing"
     SMYLE_ROOT = "/glade/p/cesm/espwg/CESM2-SMYLE"
+  [[parameters]]
+    # The number of ensemble members can be changed here
+    # The first number here should always be 1 and the second the number of members to run
+    # the member to start with is firstmember
+    member = {{ ensemble_start }}..{{ ensemble_end }}
+
 
 [scheduling]
   # Change the run start and end dates here
@@ -64,7 +68,7 @@ cd ${FCST_HOME}/bin/
   [[build_model]]
     script = """
 cd ${FCST_HOME}/bin/
-./buildcase.py
+./buildcase.py --ensemble-start {{ ensemble_start }} --ensemble-end {{ ensemble_end }}
 """
     [[[job]]]
       batch system = pbs
