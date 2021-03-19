@@ -31,8 +31,6 @@ def parse_command_line(args, description):
     parser.add_argument("--ensemble-end",default=10,
                         help="Specify the last ensemble member")
 
-    parser.add_argument("--date",
-                        help="Specify a start Date")
     parser.add_argument("--model",help="Specify a case (cesm2cam6, cesm2smyle)", default="cesm2smyle")
 
     args = CIME.utils.parse_args_and_handle_standard_logging_options(args, parser)
@@ -119,9 +117,10 @@ def per_run_case_updates(case, date, sdrestdir, user_mods_dir, rundir):
 #    lock_file("env_batch.xml",caseroot=caseroot)
 
 
-def build_base_case(date, baseroot, basecasename, basemonth,res, compset, overwrite,
+def build_base_case(date, baseroot, basecasename, basemonth,res, ensemble_start, compset, overwrite,
                     sdrestdir, user_mods_dir, pecount=None, exeroot="/glade/scratch/nanr/SMYLE/b.e21.BSMYLE.f09_g17.1980-11.001/bld/"):
-    caseroot = os.path.join(baseroot,basecasename+"."+date[:7]+".001")
+    caseroot = os.path.join(baseroot,basecasename+"."+date[:7]+".{:03d}".format(ensemble_start))
+    #caseroot = os.path.join(baseroot,basecasename+"."+date[:7]+".001")
     #caseroot = os.path.join(baseroot,basecasename+".{}".format(date[:7])+".00")
     if overwrite and os.path.isdir(caseroot):
         shutil.rmtree(caseroot)
@@ -181,8 +180,9 @@ def build_base_case(date, baseroot, basecasename, basemonth,res, compset, overwr
 
 def clone_base_case(date, caseroot, ensemble_start, ensemble_end, sdrestdir, user_mods_dir, overwrite):
 
+    nint=3
     cloneroot = caseroot
-    for i in range(enemble_start+1, ensemble_end):
+    for i in range(ensemble_start+1, ensemble_end):
         member_string = '{{0:0{0:d}d}}'.format(nint).format(i)
         if ensemble_end > ensemble_start:
             caseroot = caseroot[:-nint] + member_string
@@ -209,10 +209,6 @@ def _main_func(description):
     basemonth = int(date[5:7])
     baseyear = int(date[0:4])
     baseroot = os.path.join(os.getenv("SMYLE_ROOT"),"cases")
-    #baseroot = os.path.join(os.getenv("WORK"),"cases")
-    #baseroot = os.path.join(os.getenv("WORK"),"CESM2-SMYLE","cases")
-    #usecase  = os.getenv("USECASE")
-    #baseroot = os.path.join(os.getenv("WORK"),"CESM2-SMYLE","cases",basecasename)
     res = "f09_g17"
     waccm = False
     if model == "cesm2smyle":
@@ -227,7 +223,7 @@ def _main_func(description):
 
     # END TODO
     print("basemonth = {}".format(basemonth))
-    caseroot = build_base_case(date, baseroot, basecasename, basemonth, res,
+    caseroot = build_base_case(date, baseroot, basecasename, basemonth, res, ensemble_start,
                             compset, overwrite, sdrestdir, user_mods_dir+'.base', pecount="S")
     clone_base_case(date, caseroot, ensemble_start, ensemble_end, sdrestdir, user_mods_dir, overwrite)
 
