@@ -1,5 +1,0 @@
-user_nl_clm
-stream_fldfilename_ndep = '/glade/p/cesmdata/cseg/inputdata/lnd/clm2/ndepdata/fndep_clm_f09_g17.CMIP6-SSP3-7.0-WACCM_1849-2101_monthly_c191007.nc'
-
-user_nl_pop
-ndep_shr_stream_file = '/glade/p/cesmdata/cseg/inputdata/ocn/pop/gx1v6/forcing/ndep_ocn_ssp370_w_nhx_emis_gx1v6_c190412.nc'

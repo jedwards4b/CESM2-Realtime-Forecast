@@ -1,9 +1,9 @@
 #!Jinja2
 
-{% set ensemble_start = 11 %}
+{% set ensemble_start =  1 %}
 {% set ensemble_end   = 20 %}
 [meta]
-  title = CESM CYLC workflow for ensemble from cesm2cam6v2.MM.00 to cesm2cam6v2.MM.3
+  title = CESM CYLC workflow for ensemble from cesm2smyle
 [cylc]
   UTC mode = True
   cycle point format = CCYY-MM-DD
@@ -25,8 +25,8 @@
 
 [scheduling]
   # Change the run start and end dates here
-    initial cycle point = "1970-11-01"
-    final cycle point = "1970-11-01"
+    initial cycle point = "2012-11-01"
+    final cycle point = "2012-11-01"
 
     # must start Feb 01, any year:
     # initial cycle point constraints = "0201T00"
@@ -130,7 +130,7 @@ cd ${SMYLE_ROOT}/cases/b.e21.BSMYLE.f09_g17.${CYLC_TASK_CYCLE_DATE}.$(printf "%0
       # Retry each run up to 2 times with different fv_nsplit values
       # execution retry delays = 2*PT6S
       batch system = pbs
-      batch submit command template = qsub -q regular -l walltime=12:00:00 -A NCGD0047 '%(job)s'
+      batch submit command template = qsub -q economy -l walltime=12:00:00 -A NCGD0047 '%(job)s'
     [[[directives]]]
        -r = n
        -j = oe

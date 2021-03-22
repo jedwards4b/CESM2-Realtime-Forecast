@@ -94,7 +94,6 @@ def per_run_case_updates(case, date, sdrestdir, user_mods_dir, rundir):
     case.set_value("RUN_REFDATE",date)
     case.set_value("RUN_STARTDATE",date)
     case.set_value("RUN_REFDIR",sdrestdir)
-    case.set_value("REST_OPTION",'none')
     case.set_value("PROJECT","NCGD0047")
     case.set_value("OCN_TRACER_MODULES","iage cfc ecosys")
 #    dout_s_root = case.get_value("DOUT_S_ROOT")
@@ -118,7 +117,7 @@ def per_run_case_updates(case, date, sdrestdir, user_mods_dir, rundir):
 
 
 def build_base_case(date, baseroot, basecasename, basemonth,res, ensemble_start, compset, overwrite,
-                    sdrestdir, user_mods_dir, pecount=None, exeroot="/glade/scratch/nanr/SMYLE/b.e21.BSMYLE.f09_g17.1980-11.001/bld/"):
+                    sdrestdir, user_mods_dir, pecount=None, exeroot="/glade/scratch/$USER/SMYLE/b.e21.BSMYLE.f09_g17.1980-11.001/bld/"):
     caseroot = os.path.join(baseroot,basecasename+"."+date[:7]+".{:03d}".format(ensemble_start))
     #caseroot = os.path.join(baseroot,basecasename+"."+date[:7]+".001")
     #caseroot = os.path.join(baseroot,basecasename+".{}".format(date[:7])+".00")
@@ -165,13 +164,24 @@ def build_base_case(date, baseroot, basecasename, basemonth,res, ensemble_start,
 
             case.set_value("STOP_OPTION","nmonths")
             case.set_value("STOP_N", 24)
-            case.set_value("REST_OPTION","none")
+            case.set_value("REST_OPTION","nmonths")
+            case.set_value("REST_N", 24)
 
             case.set_value("CCSM_BGC","CO2A")
             case.set_value("EXTERNAL_WORKFLOW",True)
             case.set_value("CLM_NAMELIST_OPTS", "use_init_interp=.true.")
 
+        nint = 3 
+        n2nt = 11 
         rundir = case.get_value("RUNDIR")
+        print("rundir 1 = {}".format(rundir))
+        #rundir = os.path.join("/glade/scratch/nanr/","SMYLE","b.e21.BSMYLE.f09_g17."+date[0:7]+".001",
+        #rundir = os.path.join(baseroot,basecasename+"."+date[:7]+".001")
+        rundir = rundir[:-n2nt]+"001/run.{:03d}".format(ensemble_start)
+        print("rundir 2 = {}".format(rundir))
+        rundir = rundir[:-nint]+"{:03d}".format(ensemble_start)
+        print("rundir 3 = {}".format(rundir))
+        case.set_value("RUNDIR",rundir)
         per_run_case_updates(case, date, sdrestdir, user_mods_dir, rundir)
         if not exeroot:
             build.case_build(caseroot, case=case)
@@ -182,7 +192,7 @@ def clone_base_case(date, caseroot, ensemble_start, ensemble_end, sdrestdir, use
 
     nint=3
     cloneroot = caseroot
-    for i in range(ensemble_start+1, ensemble_end):
+    for i in range(ensemble_start+1, ensemble_end+1):
         member_string = '{{0:0{0:d}d}}'.format(nint).format(i)
         if ensemble_end > ensemble_start:
             caseroot = caseroot[:-nint] + member_string
@@ -208,7 +218,8 @@ def _main_func(description):
 
     basemonth = int(date[5:7])
     baseyear = int(date[0:4])
-    baseroot = os.path.join(os.getenv("SMYLE_ROOT"),"cases")
+    #baseroot = os.path.join(os.getenv("SMYLE_ROOT"),"cases")
+    baseroot = os.path.join("/glade/p/cesm/espwg/CESM2-SMYLE/","cases")
     res = "f09_g17"
     waccm = False
     if model == "cesm2smyle":

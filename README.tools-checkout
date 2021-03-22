@@ -1,4 +1,0 @@
-git clone https://github.com/jedwards4b/CESM2-Realtime-Forecast ./cesm2-smyle
-cd cesm2-smyle/
-git checkout -b cesm2-smyle
-
