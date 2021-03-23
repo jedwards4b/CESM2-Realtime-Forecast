@@ -56,6 +56,7 @@ def get_rvals(date, ensemble_start,ensemble_end, model):
     rvals_file = os.path.join("/glade/p/cesm/espwg/CESM2-SMYLE/","cases","camic_"+date+".txt")
     rvals = []
     if os.path.isfile(rvals_file):
+        print("Using existing rvals file {}".format(rvals_file))
         with open(rvals_file,"r") as fd:
             rawvals = fd.read().split(',')
         for rval in rawvals:
@@ -70,6 +71,7 @@ def get_rvals(date, ensemble_start,ensemble_end, model):
     ensemble = ensemble_end
     if len(rvals) < ensemble//2:
         newrvals = random.sample(range(500),k=ensemble//2)
+        #reuse old rvals if any exist
         if len(rvals)>0:
             for i in 0,len(rvals)-1:
                 if rvals[i] not in newrvals:
@@ -78,7 +80,7 @@ def get_rvals(date, ensemble_start,ensemble_end, model):
         with open(rvals_file,"w") as fd:
             fd.write("{}".format(newrvals))
         rvals = newrvals
-    print "LEN of rvals is {}".format(len(rvals))
+    print "rvals {} LEN of rvals is {}".format(rvals,len(rvals))
     return rvals
 
 #def create_cam_ic_perturbed(original, ensemble, date, baserundir, model, outroot="b.e21.f09_g17.cam.i.", factor=0.15):
@@ -166,7 +168,7 @@ def create_cam_ic_perturbed(original, ensemble_start,ensemble_end, date, baserun
         #os.symlink(outfile1, os.path.join(os.path.dirname(outfile1),os.path.basename(original)))
         #os.symlink(outfile2, os.path.join(os.path.dirname(outfile2),os.path.basename(original)))
         #os.symlink(outfile2, os.path.basename(original))
-    
+
 
 def create_perturbed_init_file(original, perturb_file, outfile, weight):
     ncflint = "ncflint"
@@ -174,9 +176,9 @@ def create_perturbed_init_file(original, perturb_file, outfile, weight):
         os.makedirs(os.path.dirname(outfile))
     safe_copy(original, outfile)
     if "BWHIST" in original:
-        cmd = ncflint + " -A -v US,VS,T,Q,PS -w {},1.0 {} {} {}".format(weight, perturb_file, original, outfile)    
+        cmd = ncflint + " -A -v US,VS,T,Q,PS -w {},1.0 {} {} {}".format(weight, perturb_file, original, outfile)
     else:
-        cmd = ncflint+" -O -C -v lat,lon,slat,slon,lev,ilev,hyai,hybi,hyam,hybm,US,VS,T,Q,PS -w {},1.0 {} {} {}".format(weight, perturb_file, original, outfile)    
+        cmd = ncflint+" -O -C -v lat,lon,slat,slon,lev,ilev,hyai,hybi,hyam,hybm,US,VS,T,Q,PS -w {},1.0 {} {} {}".format(weight, perturb_file, original, outfile)
     run_cmd(cmd, verbose=True)
     os.rename(outfile, outfile.replace("-tmp.nc","-00000.nc"))
 
