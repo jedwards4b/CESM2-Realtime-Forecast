@@ -52,35 +52,10 @@ def parse_command_line(args, description):
     return date.strftime("%Y-%m-%d"), args.model,int(args.ensemble_start),int(args.ensemble_end)
 
 def get_rvals(date, ensemble_start,ensemble_end, model):
-    #rvals_file = os.path.join(os.getenv("SMYLE_ROOT"),"cases","camic_"+date+".txt")
-    rvals_file = os.path.join("/glade/p/cesm/espwg/CESM2-SMYLE/","cases","camic_"+date+".txt")
-    rvals = []
-    if os.path.isfile(rvals_file):
-        print("Using existing rvals file {}".format(rvals_file))
-        with open(rvals_file,"r") as fd:
-            rawvals = fd.read().split(',')
-        for rval in rawvals:
-            rval = rval.strip()
-            if rval.startswith('['):
-                rval = int(rval[1:])
-            elif rval.endswith(']'):
-                rval = int(rval[:-1])
-            else:
-                rval = int(rval)
-            rvals.append(rval)
-    ensemble = ensemble_end
-    if len(rvals) < ensemble//2:
-        newrvals = random.sample(range(500),k=ensemble//2)
-        #reuse old rvals if any exist
-        if len(rvals)>0:
-            for i in 0,len(rvals)-1:
-                if rvals[i] not in newrvals:
-                    newrvals[i] = rvals[i]
-        #save these rvals to a file
-        with open(rvals_file,"w") as fd:
-            fd.write("{}".format(newrvals))
-        rvals = newrvals
-    print "rvals {} LEN of rvals is {}".format(rvals,len(rvals))
+    random.seed(int(date[0:3])+int(date[5:6])+int(date[8:9]))
+    rvals = random.sample(range(1001),k=ensemble_end//2)
+    print("Rvals are {}".format(rvals))
+
     return rvals
 
 #def create_cam_ic_perturbed(original, ensemble, date, baserundir, model, outroot="b.e21.f09_g17.cam.i.", factor=0.15):
