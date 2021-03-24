@@ -107,6 +107,7 @@ def create_cam_ic_perturbed(original, ensemble_start,ensemble_end, date, baserun
 
     #    for i in range(ensemble_start,ensemble_end, 2):
     for pfile in perturb_files:
+        pfile = os.path.join(local_path, pfile)
         outfile1 = os.path.join(pertroot[:-2]+"{:02d}".format(i), outroot+date+"-tmp.nc")
         outfile2 = os.path.join(pertroot[:-2]+"{:02d}".format(i+1), outroot+date+"-tmp.nc")
         print("Creating perturbed init file {}".format(outfile1))
