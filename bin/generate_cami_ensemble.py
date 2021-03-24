@@ -102,12 +102,13 @@ def create_cam_ic_perturbed(original, ensemble_start,ensemble_end, date, baserun
 
     pertroot = os.path.join("/glade/scratch/nanr/SMYLE/inputdata/cesm2_init","b.e21.SMYLE_IC.f09_g17."+date[0:7]+".01","pert.01")
 
-    for i in range(ensemble_start,ensemble_end+1, 2):
-        perturb_file = os.path.join(local_path,perturb_files[i//2-1])
+    for i in range(ensemble_start-1,ensemble_end, 2):
+        perturb_file = os.path.join(local_path,perturb_files[i//2])
         outfile1 = os.path.join(pertroot[:-2]+"{:02d}".format(i), outroot+date+"-tmp.nc")
         outfile2 = os.path.join(pertroot[:-2]+"{:02d}".format(i+1), outroot+date+"-tmp.nc")
         print("Creating perturbed init file {}".format(outfile1))
         print("Creating perturbed init file {}".format(outfile2))
+        print("Using perturb_file {}".format(perturb_file))
         t = threading.Thread(target=create_perturbed_init_file,args=(original, perturb_file, outfile1, factor))
         t.start()
         t = threading.Thread(target=create_perturbed_init_file,args=(original, perturb_file, outfile2, -1*factor))
@@ -162,7 +163,8 @@ def _main_func(description):
     date, model,ensemble_start,ensemble_end = parse_command_line(sys.argv, description)
 
     sdrestdir = os.path.join("/glade/scratch/nanr/","SMYLE","inputdata","cesm2_init","b.e21.SMYLE_IC.f09_g17."+date[0:7]+".01","{}".format(date))
-    baserundir = os.path.join("/glade/scratch/$USER/","SMYLE","b.e21.BSMYLE.f09_g17."+date[0:7]+".001","run.{:03d}".format(ensemble_start))
+    user = os.getenv("USER")
+    baserundir = os.path.join("/glade/scratch/{}/".format(user),"SMYLE","b.e21.BSMYLE.f09_g17."+date[0:7]+".001","run.{:03d}".format(ensemble_start))
     caminame = os.path.join(sdrestdir,"b.e21.SMYLE_IC.f09_g17.{}.01.cam.i.{date}-00000.nc".format(date[:7],date=date))
     outroot = "b.e21.SMYLE_IC.pert.f09_g17.cam.i."
 
