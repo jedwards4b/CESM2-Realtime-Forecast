@@ -56,8 +56,9 @@ def get_rvals(date, ensemble_start,ensemble_end, model):
     rvals = random.sample(range(1001),k=ensemble_end//2)
     print("Rvals are {}".format(rvals))
     rvals_file = os.path.join("/glade/p/cesm/espwg/CESM2-SMYLE/","cases","camic_"+date+".txt")
-    with open(rvals_file,"w") as fd:
-        fd.write("{}".format(rvals))
+#    with open(rvals_file,"w") as fd:
+#        fd.write("{}".format(rvals))
+
     return rvals
 
 #def create_cam_ic_perturbed(original, ensemble, date, baserundir, model, outroot="b.e21.f09_g17.cam.i.", factor=0.15):
@@ -88,14 +89,14 @@ def create_cam_ic_perturbed(original, ensemble_start,ensemble_end, date, baserun
     else:
         local_path = "/glade/campaign/cesm/development/cross-wg/S2S/CESM2/CAMI/RP"
     perturb_files = []
-    for i in range(1,ensemble_end+1, 2):
-        print "HERE rvals[{}] = {}".format(i//2,rvals[i//2])
+    for i in range(ensemble_start,ensemble_end, 2):
+        print "HERE rvals[{}] = {}".format((i-1)//2,rvals[(i-1)//2])
         if model == "cesm2smyle":
             perturb_file = os.path.join("{}".format(month),
-                                        "CESM2.cam.i.M{}.diff.{}.nc".format(month,rvals[i//2]))
+                                        "CESM2.cam.i.M{}.diff.{}.nc".format(month,rvals[(i-1)//2]))
         else:
             perturb_file = os.path.join("{}".format(month),
-                                        "CESM2.cam.i.M{}.diff.{}.nc".format(month,rvals[i//2]))
+                                        "CESM2.cam.i.M{}.diff.{}.nc".format(month,rvals[(i-1)//2]))
         dirname = os.path.dirname(os.path.join(local_path,perturb_file))
         if not os.path.isdir(dirname):
             print("Creating directory {}".format(dirname))
@@ -104,21 +105,21 @@ def create_cam_ic_perturbed(original, ensemble_start,ensemble_end, date, baserun
 
     pertroot = os.path.join("/glade/scratch/nanr/SMYLE/inputdata/cesm2_init","b.e21.SMYLE_IC.f09_g17."+date[0:7]+".01","pert.01")
 
-    for i in range(ensemble_start-1,ensemble_end, 2):
-        perturb_file = os.path.join(local_path,perturb_files[i//2])
+    #    for i in range(ensemble_start,ensemble_end, 2):
+    for pfile in perturb_files:
         outfile1 = os.path.join(pertroot[:-2]+"{:02d}".format(i), outroot+date+"-tmp.nc")
         outfile2 = os.path.join(pertroot[:-2]+"{:02d}".format(i+1), outroot+date+"-tmp.nc")
         print("Creating perturbed init file {}".format(outfile1))
         print("Creating perturbed init file {}".format(outfile2))
-        print("Using perturb_file {}".format(perturb_file))
-        t = threading.Thread(target=create_perturbed_init_file,args=(original, perturb_file, outfile1, factor))
+        print("Using perturb_file {}".format(pfile))
+        t = threading.Thread(target=create_perturbed_init_file,args=(original, pfile, outfile1, factor))
         t.start()
-        t = threading.Thread(target=create_perturbed_init_file,args=(original, perturb_file, outfile2, -1*factor))
+        t = threading.Thread(target=create_perturbed_init_file,args=(original, pfile, outfile2, -1*factor))
         t.start()
     while(threading.active_count() > 1):
         time.sleep(1)
-    #for perturb_file in perturb_files:
-    for i in range(ensemble_start+1,ensemble_end+1, 2):
+
+    for perturb_file in perturb_files:
         outfile1 = os.path.join(pertroot[:-2]+"{:02d}".format(i), outroot+date+"-00000.nc")
         outfile2 = os.path.join(pertroot[:-2]+"{:02d}".format(i+1), outroot+date+"-00000.nc")
         #os.link(os.path.join(local_path,perturb_file),os.path.join(local_path,original))
