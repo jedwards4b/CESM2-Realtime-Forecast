@@ -122,31 +122,21 @@ def create_cam_ic_perturbed(original, ensemble_start,ensemble_end, date, baserun
     for i in range(ensemble_start, ensemble_end, 2):
         outfile1 = os.path.join(pertroot[:-2]+"{:02d}".format(i), outroot+date+"-00000.nc")
         outfile2 = os.path.join(pertroot[:-2]+"{:02d}".format(i+1), outroot+date+"-00000.nc")
-        #os.link(os.path.join(local_path,perturb_file),os.path.join(local_path,original))
-        #print("{} {} ".format(os.path.join(local_path,original),os.path.join(local_path,perturb_file)))
-        #os.symlink(os.path.join(local_path,original),os.path.join(local_path,perturb_file))
-
         outdir1 = baserundir[:-3]+"{:03d}".format(i)
         outdir2 = baserundir[:-3]+"{:03d}".format(i+1)
-        print("{} {} ".format(outfile1, os.path.join(outdir1,os.path.basename(original))))
-        print("{} {} ".format(outfile2, os.path.join(outdir2,os.path.basename(original))))
-        #print("{} {} ".format(outfile1, os.path.join(os.path.dirname(outfile1),os.path.basename(original))))
-        #print("{} {} ".format(outfile2, os.path.join(os.path.dirname(outfile2),os.path.basename(original))))
+        origfile = os.path.basename(original)
+        print("{} {} ".format(outfile1, os.path.join(outdir1,origfile)))
+        print("{} {} ".format(outfile2, os.path.join(outdir2,origfile)))
         for outdir in (outdir1,outdir2):
            if not os.path.isdir(outdir):
               os.mkdir(outdir)
               print("outdir = {} ".format(outdir))
         if i != 1:
-           if os.path.isfile(os.path.join(outdir1,os.path.basename(original))):
-              os.unlink(os.path.join(outdir1,os.path.basename(original)))
-           os.symlink(outfile1, os.path.join(outdir1,os.path.basename(original)))
+           if os.path.isfile(os.path.join(outdir1,origfile)):
+              os.unlink(os.path.join(outdir1,origfile))
+           os.symlink(outfile1, os.path.join(outdir1,origfile))
            print("I made it here = {} ".format(outdir))
-        os.symlink(outfile2, os.path.join(outdir2,os.path.basename(original)))
-          #os.symlink(outfile1, os.path.join(baserundir[:-3]+"{:03d}".format(i),os.path.basename(original)))
-        #os.symlink(outfile2, os.path.join(baserundir[:-3]+"{:03d}".format(i+1),os.path.basename(original)))
-        #os.symlink(outfile1, os.path.join(os.path.dirname(outfile1),os.path.basename(original)))
-        #os.symlink(outfile2, os.path.join(os.path.dirname(outfile2),os.path.basename(original)))
-        #os.symlink(outfile2, os.path.basename(original))
+        os.symlink(outfile2, os.path.join(outdir2,origfile))
 
 
 def create_perturbed_init_file(original, perturb_file, outfile, weight):
