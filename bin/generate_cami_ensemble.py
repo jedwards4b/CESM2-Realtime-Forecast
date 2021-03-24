@@ -144,7 +144,9 @@ def create_perturbed_init_file(original, perturb_file, outfile, weight):
     ncflint = "ncflint"
     if not os.path.isdir(os.path.dirname(outfile)):
         os.makedirs(os.path.dirname(outfile))
-    if os.path.isfile(outfile.replace("-tmp.nc","-00000.nc")):
+    pertfile = outfile.replace("-tmp.nc","-00000.nc")
+    if os.path.isfile(pertfile):
+        print("Found existing file {}".format(pertfile))
         return # file exists nothing more to do
     safe_copy(original, outfile)
     if "BWHIST" in original:
