@@ -55,7 +55,9 @@ def get_rvals(date, ensemble_start,ensemble_end, model):
     random.seed(int(date[0:3])+int(date[5:6])+int(date[8:9]))
     rvals = random.sample(range(1001),k=ensemble_end//2)
     print("Rvals are {}".format(rvals))
-
+    rvals_file = os.path.join("/glade/p/cesm/espwg/CESM2-SMYLE/","cases","camic_"+date+".txt")
+    with open(rvals_file,"w") as fd:
+        fd.write("{}".format(rvals))
     return rvals
 
 #def create_cam_ic_perturbed(original, ensemble, date, baserundir, model, outroot="b.e21.f09_g17.cam.i.", factor=0.15):
