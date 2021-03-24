@@ -144,14 +144,18 @@ def create_perturbed_init_file(original, perturb_file, outfile, weight):
     ncflint = "ncflint"
     if not os.path.isdir(os.path.dirname(outfile)):
         os.makedirs(os.path.dirname(outfile))
+    if os.path.isfile(outfile.replace("-tmp.nc","-00000.nc")):
+        return # file exists nothing more to do
     safe_copy(original, outfile)
     if "BWHIST" in original:
         cmd = ncflint + " -A -v US,VS,T,Q,PS -w {},1.0 {} {} {}".format(weight, perturb_file, original, outfile)
     else:
         cmd = ncflint+" -O -C -v lat,lon,slat,slon,lev,ilev,hyai,hybi,hyam,hybm,US,VS,T,Q,PS -w {},1.0 {} {} {}".format(weight, perturb_file, original, outfile)
     run_cmd(cmd, verbose=True)
-    os.rename(outfile, outfile.replace("-tmp.nc","-00000.nc"))
-
+    if os.path.isfile(outfile):
+        os.rename(outfile, outfile.replace("-tmp.nc","-00000.nc"))
+    else:
+        print("Rename of {} failed".format(outfile))
 
 def _main_func(description):
     date, model,ensemble_start,ensemble_end = parse_command_line(sys.argv, description)
