@@ -30,6 +30,11 @@ def parse_command_line(args, description):
 
     parser.add_argument("--model",help="Specify a case (cesm2cam6, cesm2smyle)", default="cesm2smyle")
 
+    parser.add_argument("--ensemble-start",default=1,
+                        help="Specify the first ensemble member")
+    parser.add_argument("--ensemble-end",default=10,
+                        help="Specify the last ensemble member")
+
     args = CIME.utils.parse_args_and_handle_standard_logging_options(args, parser)
     cdate = os.environ.get("CYLC_TASK_CYCLE_POINT")
 
@@ -44,52 +49,36 @@ def parse_command_line(args, description):
         date = datetime.date.today()
         date = date.replace(day=date.day-1)
 
-    return date.strftime("%Y-%m-%d"), args.model
+    return date.strftime("%Y-%m-%d"), args.model,int(args.ensemble_start),int(args.ensemble_end)
 
-def get_rvals(date, ensemble, model):
-    #rvals_file = os.path.join(os.getenv("WORK"),"cases","cesm2smyle","camic_"+date+".txt")
-    rvals_file = os.path.join("/glade/work/nanr/CESM2-SMYLE","cases","camic_"+date+".txt")
-    rvals = []
-    if os.path.isfile(rvals_file):
-        with open(rvals_file,"r") as fd:
-            rawvals = fd.read().split(',')
-        for rval in rawvals:
-            rval = rval.strip()
-            if rval.startswith('['):
-                rval = int(rval[1:])
-            elif rval.endswith(']'):
-                rval = int(rval[:-1])
-            else:
-                rval = int(rval)
-            rvals.append(rval)
-    if len(rvals) < ensemble//2:
-        newrvals = random.sample(range(500),k=ensemble//2)
-        if len(rvals)>0:
-            for i in 0,len(rvals)-1:
-                if rvals[i] not in newrvals:
-                    newrvals[i] = rvals[i]
-        #save these rvals to a file
-        with open(rvals_file,"w") as fd:
-            fd.write("{}".format(newrvals))
-        rvals = newrvals
-    print "LEN of rvals is {}".format(len(rvals))
+def get_rvals(date, ensemble_start,ensemble_end, model):
+    random.seed(int(date[0:3])+int(date[5:6])+int(date[8:9]))
+    rvals = random.sample(range(1001),k=ensemble_end//2)
+    print("Rvals are {}".format(rvals))
+    rvals_file = os.path.join("/glade/p/cesm/espwg/CESM2-SMYLE/","cases","camic_"+date+".{}-{}.txt".format(ensemble_start,ensemble_end))
+    #rvals_file = os.path.join("/glade/p/cesm/espwg/CESM2-SMYLE/","cases","camic_"+date+"."+ensemble_start+"-"+ensemble_end+".txt")
+    with open(rvals_file,"w") as fd:
+        fd.write("{}".format(rvals))
+
     return rvals
 
 #def create_cam_ic_perturbed(original, ensemble, date, baserundir, model, outroot="b.e21.f09_g17.cam.i.", factor=0.15):
-def create_cam_ic_perturbed(original, ensemble, date, baserundir, model, outroot="b.e21.SMYLE_IC.pert.f09_g17.cam.i.", factor=0.15):
-    rvals = get_rvals(date, ensemble, model)
+def create_cam_ic_perturbed(original, ensemble_start,ensemble_end, date, baserundir, model, outroot="b.e21.SMYLE_IC.pert.f09_g17.cam.i.", factor=0.15):
+    rvals = get_rvals(date, ensemble_start,ensemble_end, model)
 
     outfile = os.path.join(baserundir,outroot+date+"-00000.nc")
     # first link the original ic file to the 0th ensemble member
     if os.path.exists(outfile):
         os.unlink(outfile)
     expect(os.path.isfile(original),"ERROR file {} not found".format(original))
-    print("Linking {} to {}".format(original, outfile))
+    #print("Linking {} to {}".format(original, outfile))
     rundir = os.path.dirname(outfile)
+    print("Linking {} to {}".format(original, os.path.join(rundir,os.path.basename(original))))
     if os.path.isdir(rundir):
         shutil.rmtree(rundir)
     os.makedirs(rundir)
-    os.symlink(original, outfile)
+    #os.symlink(original, outfile)
+    os.symlink(original, os.path.join(rundir,os.path.basename(original)))
 
     # for each pair of ensemble members create an ic file with same perturbation opposite sign
     month = date[5:7]
@@ -101,62 +90,85 @@ def create_cam_ic_perturbed(original, ensemble, date, baserundir, model, outroot
     else:
         local_path = "/glade/campaign/cesm/development/cross-wg/S2S/CESM2/CAMI/RP"
     perturb_files = []
-    for i in range(1,ensemble, 2):
-        print "HERE rvals[{}] = {}".format(i//2,rvals[i//2])
+    for i in range(ensemble_start,ensemble_end, 2):
+        print "HERE rvals[{}] = {}".format((i-1)//2,rvals[(i-1)//2])
         if model == "cesm2smyle":
             perturb_file = os.path.join("{}".format(month),
-                                        "CESM2.cam.i.M{}.diff.{}.nc".format(month,rvals[i//2]))
+                                        "CESM2.cam.i.M{}.diff.{}.nc".format(month,rvals[(i-1)//2]))
         else:
             perturb_file = os.path.join("{}".format(month),
-                                        "CESM2.cam.i.M{}.diff.{}.nc".format(month,rvals[i//2]))
+                                        "CESM2.cam.i.M{}.diff.{}.nc".format(month,rvals[(i-1)//2]))
         dirname = os.path.dirname(os.path.join(local_path,perturb_file))
         if not os.path.isdir(dirname):
             print("Creating directory {}".format(dirname))
             os.makedirs(dirname)
         perturb_files.append(perturb_file)
 
-    for i in range(1,ensemble, 2):
-        perturb_file = os.path.join(local_path,perturb_files[i//2-1])
-        outfile1 = os.path.join(baserundir[:-2]+"{:02d}".format(i), outroot+date+"-tmp.nc")
-        outfile2 = os.path.join(baserundir[:-2]+"{:02d}".format(i+1), outroot+date+"-tmp.nc")
+    pertroot = os.path.join("/glade/scratch/nanr/SMYLE/inputdata/cesm2_init","b.e21.SMYLE_IC.f09_g17."+date[0:7]+".01","pert.01")
+
+    for i in range(ensemble_start,ensemble_end, 2):
+        pfile = os.path.join(local_path, perturb_files.pop(0))
+        outfile1 = os.path.join(pertroot[:-2]+"{:02d}".format(i), outroot+date+"-tmp.nc")
+        outfile2 = os.path.join(pertroot[:-2]+"{:02d}".format(i+1), outroot+date+"-tmp.nc")
         print("Creating perturbed init file {}".format(outfile1))
-        t = threading.Thread(target=create_perturbed_init_file,args=(original, perturb_file, outfile1, factor))
+        print("Creating perturbed init file {}".format(outfile2))
+        print("Using perturb_file {}".format(pfile))
+        t = threading.Thread(target=create_perturbed_init_file,args=(original, pfile, outfile1, factor))
         t.start()
-        t = threading.Thread(target=create_perturbed_init_file,args=(original, perturb_file, outfile2, -1*factor))
+        t = threading.Thread(target=create_perturbed_init_file,args=(original, pfile, outfile2, -1*factor))
         t.start()
     while(threading.active_count() > 1):
         time.sleep(1)
-#    for perturb_file in perturb_files:
-#        os.unlink(os.path.join(local_path,perturb_file))
-    
+
+    for i in range(ensemble_start, ensemble_end, 2):
+        outfile1 = os.path.join(pertroot[:-2]+"{:02d}".format(i), outroot+date+"-00000.nc")
+        outfile2 = os.path.join(pertroot[:-2]+"{:02d}".format(i+1), outroot+date+"-00000.nc")
+        outdir1 = baserundir[:-3]+"{:03d}".format(i)
+        outdir2 = baserundir[:-3]+"{:03d}".format(i+1)
+        origfile = os.path.basename(original)
+        print("{} {} ".format(outfile1, os.path.join(outdir1,origfile)))
+        print("{} {} ".format(outfile2, os.path.join(outdir2,origfile)))
+        for outdir in (outdir1,outdir2):
+           if not os.path.isdir(outdir):
+              os.mkdir(outdir)
+              print("outdir = {} ".format(outdir))
+        if i != 1:
+           if os.path.isfile(os.path.join(outdir1,origfile)):
+              os.unlink(os.path.join(outdir1,origfile))
+           os.symlink(outfile1, os.path.join(outdir1,origfile))
+           print("I made it here = {} ".format(outdir))
+        os.symlink(outfile2, os.path.join(outdir2,origfile))
+
 
 def create_perturbed_init_file(original, perturb_file, outfile, weight):
     ncflint = "ncflint"
     if not os.path.isdir(os.path.dirname(outfile)):
         os.makedirs(os.path.dirname(outfile))
+    pertfile = outfile.replace("-tmp.nc","-00000.nc")
+    if os.path.isfile(pertfile):
+        print("Found existing file {}".format(pertfile))
+        return # file exists nothing more to do
     safe_copy(original, outfile)
-    cmd = ncflint+" -O -C -v lat,lon,slat,slon,lev,ilev,hyai,hybi,hyam,hybm,US,VS,T,Q,PS -w {},1.0 {} {} {}".format(weight, perturb_file, original, outfile)    
+    if "BWHIST" in original:
+        cmd = ncflint + " -A -v US,VS,T,Q,PS -w {},1.0 {} {} {}".format(weight, perturb_file, original, outfile)
+    else:
+        cmd = ncflint+" -O -C -v lat,lon,slat,slon,lev,ilev,hyai,hybi,hyam,hybm,US,VS,T,Q,PS -w {},1.0 {} {} {}".format(weight, perturb_file, original, outfile)
     run_cmd(cmd, verbose=True)
-    os.rename(outfile, outfile.replace("-tmp.nc","-00000.nc"))
-
+    if os.path.isfile(outfile):
+        os.rename(outfile, outfile.replace("-tmp.nc","-00000.nc"))
+    else:
+        print("Rename of {} failed".format(outfile))
 
 def _main_func(description):
-    date, model = parse_command_line(sys.argv, description)
+    date, model,ensemble_start,ensemble_end = parse_command_line(sys.argv, description)
 
-    ensemble = 10
-    #sdrestdir = os.path.join(os.getenv("SCRATCH"),"SMYLE","inputdata","cesm2_init","b.e21.SMYLE_IC.f09_g17."+date[:7]+".01")
-    #sdrestdir = os.path.join(os.getenv("SCRATCH"),"SMYLE","inputdata","cesm2_init","b.e21.SMYLE_IC.f09_g17."+date[:7]+".01","{}".format(date))
-    sdrestdir  = os.path.join("/glade/scratch/nanr/","SMYLE","inputdata","cesm2_init","b.e21.SMYLE_IC.f09_g17."+date[0:7]+".01","{}".format(date))
-    #baserundir = os.path.join("/glade/scratch/nanr/","SMYLE","inputdata","cesm2_init","b.e21.SMYLE_IC.f09_g17."+date[0:7]+".01","{}".format(date))
-    #baserundir = os.path.join(os.getenv("SCRATCH"),"SMYLE","rundir","b.e21.SMYLE.f09_g17."+date[:7]+".001","run.01")
-    #baserundir = os.path.join(os.getenv("SCRATCH"),"b.e21.SMYLE.f09_g17."+date[:7]+".001","run.01")
-    baserundir = os.path.join("/glade/scratch/nanr/SMYLE/inputdata/cesm2_init","b.e21.SMYLE_IC.f09_g17."+date[0:7]+".01","pert.01")
-    #baserundir = os.path.join(sdrestdir,"pert.01")
-    #baserundir = os.path.join(os.getenv("SCRATCH"),"cesm2cam6."+date[5:7]+".01","run.01")
+    sdrestdir = os.path.join("/glade/scratch/nanr/","SMYLE","inputdata","cesm2_init","b.e21.SMYLE_IC.f09_g17."+date[0:7]+".01","{}".format(date))
+    user = os.getenv("USER")
+    baserundir = os.path.join("/glade/scratch/{}/".format(user),"SMYLE","b.e21.BSMYLE.f09_g17."+date[0:7]+".001","run.{:03d}".format(ensemble_start))
     caminame = os.path.join(sdrestdir,"b.e21.SMYLE_IC.f09_g17.{}.01.cam.i.{date}-00000.nc".format(date[:7],date=date))
     outroot = "b.e21.SMYLE_IC.pert.f09_g17.cam.i."
 
-    create_cam_ic_perturbed(caminame,ensemble, date,baserundir, model, outroot=outroot)
+    create_cam_ic_perturbed(caminame,ensemble_start,ensemble_end, date,baserundir, model, outroot=outroot)
 
 if __name__ == "__main__":
     _main_func(__doc__)
