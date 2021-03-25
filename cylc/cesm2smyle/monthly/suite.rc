@@ -141,6 +141,7 @@ cd ${SMYLE_ROOT}/cases/b.e21.BSMYLE.f09_g17.${CYLC_TASK_CYCLE_DATE}.$(printf "%0
        -j = oe
        -V =
        -S = /bin/bash
+       -N = ${CYLC_TASK_CYCLE_DATE}.$(printf "%03d" ${CYLC_TASK_PARAM_member}).run
        # dont forget to change this line if you change pelayout
        # How can we connect this to the pelayout?
        -l = select=20:ncpus=36:mpiprocs=36:ompthreads=1
