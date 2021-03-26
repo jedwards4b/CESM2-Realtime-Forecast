@@ -236,7 +236,8 @@ def _main_func(description):
     print ("baseyear is {} basemonth is {}".format(baseyear,basemonth))
 
     overwrite = True
-    sdrestdir = os.path.join(os.getenv("SCRATCH"),"SMYLE","inputdata","cesm2_init","b.e21.SMYLE_IC.f09_g17."+date[0:7]+".01","{}".format(date))
+#    sdrestdir = os.path.join(os.getenv("SCRATCH"),"SMYLE","inputdata","cesm2_init","b.e21.SMYLE_IC.f09_g17."+date[0:7]+".01","{}".format(date))
+    sdrestdir = os.path.join("/glade/p/cesm/espwg/CESM2-SMYLE/inputdata/cesm2_init","b.e21.SMYLE_IC.f09_g17."+date[0:7]+".01","{}".format(date))
 
     user_mods_dir = os.path.join(s2sfcstroot,"user_mods","cesm2smyle")
 
