@@ -118,8 +118,10 @@ def per_run_case_updates(case, date, sdrestdir, user_mods_dir, rundir):
 
 #def build_base_case(date, baseroot, basecasename, basemonth,res, ensemble_start, compset, overwrite,
                     #sdrestdir, user_mods_dir, pecount=None, exeroot="/glade/scratch/nanr/SMYLE/b.e21.BSMYLE.f09_g17.1980-11.001/bld/"):
+#def build_base_case(date, baseroot, basecasename, basemonth,res, ensemble_start, compset, overwrite,
+                    #sdrestdir, user_mods_dir, pecount=None, exeroot="/glade/scratch/nanr/SMYLE/exerootdir/bld/"):
 def build_base_case(date, baseroot, basecasename, basemonth,res, ensemble_start, compset, overwrite,
-                    sdrestdir, user_mods_dir, pecount=None, exeroot="/glade/scratch/nanr/SMYLE/exerootdir/bld/"):
+                    sdrestdir, user_mods_dir, pecount=None):
     caseroot = os.path.join(baseroot,basecasename+"."+date[:7]+".{:03d}".format(ensemble_start))
     #caseroot = os.path.join(baseroot,basecasename+"."+date[:7]+".001")
     #caseroot = os.path.join(baseroot,basecasename+".{}".format(date[:7])+".00")
@@ -134,6 +136,7 @@ def build_base_case(date, baseroot, basecasename, basemonth,res, ensemble_start,
             # make sure that changing the casename will not affect these variables
             user = os.getenv("USER")
             cimeroot = os.path.join("/glade/scratch/{}/".format(user),"SMYLE")
+            exeroot = os.path.join("/glade/scratch/{}/".format(user),"SMYLE/exerootdir/bld")
             case.set_value("CIME_OUTPUT_ROOT",cimeroot)
             #case.set_value("CIME_OUTPUT_ROOT","/glade/scratch/nanr/SMYLE")
             if exeroot and os.path.exists(os.path.join(exeroot,"cesm.exe")):

@@ -41,9 +41,9 @@
   #     st_archive<mbr>[-P3M] => build_model => run_family:finish-all
     [[[R/P1Y]]]
       graph = """
-        postprocess_family:finish-all => dispose
+        pp_family:finish-all => dispose
         st_archive<mbr>[-P1Y] => get_data => build_model => run_family:finish-all
-        run<mbr> => st_archive<mbr> => postprocess<mbr>
+        run<mbr> => st_archive<mbr> => pp<mbr>
              """
 [runtime]
   [[get_data]]
@@ -88,9 +88,9 @@ cd ${SMYLE_ROOT}/cases/b.e21.BSMYLE.f09_g17.${CYLC_TASK_CYCLE_DATE}.$(printf "%0
     [[[environment]]]
       #CYLC_TASK_CYCLE_MONTH = $(cylc cyclepoint --template=%m)
       CYLC_TASK_CYCLE_DATE = $(cylc cyclepoint --template=%Y-%m)
-    [[postprocess<mbr>]]
-      inherit = postprocess_family
-    [[postprocess_family]]
+    [[pp<mbr>]]
+      inherit = pp_family
+    [[pp_family]]
       script = """
 cd ${SMYLE_ROOT}/cases/b.e21.BSMYLE.f09_g17.${CYLC_TASK_CYCLE_DATE}.$(printf "%03d" ${CYLC_TASK_PARAM_mbr})
 unset PYTHONPATH
