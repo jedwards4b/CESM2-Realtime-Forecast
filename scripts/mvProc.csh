@@ -11,8 +11,8 @@ setenv RESTDIR  /glade/campaign/cesm/development/espwg/SMYLE/restarts
 set syr = 1963
 set eyr = 1963
 # ...
-set syr = 1971
-set eyr = 1972
+set syr = 2012
+set eyr = 2012
 
 @ ib = $syr
 @ ie = $eyr
@@ -24,7 +24,7 @@ foreach mon ( 11 )
 
 # case name counter
 set smbr =  11
-set embr =  20
+set embr =  12
 
 @ mb = $smbr
 @ me = $embr

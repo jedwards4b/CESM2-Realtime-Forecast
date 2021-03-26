@@ -25,8 +25,8 @@
 
 [scheduling]
   # Change the run start and end dates here
-    initial cycle point = "1971-11-01"
-    final cycle point = "1971-11-01"
+    initial cycle point = "2012-11-01"
+    final cycle point = "2012-11-01"
 
     # must start Feb 01, any year:
     # initial cycle point constraints = "0201T00"
@@ -94,14 +94,15 @@ cd ${SMYLE_ROOT}/cases/b.e21.BSMYLE.f09_g17.${CYLC_TASK_CYCLE_DATE}.$(printf "%0
       script = """
 cd ${SMYLE_ROOT}/cases/b.e21.BSMYLE.f09_g17.${CYLC_TASK_CYCLE_DATE}.$(printf "%03d" ${CYLC_TASK_PARAM_member})
 unset PYTHONPATH
-source $POSTPROCESS_PATH/cesm-env2/bin/activate
+module use /glade/work/bdobbins/Software/Modules
+module load cesm_postprocessing
 if [ ! -d "postprocess" ]; then
-   $POSTPROCESS_PATH/cesm-env2/bin/create_postprocess -caseroot `pwd`
+   create_postprocess -caseroot=`pwd`
 fi
 cd postprocess
-./pp_config --set TIMESERIES_OUTPUT_ROOTDIR=/glade/p/cesm/espwg/CESM2-SMYLE/timeseries/b.e21.BSMYLE.f09_g17.${CYLC_TASK_CYCLE_DATE}.$(printf "%03d" ${CYLC_TASK_PARAM_member})
-cd ../
-${FCST_HOME}/bin/postprocess.py
+pp_config --set TIMESERIES_OUTPUT_ROOTDIR=/glade/p/cesm/espwg/CESM2-SMYLE/timeseries/b.e21.BSMYLE.f09_g17.${CYLC_TASK_CYCLE_DATE}.$(printf "%03d" ${CYLC_TASK_PARAM_member})
+today=`date '+%Y%m%d-%H%M%S'`
+mpirun ./timeseries > ./logs/timeseries.log.${today} 2>&1
 """
     [[[environment]]]
       #CYLC_TASK_CYCLE_MONTH = $(cylc cyclepoint --template=%m)
@@ -141,7 +142,6 @@ cd ${SMYLE_ROOT}/cases/b.e21.BSMYLE.f09_g17.${CYLC_TASK_CYCLE_DATE}.$(printf "%0
        -j = oe
        -V =
        -S = /bin/bash
-       -N = ${CYLC_TASK_CYCLE_DATE}.$(printf "%03d" ${CYLC_TASK_PARAM_member}).run
        # dont forget to change this line if you change pelayout
        # How can we connect this to the pelayout?
        -l = select=20:ncpus=36:mpiprocs=36:ompthreads=1
