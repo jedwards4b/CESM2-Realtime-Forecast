@@ -20,7 +20,7 @@
     # The number of ensemble members can be changed here
     # The first number here should always be 1 and the second the number of members to run
     # the member to start with is firstmember
-    member = {{ ensemble_start }}..{{ ensemble_end }}
+    mbr = {{ ensemble_start }}..{{ ensemble_end }}
 
 
 [scheduling]
@@ -38,12 +38,12 @@
   # run needs to finish, not nessasarily successfully for next step to start
   # 3 month cycle
   # [[[R/P3M]]]
-  #     st_archive<member>[-P3M] => build_model => run_family:finish-all
+  #     st_archive<mbr>[-P3M] => build_model => run_family:finish-all
     [[[R/P1Y]]]
       graph = """
         postprocess_family:finish-all => dispose
-        st_archive<member>[-P1Y] => get_data => build_model => run_family:finish-all
-        run<member> => st_archive<member> => postprocess<member>
+        st_archive<mbr>[-P1Y] => get_data => build_model => run_family:finish-all
+        run<mbr> => st_archive<mbr> => postprocess<mbr>
              """
 [runtime]
   [[get_data]]
@@ -80,19 +80,19 @@ cd ${FCST_HOME}/bin/
        -S = /bin/bash
        -l = select=1:ncpus=18:ompthreads=18
 
-  [[st_archive<member>]]
+  [[st_archive<mbr>]]
     script = """
-cd ${SMYLE_ROOT}/cases/b.e21.BSMYLE.f09_g17.${CYLC_TASK_CYCLE_DATE}.$(printf "%03d" ${CYLC_TASK_PARAM_member})
+cd ${SMYLE_ROOT}/cases/b.e21.BSMYLE.f09_g17.${CYLC_TASK_CYCLE_DATE}.$(printf "%03d" ${CYLC_TASK_PARAM_mbr})
 ./case.submit --job case.st_archive
 """
     [[[environment]]]
       #CYLC_TASK_CYCLE_MONTH = $(cylc cyclepoint --template=%m)
       CYLC_TASK_CYCLE_DATE = $(cylc cyclepoint --template=%Y-%m)
-    [[postprocess<member>]]
+    [[postprocess<mbr>]]
       inherit = postprocess_family
     [[postprocess_family]]
       script = """
-cd ${SMYLE_ROOT}/cases/b.e21.BSMYLE.f09_g17.${CYLC_TASK_CYCLE_DATE}.$(printf "%03d" ${CYLC_TASK_PARAM_member})
+cd ${SMYLE_ROOT}/cases/b.e21.BSMYLE.f09_g17.${CYLC_TASK_CYCLE_DATE}.$(printf "%03d" ${CYLC_TASK_PARAM_mbr})
 unset PYTHONPATH
 module use /glade/work/bdobbins/Software/Modules
 module load cesm_postprocessing
@@ -100,7 +100,7 @@ if [ ! -d "postprocess" ]; then
    create_postprocess -caseroot=`pwd`
 fi
 cd postprocess
-pp_config --set TIMESERIES_OUTPUT_ROOTDIR=/glade/p/cesm/espwg/CESM2-SMYLE/timeseries/b.e21.BSMYLE.f09_g17.${CYLC_TASK_CYCLE_DATE}.$(printf "%03d" ${CYLC_TASK_PARAM_member})
+pp_config --set TIMESERIES_OUTPUT_ROOTDIR=/glade/p/cesm/espwg/CESM2-SMYLE/timeseries/b.e21.BSMYLE.f09_g17.${CYLC_TASK_CYCLE_DATE}.$(printf "%03d" ${CYLC_TASK_PARAM_mbr})
 today=`date '+%Y%m%d-%H%M%S'`
 mpirun ./timeseries > ./logs/timeseries.log.${today} 2>&1
 """
@@ -122,11 +122,11 @@ mpirun ./timeseries > ./logs/timeseries.log.${today} 2>&1
       script = """
 #${FCST_HOME}/bin/dispose_data.py
 """
-    [[run<member>]]
+    [[run<mbr>]]
        inherit = run_family
     [[run_family]]
     script = """
-cd ${SMYLE_ROOT}/cases/b.e21.BSMYLE.f09_g17.${CYLC_TASK_CYCLE_DATE}.$(printf "%03d" ${CYLC_TASK_PARAM_member})
+cd ${SMYLE_ROOT}/cases/b.e21.BSMYLE.f09_g17.${CYLC_TASK_CYCLE_DATE}.$(printf "%03d" ${CYLC_TASK_PARAM_mbr})
 ./case.submit --job case.run
 """
     [[[environment]]]
