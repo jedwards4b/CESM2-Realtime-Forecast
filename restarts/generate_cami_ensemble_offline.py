@@ -52,7 +52,7 @@ def parse_command_line(args, description):
     return date.strftime("%Y-%m-%d"), args.model,int(args.ensemble_start),int(args.ensemble_end)
 
 def get_rvals(date, ensemble_start,ensemble_end, model):
-    random.seed(int(date[0:3])+int(date[5:6])+int(date[8:9]))
+    random.seed(int(date[0:4])+int(date[5:7])+int(date[8:10]))
     rvals = random.sample(range(1001),k=ensemble_end//2)
     print("Rvals are {}".format(rvals))
     rvals_file = os.path.join("/glade/p/cesm/espwg/CESM2-SMYLE/","cases","camic_"+date+".{}-{}.txt".format(ensemble_start,ensemble_end))

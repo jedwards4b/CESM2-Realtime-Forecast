@@ -23,8 +23,8 @@ foreach mon ( 11 )
 
 
 # case name counter
-set smbr =  11
-set embr =  12
+set smbr =  13
+set embr =  14
 
 @ mb = $smbr
 @ me = $embr
