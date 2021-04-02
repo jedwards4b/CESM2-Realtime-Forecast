@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 import os, glob, sys
 
-_LIBDIR = os.path.join("/glade/work/nanr/cesm_tags/cesm2.1.4-SMYLE/cime", "scripts", "Tools")
+_LIBDIR = os.path.join("/home/smyle/work/cesm/cesm2.1.x/cime", "scripts", "Tools")
 sys.path.append(_LIBDIR)
 from standard_script_setup          import *
 from CIME.utils import run_cmd, safe_copy, expect

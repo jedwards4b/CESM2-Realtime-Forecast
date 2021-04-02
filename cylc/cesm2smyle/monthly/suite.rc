@@ -9,13 +9,13 @@
   cycle point format = CCYY-MM-DD
   [[environment]]
     #CYLC_TASK_CYCLE_MONTH = "11"
-    FCST_HOME = "/glade/work/nanr/cesm_tags/CASE_tools/cesm2-smyle/"
-    CESM_ROOT = "/glade/work/nanr/cesm_tags/cesm2.1.4-SMYLE/"
-    SCRATCH   = "/glade/scratch/nanr/"
+    FCST_HOME = "/home/smyle/work/cesm/CESM2-Realtime-Forecast/"
+    CESM_ROOT = "/home/smyle/work/cesm/cesm2.1.x/"
+    SCRATCH   = "/home/smyle/work/cesm/scratch"
     USECASE   = "cesm2smyle"
-    REFDIR    = "/glade/scratch/nanr/SMYLE/inputdata/cesm2_init/"
-    POSTPROCESS_PATH = "/glade/work/jedwards/sandboxes/CESM_postprocessing"
-    SMYLE_ROOT = "/glade/p/cesm/espwg/CESM2-SMYLE"
+    REFDIR    = "/home/smyle/work/cesm/inputdata/cesm2_init/"
+    POSTPROCESS_PATH = "/home/smyle/work/cesm/CESM_postprocessing"
+    SMYLE_ROOT = "/home/smyle/work/cesm/CESM2-SMYLE"
   [[parameters]]
     # The number of ensemble members can be changed here
     # The first number here should always be 1 and the second the number of members to run
@@ -41,7 +41,6 @@
   #     st_archive<mbr>[-P3M] => build_model => run_family:finish-all
     [[[R/P1Y]]]
       graph = """
-        pp_family:finish-all => dispose
         st_archive<mbr>[-P1Y] => get_data => build_model => run_family:finish-all
         run<mbr> => st_archive<mbr> => pp<mbr>
              """
@@ -56,13 +55,11 @@ cd ${FCST_HOME}/bin/
       batch system = slurm
       shell = /bin/bash
     [[[directives]]]
-       --ntasks=1
+       --nodes=1
        --cpus-per-task=8
-       --partition=dav
        --time=01:00:00
-       --account=NCGD0047
     [[[environment]]]
-       SMYLE_ROOT = "/glade/p/cesm/espwg/CESM2-SMYLE"
+       SMYLE_ROOT = "/home/smyle/work/cesm/CESM2-SMYLE"
 
   [[build_model]]
     script = """
@@ -70,15 +67,12 @@ cd ${FCST_HOME}/bin/
 ./buildcase.py --ensemble-start {{ ensemble_start }} --ensemble-end {{ ensemble_end }}
 """
     [[[job]]]
-      batch system = pbs
-      batch submit command template = qsub -q share -l walltime=01:00:00 -A NCGD0047 '%(job)s'
+      batch system = slurm
       shell = /bin/bash
     [[[directives]]]
-       -r = n
-       -j = oe
-       -V =
-       -S = /bin/bash
-       -l = select=1:ncpus=18:ompthreads=18
+       --nodes=1
+       --cpus-per-task=16
+       --time=01:00:00
 
   [[st_archive<mbr>]]
     script = """
@@ -100,7 +94,7 @@ if [ ! -d "postprocess" ]; then
    create_postprocess -caseroot=`pwd`
 fi
 cd postprocess
-pp_config --set TIMESERIES_OUTPUT_ROOTDIR=/glade/scratch/nanr/SMYLE/timeseries/b.e21.BSMYLE.f09_g17.${CYLC_TASK_CYCLE_DATE}.$(printf "%03d" ${CYLC_TASK_PARAM_mbr})
+pp_config --set TIMESERIES_OUTPUT_ROOTDIR=/home/smyle/work/cesm/scratch/SMYLE/timeseries/b.e21.BSMYLE.f09_g17.${CYLC_TASK_CYCLE_DATE}.$(printf "%03d" ${CYLC_TASK_PARAM_mbr})
 today=`date '+%Y%m%d-%H%M%S'`
 mpirun ./timeseries > ./logs/timeseries.log.${today} 2>&1
 """
@@ -108,14 +102,10 @@ mpirun ./timeseries > ./logs/timeseries.log.${today} 2>&1
       #CYLC_TASK_CYCLE_MONTH = $(cylc cyclepoint --template=%m)
       CYLC_TASK_CYCLE_DATE = $(cylc cyclepoint --template=%Y-%m)
     [[[job]]]
-      batch system = pbs
-      batch submit command template = qsub -q regular -l walltime=02:00:00 -A NCGD0047 '%(job)s'
+      batch system = slurm
     [[[directives]]]
-       -r = n
-       -j = oe
-       -V =
-       -S = /bin/bash
-       -l = select=1:ncpus=36:mpiprocs=36:ompthreads=1
+       --nodes=1
+       --time=12:00:00
 
     [[dispose]]
     # Globus process, must run on host
@@ -135,15 +125,11 @@ cd ${SMYLE_ROOT}/cases/b.e21.BSMYLE.f09_g17.${CYLC_TASK_CYCLE_DATE}.$(printf "%0
     [[[job]]]
       # Retry each run up to 2 times with different fv_nsplit values
       # execution retry delays = 2*PT6S
-      batch system = pbs
-      batch submit command template = qsub -q economy -l walltime=12:00:00 -A NCGD0047 '%(job)s'
+      batch system = slurm
     [[[directives]]]
-       -r = n
-       -j = oe
-       -V =
-       -S = /bin/bash
-       # dont forget to change this line if you change pelayout
+       # dont forget to change these lines if you change pelayout
        # How can we connect this to the pelayout?
-       -l = select=20:ncpus=36:mpiprocs=36:ompthreads=1
+       --nodes=20
+       --ntasks-per-node=24
     [[[events]]]
         handler events = retry, failed

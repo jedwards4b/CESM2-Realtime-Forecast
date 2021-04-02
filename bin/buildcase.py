@@ -135,9 +135,9 @@ def build_base_case(date, baseroot, basecasename, basemonth,res, ensemble_start,
                         user_mods_dir=user_mods_dir, pecount=pecount, project="NCGD0047", workflowid="timeseries")
             # make sure that changing the casename will not affect these variables
             user = os.getenv("USER")
-            cimeroot = os.path.join("/glade/scratch/{}/".format(user),"SMYLE")
-            exeroot = os.path.join("/glade/scratch/{}/".format(user),"SMYLE/exerootdir/bld")
-            case.set_value("CIME_OUTPUT_ROOT",cimeroot)
+            cimeoutputroot = os.path.join("/home/smyle/work/cesm/scratch/SMYLE")
+            exeroot = os.path.join("/home/smyle/work/cesm/scratch/SMYLE/exerootdir/bld")
+            case.set_value("CIME_OUTPUT_ROOT",cimeoutputroot)
             #case.set_value("CIME_OUTPUT_ROOT","/glade/scratch/nanr/SMYLE")
             if exeroot and os.path.exists(os.path.join(exeroot,"cesm.exe")):
                 case.set_value("EXEROOT",exeroot)
@@ -227,7 +227,7 @@ def _main_func(description):
     basemonth = int(date[5:7])
     baseyear = int(date[0:4])
     #baseroot = os.path.join(os.getenv("SMYLE_ROOT"),"cases")
-    baseroot = os.path.join("/glade/p/cesm/espwg/CESM2-SMYLE/","cases")
+    baseroot = "/home/smyle/work/cesm/CESM2-SMYLE/cases"
     res = "f09_g17"
     waccm = False
     if model == "cesm2smyle":
@@ -237,7 +237,7 @@ def _main_func(description):
 
     overwrite = True
 #    sdrestdir = os.path.join(os.getenv("SCRATCH"),"SMYLE","inputdata","cesm2_init","b.e21.SMYLE_IC.f09_g17."+date[0:7]+".01","{}".format(date))
-    sdrestdir = os.path.join("/glade/p/cesm/espwg/CESM2-SMYLE/inputdata/cesm2_init","b.e21.SMYLE_IC.f09_g17."+date[0:7]+".01","{}".format(date))
+    sdrestdir = os.path.join("/home/smyle/work/cesm/inputdata/cesm2_init","b.e21.SMYLE_IC.f09_g17."+date[0:7]+".01","{}".format(date))
 
     user_mods_dir = os.path.join(s2sfcstroot,"user_mods","cesm2smyle")
 
