@@ -1,27 +1,15 @@
 #! /bin/csh -fxv 
 
-setenv CESM2_TOOLS_ROOT /glade/work/nanr/cesm_tags/CASE_tools/cesm2-smyle/
+setenv CESM2_TOOLS_ROOT /glade/work/nanr/cesm_tags/CASE_tools/cesm2-scripps/
 setenv CESMROOT /glade/work/nanr/cesm_tags/cesm2.1.4-SMYLE
 
 if ($HOST != casper10) then
 echo "ERROR:  Must be run on Casper"
-exit
+#exit
 endif
 
-
-#foreach  year ( 1954 1964 1974 1984 1994 2004 )
-set syr = 1959
-set eyr = 1970
-#set syr = 2007
-#set eyr = 2007
-#set syr = 1958
-#set eyr = 1970
-set syr = 1971
-set eyr = 2000
-set syr = 2001
-set eyr = 2014
-set syr = 2015
-set eyr = 2018
+set syr = 1979
+set eyr = 1979
 
 @ ib = $syr
 @ ie = $eyr
@@ -31,12 +19,12 @@ foreach year ( `seq $ib $ie` )
 #foreach mon ( 05 08 11 )
 foreach mon ( 11 )
 
-set case = b.e21.SMYLE_IC.f09_g17.${year}-${mon}.01
+set case = b.e21.SMYLE_ERA5_IC.f09_g17.${year}-${mon}.01
 
 
 #set icdir = /glade/p/cesm/cseg/inputdata/ccsm4_init/{$case} 
-set Picdir = /glade/scratch/nanr/SMYLE/inputdata/cesm2_init/{$case}/
-set icdir  = /glade/scratch/nanr/SMYLE/inputdata/cesm2_init/{$case}/${year}-${mon}-01
+set Picdir = /glade/scratch/nanr/SMYLE-ERA5/inputdata/cesm2_init/{$case}/
+set icdir  = /glade/scratch/nanr/SMYLE-ERA5/inputdata/cesm2_init/{$case}/${year}-${mon}-01
 if (! -d ${Picdir}) then
  mkdir ${Picdir}
 endif
@@ -49,7 +37,7 @@ set doThis99 = 1
 if ($doThis99 == 1) then
 
 # atm, lnd initial conditions
-set atmcase =  JRA55_0.9x1.25_L32
+set atmcase =  ERA5_0.9x1.25_L32
 set lndcase =  smyle_Transient
 
 # names
@@ -58,7 +46,8 @@ set lndfname = ${lndcase}.clm2.r.${year}-${mon}-01-00000.nc
 set roffname = ${lndcase}.mosart.r.${year}-${mon}-01-00000.nc
 
 # directories
-set atmdir = /glade/p/cesm/espwg/CESM2-SMYLE/initial_conditions/cam/
+#set atmdir = /glade/p/cesm/espwg/CESM2-SMYLE/initial_conditions/cam/
+set atmdir = /glade/scratch/islas/analyses_output/
 set lnddir = /glade/p/cesm/espwg/CESM2-SMYLE/initial_conditions/clm/${year}-${mon}-01-00000/
 
 # rename atm, land IC files
