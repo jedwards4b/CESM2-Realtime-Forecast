@@ -129,14 +129,14 @@ def _main_func(description):
         #print("HERE rundir {} dout_s_root {}".format(rundir,dout_s_root))
         outfiles = run_ncl_scripts(basecasename)
         # Copy data to ftp site
-        if basecasename == "70Lwaccm6" and sendtoftp:
+        if sendtoftp:
             for _file in outfiles:
-                fsplit = _file.find("70Lwaccm6/")+10
+                fsplit = _file.find(basecasename + os.sep)+10
                 fpath = os.path.dirname(_file[fsplit-1:])
                 # path for hindcasts
                 # rsynccmd = "rsync -azvh --rsync-path=\"mkdir -p /ftp/pub/jedwards/70Lwaccm6/"+fpath+" && rsync\" "+_file+" "+ftproot+fpath
                 # path for realtime
-                rsynccmd = "rsync -azvh --rsync-path=\"mkdir -p /ftp/pub/jedwards/70Lwaccm6/realtime && rsync\" {} {}/realtime/{}".format(_file, ftproot,os.path.basename(_file))
+                rsynccmd = "rsync -azvh --rsync-path=\"mkdir -p /ftp/pub/jedwards/"+basecasename+"/realtime && rsync\" {} {}/realtime/{}".format(_file, ftproot,os.path.basename(_file))
                 print("copying file {} to ftp server location {}".format(_file,ftproot+"/realtime/"))
                 run_cmd(rsynccmd,verbose=True)
 
@@ -167,12 +167,12 @@ def _main_func(description):
         print("ICE PATH")
         print(outdir)
         print("Combining cice files into {} in {}".format(fnameout,icehistpath))
-        
+
         if glob.iglob(os.path.join(icehistpath,"*.cice.h.*.nc")):
             run_cmd("ncrcat -4 -L 1 *.cice.h.*.nc -O {}".format(os.path.join(outdir,fnameout)),from_dir=icehistpath,verbose=True)
             for _file in glob.iglob(os.path.join(icehistpath,"*ice.h.*.nc")):
                 os.unlink(_file)
-        fnameout = fnameout.replace("cice.hd.nc","pop.h.nday1.nc") 
+        fnameout = fnameout.replace("cice.hd.nc","pop.h.nday1.nc")
 
         print("Copying ocn daily files into {}".format(fnameout))
         if basecasename == "cesm2cam6":
@@ -213,13 +213,13 @@ def _main_func(description):
 #        for _file in glob.iglob(os.path.join(atmhistpath,"*cam.h1*.nc")):
 #            print("Copying {} file into {}".format(_file, outdir))
 #            run_cmd("nccopy -4 -d 1 -VU10,TGCLDIWP,TGCLDLWP,lev,ilev,lat,lon,date,time_bnds,time,gw,ndcur,nscur,nsteph {} {}".format(_file, os.path.join(outdir,os.path.basename(_file))), verbose=True, from_dir=atmhistpath)
-        
+
         if basecasename == "cesm2cam6":
              outdir = "/glade/scratch/ssfcst/cesm2cam6v2/lnd/"
         else:
              outdir="/glade/scratch/ssfcst/{}/lnd".format(basecasename)
-     
-        print("LND OUTDIR:")  
+
+        print("LND OUTDIR:")
         print(outdir)
 
         for _file in glob.iglob(os.path.join(lndhistpath,"*clm2.h0*.nc")):
