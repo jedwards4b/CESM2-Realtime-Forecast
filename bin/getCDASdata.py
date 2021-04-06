@@ -5,6 +5,7 @@ _LIBDIR = os.path.join(cesmroot,"cime","scripts","Tools")
 
 sys.path.append(_LIBDIR)
 from datetime import datetime as dt
+from datetime import timedelta
 import datetime, tarfile
 from standard_script_setup import *
 from CIME.utils import run_cmd, expect
@@ -31,6 +32,8 @@ def parse_command_line(args, description):
     else:
 #       date = datetime.date.today() - datetime.timedelta(days=1)
 	date = datetime.datetime.strptime(dt.today().strftime('%Y-%m'),'%Y-%m')
+#	date = datetime.datetime.strptime(dt.today().strftime('%Y-%m'),'%Y-%m')-timedelta(1)
+	print(date)
 
     return date, fullmonth
 

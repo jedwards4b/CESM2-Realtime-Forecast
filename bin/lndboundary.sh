@@ -11,7 +11,7 @@ ncl ./bin/create_landforcing_from_NCEPCFC.ncl
 
 # -------- attempt to get around the issue for now (Dec. 1, 2020, sasha glanville)
 #sg_year=2021
-#sg_month=01
+#sg_month=03
 #sg_date=$sg_year-$sg_month
 #echo $sg_date
 #./bin/getCDASdata.py --date $sg_date
