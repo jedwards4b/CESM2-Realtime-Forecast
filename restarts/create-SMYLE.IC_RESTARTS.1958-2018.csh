@@ -5,7 +5,7 @@ setenv CESMROOT /glade/work/nanr/cesm_tags/cesm2.1.4-SMYLE
 
 if ($HOST != casper10) then
 echo "ERROR:  Must be run on Casper"
-exit
+#exit
 endif
 
 
@@ -16,11 +16,7 @@ set eyr = 1970
 #set eyr = 2007
 #set syr = 1958
 #set eyr = 1970
-set syr = 1971
-set eyr = 2000
-set syr = 2001
-set eyr = 2014
-set syr = 2015
+set syr = 1970
 set eyr = 2018
 
 @ ib = $syr
@@ -29,14 +25,15 @@ set eyr = 2018
 foreach year ( `seq $ib $ie` )
 #foreach mon ( 02 05 08 11 )
 #foreach mon ( 05 08 11 )
-foreach mon ( 11 )
+#foreach mon ( 11 )
+foreach mon ( 02 )
 
 set case = b.e21.SMYLE_IC.f09_g17.${year}-${mon}.01
 
 
 #set icdir = /glade/p/cesm/cseg/inputdata/ccsm4_init/{$case} 
-set Picdir = /glade/scratch/nanr/SMYLE/inputdata/cesm2_init/{$case}/
-set icdir  = /glade/scratch/nanr/SMYLE/inputdata/cesm2_init/{$case}/${year}-${mon}-01
+set Picdir = /glade/p/cesm/espwg/CESM2-SMYLE/inputdata/cesm2_init/{$case}/
+set icdir  = /glade/p/cesm/espwg/CESM2-SMYLE/inputdata/cesm2_init/{$case}/${year}-${mon}-01
 if (! -d ${Picdir}) then
  mkdir ${Picdir}
 endif

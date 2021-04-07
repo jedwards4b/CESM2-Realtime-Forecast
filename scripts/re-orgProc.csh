@@ -4,15 +4,11 @@ module load ncl nco
 
 setenv CESM2_TOOLS_ROOT /glade/work/nanr/cesm_tags/CASE_tools/cesm2-smyle/
 setenv ARCHDIR  /glade/scratch/$USER/SMYLE/archive/
-setenv TSERIES  /glade/campaign/cesm/development/espwg/SMYLE/archive
-setenv LOGSDIR  /glade/campaign/cesm/development/espwg/SMYLE/logs
-setenv RESTDIR  /glade/campaign/cesm/development/espwg/SMYLE/restarts
+setenv TSERIES  /glade/scratch/$USER/SMYLE/timeseries
 
-set syr = 1963
-set eyr = 1963
 # ...
-set syr = 2009
-set eyr = 2009
+set syr = 1970
+set eyr = 1970
 
 @ ib = $syr
 @ ie = $eyr
@@ -23,8 +19,8 @@ foreach mon ( 11 )
 
 
 # case name counter
-set smbr =  13
-set embr =  14
+set smbr =  20
+set embr =  20
 
 @ mb = $smbr
 @ me = $embr
@@ -42,7 +38,6 @@ echo 'Case   = ' $CASE
 
 if (! -d $TSERIES/$CASE/) then
 	mkdir -p $TSERIES/$CASE/atm
-	mkdir -p $TSERIES/$CASE/cpl/hist
 	mkdir -p $TSERIES/$CASE/glc
 	mkdir -p $TSERIES/$CASE/ice
 	mkdir -p $TSERIES/$CASE/lnd
@@ -50,15 +45,11 @@ if (! -d $TSERIES/$CASE/) then
 	mkdir -p $TSERIES/$CASE/rof
 endif
 mv $ARCHDIR/$CASE/atm/proc $TSERIES/$CASE/atm
-cp $ARCHDIR/$CASE/cpl/hist/* $TSERIES/$CASE/cpl/hist/
 mv $ARCHDIR/$CASE/glc/proc $TSERIES/$CASE/glc
 mv $ARCHDIR/$CASE/ice/proc $TSERIES/$CASE/ice
 mv $ARCHDIR/$CASE/lnd/proc $TSERIES/$CASE/lnd
 mv $ARCHDIR/$CASE/ocn/proc $TSERIES/$CASE/ocn
 mv $ARCHDIR/$CASE/rof/proc $TSERIES/$CASE/rof
-
-tar -cvf $LOGSDIR/$CASE.logs.tar $ARCHDIR/$CASE/logs
-#tar $RESTDIR/$CASE.rest.tar $ARCHDIR/$CASE/restarts
 
 end             # member loop
 

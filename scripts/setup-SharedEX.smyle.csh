@@ -17,12 +17,13 @@ set STOP_OPTION=nmonths
 set PROJECT=NCGD0047
 
 setenv BASEROOT /glade/work/nanr/CESM2-SMYLE/cases/
+setenv BASEROOT /glade/p/cesm/espwg/CESM2-SMYLE/cases/
 
 set syr = 1963
 set eyr = 1963
 # ...
-set syr = 2006
-set eyr = 2006
+set syr = 1976
+set eyr = 1976
 
 @ ib = $syr
 @ ie = $eyr
