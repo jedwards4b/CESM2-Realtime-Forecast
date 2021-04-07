@@ -6,15 +6,16 @@
   cycle point format = CCYY-MM-DD
   [[parameters]]
     # The number of ensemble members can be changed here
-    member = 0..10
+    member = 0..20
 #    member = 5..5
+
   [[environment]]
     CYLC_TASK_CYCLE_MONTH = {{MONTH}}
 
 [scheduling]
   # Change the run start and end dates here
   initial cycle point = {{YEAR}}-{{MONTH}}-01
-  final cycle point = {{YEAR}}-{{MONTH}}-31
+  final cycle point = {{YEAR}}-{{MONTH}}-07
 
   [[dependencies]]
   # Weekly Cycling on monday, new date will submit when st_archive is complete for each member
@@ -34,15 +35,15 @@ cd ${FCST_HOME}/bin/
 ./generate_cami_ensemble.py
 """
     [[[job]]]
-      batch system = slurm
+      batch system = pbs
+      batch submit command template = qsubcasper -q casper -l walltime=01:00:00 -A CESM0021 '%(job)s'
       shell = /bin/bash
     [[[directives]]]
-       --ntasks=1
-       --cpus-per-task=8
-       --partition=dav
-       --time=01:00:00
-       --account=CESM0021
-
+       -r = n
+       -j = oe
+       -v = FCST_HOME=/glade/u/home/ssfcst/CESM2-Realtime-Forcast
+       -S = /bin/bash
+       -l = select=1:ncpus=18:ompthreads=18
 
   [[build_model]]
     script = """

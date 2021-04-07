@@ -105,10 +105,9 @@ def _main_func(description):
 
     basemonth = date[5:7]
     baseroot = os.path.join(os.getenv("WORK"),"cases",basecasename)
-    if basecasename == "cesm2cam6":
-        ftproot = " jedwards@burnt.cgd.ucar.edu:/ftp/pub/jedwards/cesm2cam6v2/"
-    else:
-        ftproot = " jedwards@burnt.cgd.ucar.edu:/ftp/pub/jedwards/70Lwaccm6/"
+    ftproot = " jedwards@thorodin.cgd.ucar.edu:/ftp/pub/jedwards/" + basecasename
+    
+
     if member < 0:
         firstmember = 0
         lastmember = 20
