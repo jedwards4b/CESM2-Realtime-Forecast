@@ -6,8 +6,8 @@
   cycle point format = CCYY-MM-DD
   [[parameters]]
     # The number of ensemble members can be changed here
-    member = 0..20
-#    member = 5..5
+#    member = 0..20
+    member = 5..5
 
   [[environment]]
     CYLC_TASK_CYCLE_MONTH = {{MONTH}}

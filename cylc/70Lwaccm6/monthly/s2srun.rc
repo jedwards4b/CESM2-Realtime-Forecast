@@ -35,14 +35,15 @@ cd ${FCST_HOME}/bin/
 ./generate_cami_ensemble.py --model 70Lwaccm6
 """
     [[[job]]]
-      batch system = slurm
-      shell = /bin/bash 
+      batch system = pbs
+      batch submit command template = qsubcasper -q casper -l walltime=01:00:00 -A P93300007 '%(job)s'
+      shell = /bin/bash
     [[[directives]]]
-       --ntasks=1
-       --cpus-per-task=8
-       --partition=dav
-       --time=01:00:00
-       --account=P93300007
+       -r = n
+       -j = oe
+       -v = FCST_HOME=/glade/u/home/ssfcst/CESM2-Realtime-Forcast
+       -S = /bin/bash
+       -l = select=1:ncpus=18:ompthreads=18
       
 
   [[build_model]]
