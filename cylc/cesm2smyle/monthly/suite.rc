@@ -1,14 +1,13 @@
 #!Jinja2
 
-{% set ensemble_start = 19%}
-{% set ensemble_end   = 19 %}
+{% set ensemble_start = 1%}
+{% set ensemble_end   = 20 %}
 [meta]
   title = CESM CYLC workflow for ensemble from cesm2smyle
 [cylc]
   UTC mode = True
   cycle point format = CCYY-MM-DD
   [[environment]]
-    #CYLC_TASK_CYCLE_MONTH = "11"
     FCST_HOME = "/glade/work/nanr/cesm_tags/CASE_tools/cesm2-smyle/"
     CESM_ROOT = "/glade/work/nanr/cesm_tags/cesm2.1.4-SMYLE/"
     SCRATCH   = "/glade/scratch/nanr/"
@@ -25,13 +24,13 @@
 
 [scheduling]
   # Change the run start and end dates here
-    initial cycle point = "1976-11-01"
-    final cycle point = "1976-11-01"
+    initial cycle point = "1970-02-01"
+    final cycle point = "1970-02-01"
 
     # must start Feb 01, any year:
-    # initial cycle point constraints = "0201T00"
+    initial cycle point constraints = "0201T00"
     # must start Nov 01, any year:
-    initial cycle point constraints = "1101T00"
+    #initial cycle point constraints = "1101T00"
 
   [[dependencies]]
   # Weekly Cycling on monday, new date will submit when st_archive is complete for each member
@@ -41,29 +40,27 @@
   #     st_archive<mbr>[-P3M] => build_model => run_family:finish-all
     [[[R/P1Y]]]
       graph = """
-        pp_family:finish-all => dispose
+        pp_family:finish-all 
         st_archive<mbr>[-P1Y] => get_data => build_model => run_family:finish-all
         run<mbr> => st_archive<mbr> => pp<mbr>
              """
 [runtime]
   [[get_data]]
     script = """
-module load ncl nco
+module load ncl nco 
 cd ${FCST_HOME}/bin/
 ./generate_cami_ensemble.py --ensemble-start {{ ensemble_start }} --ensemble-end {{ ensemble_end }}
 """
     [[[job]]]
       batch system = pbs
+      batch submit command template = qsubcasper -q casper -l walltime=01:00:00 -A NCGD0047 '%(job)s'
       shell = /bin/bash
     [[[directives]]]
        -r = n
        -j = oe
-       -V =
+       -v = FCST_HOME=/glade/work/nanr/cesm_tags/CASE_tools/cesm2-smyle/
        -S = /bin/bash
        -l = select=1:ncpus=8:ompthreads=1
-       -q = dav
-       -l = 01:00:00
-       -A = NCGD0047
     [[[environment]]]
        SMYLE_ROOT = "/glade/p/cesm/espwg/CESM2-SMYLE"
 
@@ -100,31 +97,28 @@ unset PYTHONPATH
 module use /glade/work/bdobbins/Software/Modules
 module load cesm_postprocessing
 if [ ! -d "postprocess" ]; then
-   create_postprocess -caseroot=`pwd`
+   create_postprocess_cylc -caseroot=`pwd`
 fi
 cd postprocess
-pp_config --set TIMESERIES_OUTPUT_ROOTDIR=/glade/p/cesm/espwg/CESM2-SMYLE/timeseries/b.e21.BSMYLE.f09_g17.${CYLC_TASK_CYCLE_DATE}.$(printf "%03d" ${CYLC_TASK_PARAM_mbr})
+pp_config --set TIMESERIES_OUTPUT_ROOTDIR=/glade/campaign/cesm/development/espwg/SMYLE/archive/b.e21.BSMYLE.f09_g17.${CYLC_TASK_CYCLE_DATE}.$(printf "%03d" ${CYLC_TASK_PARAM_mbr})
 today=`date '+%Y%m%d-%H%M%S'`
 mpirun ./timeseries > ./logs/timeseries.log.${today} 2>&1
 """
     [[[environment]]]
       #CYLC_TASK_CYCLE_MONTH = $(cylc cyclepoint --template=%m)
       CYLC_TASK_CYCLE_DATE = $(cylc cyclepoint --template=%Y-%m)
+      SMYLE_ROOT = "/glade/p/cesm/espwg/CESM2-SMYLE"
     [[[job]]]
       batch system = pbs
-      batch submit command template = qsub -q regular -l walltime=02:00:00 -A NCGD0047 '%(job)s'
+      batch submit command template = qsubcasper -q casper -l walltime=02:00:00 -A NCGD0047 '%(job)s'
+      shell = /bin/bash
     [[[directives]]]
        -r = n
        -j = oe
-       -V =
+       -v = FCST_HOME=/glade/work/nanr/cesm_tags/CASE_tools/cesm2-smyle/,SMYLE_ROOT=/glade/p/cesm/espwg/CESM2-SMYLE
        -S = /bin/bash
        -l = select=1:ncpus=36:mpiprocs=36:ompthreads=1
 
-    [[dispose]]
-    # Globus process, must run on host
-      script = """
-#${FCST_HOME}/bin/dispose_data.py
-"""
     [[run<mbr>]]
        inherit = run_family
     [[run_family]]
