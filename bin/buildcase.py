@@ -25,7 +25,6 @@ def parse_command_line(args, description):
     CIME.utils.setup_standard_logging_options(parser)
     parser.add_argument("--date",
                         help="Specify a start Date")
-    parser.add_argument("--model",help="Specify a case (cesm2cam6, 70Lwaccm6)", default="cesm2cam6")
 
     args = CIME.utils.parse_args_and_handle_standard_logging_options(args, parser)
     cdate = os.getenv("CYLC_TASK_CYCLE_POINT")
@@ -41,15 +40,13 @@ def parse_command_line(args, description):
         date = datetime.date.today()
         date = date.replace(day=date.day-1)
 
-    return date.strftime("%Y-%m-%d"), args.model
+    return date.strftime("%Y-%m-%d")
 
 def stage_refcase(rundir, refdir, date, basecasename):
     if not os.path.isdir(rundir):
         os.makedirs(rundir)
-    if basecasename == "70Lwaccm6":
-        nfname = "b.e21.BWHIST.SD.f09_g17.002.nudgedOcn"
-    else:
-        nfname = "b.e21.f09_g17"
+    nfname = "b.e21.f09_g17"
+
     for reffile in glob.iglob(refdir+"/*"):
         if os.path.basename(reffile).startswith("rpointer"):
             safe_copy(reffile, rundir)
@@ -104,9 +101,9 @@ def per_run_case_updates(case, date, sdrestdir, user_mods_dir, rundir):
 #    lock_file("env_batch.xml",caseroot=caseroot)
 
 
-def build_base_case(date, baseroot, basecasename, basemonth,res, compset, overwrite,
+def build_base_case(date, baseroot, basemonth,res, compset, overwrite,
                     sdrestdir, user_mods_dir, pecount=None):
-    caseroot = os.path.join(baseroot,basecasename+".{:02d}".format(basemonth)+".00")
+    caseroot = os.path.join(baseroot,"cesm2cam6.{:02d}".format(basemonth)+".00")
     if overwrite and os.path.isdir(caseroot):
         shutil.rmtree(caseroot)
             
@@ -122,14 +119,9 @@ def build_base_case(date, baseroot, basecasename, basemonth,res, compset, overwr
             case.set_value("RUN_TYPE","hybrid")
             case.set_value("GET_REFCASE",False)
             case.set_value("RUN_REFDIR",sdrestdir)
-            if basecasename == "70Lwaccm6":
-                case.set_value("RUN_REFCASE", "b.e21.BWHIST.SD.{}.002.nudgedOcn".format(res))
-                case.set_value("OCN_TRACER_MODULES","")
-                case.set_value("NTHRDS", 1)
-            else:
-                case.set_value("RUN_REFCASE", "b.e21.f09_g17")
-                case.set_value("OCN_TRACER_MODULES","iage")
-                case.set_value("OCN_CHL_TYPE","diagnostic")
+            case.set_value("RUN_REFCASE", "b.e21.f09_g17")
+            case.set_value("OCN_TRACER_MODULES","iage")
+            case.set_value("OCN_CHL_TYPE","diagnostic")
             # pelayout for cesm2cam6 case
 #            case.set_value("NTASKS_ATM",1152)
 #            case.set_value("NTASKS_CPL",1152)
@@ -180,42 +172,33 @@ def clone_base_case(date, caseroot, ensemble, sdrestdir, user_mods_dir, overwrit
             per_run_case_updates(case, date, sdrestdir, user_mods_dir, rundir)
 
 def _main_func(description):
-    date, basecasename = parse_command_line(sys.argv, description)
+    date = parse_command_line(sys.argv, description)
 
     # TODO make these input vars
 
     basemonth = int(date[5:7])
     baseyear = int(date[0:4])
-    baseroot = os.path.join(os.getenv("WORK"),"cases",basecasename)
+    baseroot = os.getenv("WORK")
     res = "f09_g17"
     waccm = False
-    if basecasename == "70Lwaccm6":
-        waccm = True
-        if baseyear < 2014 or (baseyear == 2014 and basemonth < 10):
-            compset = "BWHIST"
-        else:
-            compset = "BWSSP585"
+
+    if baseyear < 2014 or (baseyear == 2014 and basemonth < 11):
+        compset = "BHIST"
     else:
-        if baseyear < 2014 or (baseyear == 2014 and basemonth < 11):
-            compset = "BHIST"
-        else:
-            compset = "BSSP585"
+        compset = "BSSP585"
         
     print ("baseyear is {} basemonth is {}".format(baseyear,basemonth))
     
     overwrite = True
-    if waccm:
-        sdrestdir = os.path.join(os.getenv("SCRATCH"),"S2S_70LIC_globus","SDnudgedOcn","rest","{}".format(date))
-        ensemble = 20
-    else:
-        sdrestdir = os.path.join(os.getenv("SCRATCH"),"CESM2","Ocean","rest","{}".format(date))
-        ensemble = 10
 
-    user_mods_dir = os.path.join(s2sfcstroot,"user_mods",basecasename)
+    sdrestdir = os.path.join(os.getenv("SCRATCH"),"CESM2","Ocean","rest","{}".format(date))
+    ensemble = 10
+
+    user_mods_dir = os.path.join(s2sfcstroot,"user_mods","cesm2cam6")
 
     # END TODO
     print("basemonth = {}".format(basemonth))
-    caseroot = build_base_case(date, baseroot, basecasename, basemonth, res,
+    caseroot = build_base_case(date, baseroot, basemonth, res,
                             compset, overwrite, sdrestdir, user_mods_dir+'.base', pecount="S")
     clone_base_case(date, caseroot, ensemble, sdrestdir, user_mods_dir, overwrite)
 

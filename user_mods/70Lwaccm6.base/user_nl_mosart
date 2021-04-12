@@ -1,3 +1,0 @@
-  rtmhist_fincl1 = 'RIVER_DISCHARGE_OVER_LAND_LIQ', 'TOTAL_DISCHARGE_TO_OCEAN_LIQ'
-  rtmhist_mfilt = 45
-  rtmhist_nhtfrq = -24

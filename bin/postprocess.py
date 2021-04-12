@@ -31,8 +31,6 @@ def parse_command_line(args, description):
     parser.add_argument("--member",
                         help="Specify an ensemble member")
 
-    parser.add_argument("--model",help="Specify a case (cesm2cam6, 70Lwaccm6)", default="cesm2cam6")
-
     parser.add_argument("--sendtoftp",help="Send output to ftp server", default=False, action='store_true')
 
     args = CIME.utils.parse_args_and_handle_standard_logging_options(args, parser)
@@ -56,12 +54,10 @@ def parse_command_line(args, description):
         date = datetime.date.today()
         date = date.replace(day=date.day-1)
 
-    return date.strftime("%Y-%m-%d"), member, args.model, args.sendtoftp
+    return date.strftime("%Y-%m-%d"), member, args.sendtoftp
 
 def run_ncl_scripts(basecasename):
     scripts = ["pp_priority2.ncl","pp_priority1.ncl","pp_priority3.ncl","pp_h1vertical.ncl"]
-    if basecasename == "70Lwaccm6":
-        scripts.append("pp_h4vertical.ncl")
 
     outfiles = []
     processes = []
@@ -101,12 +97,12 @@ def send_data_to_campaignstore(source_path):
     complete_transfer_request(tc, transfer_data)
 
 def _main_func(description):
-    date, member, basecasename, sendtoftp = parse_command_line(sys.argv, description)
+    date, member, sendtoftp = parse_command_line(sys.argv, description)
 
     basemonth = date[5:7]
-    baseroot = os.path.join(os.getenv("WORK"),"cases",basecasename)
+    baseroot = os.getenv("WORK"),"cases"
     ftproot = " jedwards@thorodin.cgd.ucar.edu:/ftp/pub/jedwards/" + basecasename
-    
+    basecasename = "cesm2cam6"
 
     if member < 0:
         firstmember = 0
@@ -132,8 +128,6 @@ def _main_func(description):
             for _file in outfiles:
                 fsplit = _file.find(basecasename + os.sep)+10
                 fpath = os.path.dirname(_file[fsplit-1:])
-                # path for hindcasts
-                # rsynccmd = "rsync -azvh --rsync-path=\"mkdir -p /ftp/pub/jedwards/70Lwaccm6/"+fpath+" && rsync\" "+_file+" "+ftproot+fpath
                 # path for realtime
                 rsynccmd = "rsync -azvh --rsync-path=\"mkdir -p /ftp/pub/jedwards/"+basecasename+"/realtime && rsync\" {} {}/realtime/{}".format(_file, ftproot,os.path.basename(_file))
                 print("copying file {} to ftp server location {}".format(_file,ftproot+"/realtime/"))
@@ -158,10 +152,7 @@ def _main_func(description):
         #Concatinate cice history into a single file
 
         fnameout = basecasename+"v2."+basemonth+"."+date+".{0:02d}".format(curmem)+".cice.hd.nc"
-        if basecasename == "cesm2cam6":
-            outdir = "/glade/scratch/ssfcst/cesm2cam6v2/ice"
-        else:
-            outdir = "/glade/scratch/ssfcst/{}/ice".format(basecasename)
+        outdir = "/glade/scratch/ssfcst/cesm2cam6v2/ice"
 
         print("ICE PATH")
         print(outdir)
@@ -174,36 +165,22 @@ def _main_func(description):
         fnameout = fnameout.replace("cice.hd.nc","pop.h.nday1.nc")
 
         print("Copying ocn daily files into {}".format(fnameout))
-        if basecasename == "cesm2cam6":
-            outdir = "/glade/scratch/ssfcst/cesm2cam6v2/ocn"
-        else:
-            outdir = "/glade/scratch/ssfcst/{}/ocn".format(basecasename)
+        outdir = "/glade/scratch/ssfcst/cesm2cam6v2/ocn"
 
         for _file in glob.iglob(os.path.join(ocnhistpath,"*pop.h.[no]*.nc")):
             newfname = os.path.basename(_file).replace("cesm2cam6.","cesm2cam6v2.")
             run_cmd("nccopy -4 -d 1 {}  {}".format(_file, os.path.join(outdir,newfname)), verbose=True, from_dir=ocnhistpath)
 
         #    send_data_to_campaignstore(dout_s_root+os.sep )
-        if basecasename == "cesm2cam6":
-            outdir = "/glade/scratch/ssfcst/cesm2cam6v2/6hourly"
-        else:
-            outdir = "/glade/scratch/ssfcst/{}/6hourly".format(basecasename)
+        outdir = "/glade/scratch/ssfcst/cesm2cam6v2/6hourly"
 
         for _file in glob.iglob(os.path.join(atmhistpath,"*cam.h3*.nc")):
             print("Copying {} file into {}".format(_file,outdir))
-            if basecasename == "cesm2cam6":
-                newfname = os.path.basename(_file).replace("cesm2cam6.","cesm2cam6v2.")
-            else:
-                newfname = os.path.basename(_file)
+            newfname = os.path.basename(_file).replace("cesm2cam6.","cesm2cam6v2.")
 
             run_cmd("nccopy -4 -d 1 -VPS,PSL,UBOT,VBOT,Z200,Z500,U10,lat,lon,date,time_bnds,time,gw,ndcur,nscur,nsteph {}  {}".format(_file, os.path.join(outdir,newfname)), verbose=True, from_dir=atmhistpath)
 
-#        outdir = "/glade/scratch/ssfcst/cesm2cam6v2/daily"
-
-        if basecasename == "cesm2cam6":
-            outdir = "/glade/scratch/ssfcst/cesm2cam6v2/daily"
-        else:
-            outdir = "/glade/scratch/ssfcst/{}/daily".format(basecasename)
+        outdir = "/glade/scratch/ssfcst/cesm2cam6v2/daily"
 
         for _file in glob.iglob(os.path.join(atmhistpath,"*cam.h2*.nc")):
             print("Copying {} file into {}".format(_file, outdir))
@@ -213,10 +190,7 @@ def _main_func(description):
 #            print("Copying {} file into {}".format(_file, outdir))
 #            run_cmd("nccopy -4 -d 1 -VU10,TGCLDIWP,TGCLDLWP,lev,ilev,lat,lon,date,time_bnds,time,gw,ndcur,nscur,nsteph {} {}".format(_file, os.path.join(outdir,os.path.basename(_file))), verbose=True, from_dir=atmhistpath)
 
-        if basecasename == "cesm2cam6":
-             outdir = "/glade/scratch/ssfcst/cesm2cam6v2/lnd/"
-        else:
-             outdir="/glade/scratch/ssfcst/{}/lnd".format(basecasename)
+        outdir = "/glade/scratch/ssfcst/cesm2cam6v2/lnd/"
 
         print("LND OUTDIR:")
         print(outdir)

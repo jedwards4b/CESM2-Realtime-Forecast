@@ -27,8 +27,6 @@ def parse_command_line(args, description):
     parser.add_argument("--date",
                         help="Specify a start Date")
 
-    parser.add_argument("--model",help="Specify a case (cesm2cam6, 70Lwaccm6)", default="cesm2cam6")
-
     args = CIME.utils.parse_args_and_handle_standard_logging_options(args, parser)
     cdate = os.environ.get("CYLC_TASK_CYCLE_POINT")
 
@@ -43,13 +41,10 @@ def parse_command_line(args, description):
         date = datetime.date.today()
         date = date.replace(day=date.day-1)
 
-    return date.strftime("%Y-%m-%d"), args.model
+    return date.strftime("%Y-%m-%d")
 
-def get_rvals(date, ensemble, model):
-    if model == "70Lwaccm6":
-        rvals_file = os.path.join(os.getenv("WORK"),"cases","70Lwaccm6","camic_"+date+".txt")
-    else:
-        rvals_file = os.path.join(os.getenv("WORK"),"cases","CESM2","camic_"+date+".txt")
+def get_rvals(date, ensemble):
+    rvals_file = os.path.join(os.getenv("WORK"),"cases","CESM2","camic_"+date+".txt")
     rvals = []
     if os.path.isfile(rvals_file):
         with open(rvals_file,"r") as fd:
@@ -76,8 +71,8 @@ def get_rvals(date, ensemble, model):
     print "LEN of rvals is {}".format(len(rvals))
     return rvals
 
-def create_cam_ic_perturbed(original, ensemble, date, baserundir, model, outroot="b.e21.f09_g17.cam.i.", factor=0.15):
-    rvals = get_rvals(date, ensemble, model)
+def create_cam_ic_perturbed(original, ensemble, date, baserundir, outroot="b.e21.f09_g17.cam.i.", factor=0.15):
+    rvals = get_rvals(date, ensemble)
 
     outfile = os.path.join(baserundir,outroot+date+"-00000.nc")
     # first link the original ic file to the 0th ensemble member
@@ -94,20 +89,12 @@ def create_cam_ic_perturbed(original, ensemble, date, baserundir, model, outroot
     # for each pair of ensemble members create an ic file with same perturbation opposite sign
     month = date[5:7]
 
-    if model == "70Lwaccm6":
-        local_path = "/glade/campaign/cesm/collections/S2Sfcst"
-    else:
-        local_path = "/glade/campaign/cesm/development/cross-wg/S2S/CESM2/CAMI/RP"
+    local_path = "/glade/campaign/cesm/development/cross-wg/S2S/CESM2/CAMI/RP"
     perturb_files = []
     for i in range(1,ensemble, 2):
         print "HERE rvals[{}] = {}".format(i//2,rvals[i//2])
-        if model == "70Lwaccm6":
-            perturb_file = os.path.join("S2S_70LIC",
-                                        "{}".format(month),
-                                        "70Lwaccm6.cam.i.M{}.diff.{}.nc".format(month,rvals[i//2]))
-        else:
-            perturb_file = os.path.join("{}".format(month),
-                                        "CESM2.cam.i.M{}.diff.{}.nc".format(month,rvals[i//2]))
+        perturb_file = os.path.join("{}".format(month),
+                                    "CESM2.cam.i.M{}.diff.{}.nc".format(month,rvals[i//2]))
         dirname = os.path.dirname(os.path.join(local_path,perturb_file))
         if not os.path.isdir(dirname):
             print("Creating directory {}".format(dirname))
@@ -134,31 +121,21 @@ def create_perturbed_init_file(original, perturb_file, outfile, weight):
     if not os.path.isdir(os.path.dirname(outfile)):
         os.makedirs(os.path.dirname(outfile))
     safe_copy(original, outfile)
-    if "BWHIST" in original:
-        cmd = ncflint + " -A -v US,VS,T,Q,PS -w {},1.0 {} {} {}".format(weight, perturb_file, original, outfile)    
-    else:
-        cmd = ncflint+" -O -C -v lat,lon,slat,slon,lev,ilev,hyai,hybi,hyam,hybm,US,VS,T,Q,PS -w {},1.0 {} {} {}".format(weight, perturb_file, original, outfile)    
+    cmd = ncflint+" -O -C -v lat,lon,slat,slon,lev,ilev,hyai,hybi,hyam,hybm,US,VS,T,Q,PS -w {},1.0 {} {} {}".format(weight, perturb_file, original, outfile)    
     run_cmd(cmd, verbose=True)
     os.rename(outfile, outfile.replace("-tmp.nc","-00000.nc"))
 
 
 def _main_func(description):
-    date, model = parse_command_line(sys.argv, description)
+    date = parse_command_line(sys.argv, description)
 
     ensemble = 10
-    if model == "cesm2cam6":
-        sdrestdir = os.path.join(os.getenv("SCRATCH"),"CESM2","Ocean","rest","{}".format(date))
-        baserundir = os.path.join(os.getenv("SCRATCH"),"cesm2cam6."+date[5:7]+".00","run.00")
-        caminame = os.path.join(sdrestdir,"b.e21.f09_g17.cam.i.{date}-00000.nc".format(date=date))
-        outroot = "b.e21.f09_g17.cam.i."
-    else:
-        ensemble = 20
-        baserundir = os.path.join(os.getenv("SCRATCH"),"70Lwaccm6."+date[5:7]+".00","run.00")
-        sdrestdir = os.path.join(os.getenv("SCRATCH"),"S2S_70LIC_globus","SDnudgedOcn","rest","{}".format(date))
-        caminame = os.path.join(sdrestdir,"b.e21.BWHIST.SD.f09_g17.002.nudgedOcn.cam.i.{date}-00000.nc".format(date=date))
-        outroot = "b.e21.BWHIST.SD.f09_g17.002.nudgedOcn.cam.i."
+    sdrestdir = os.path.join(os.getenv("SCRATCH"),"CESM2","Ocean","rest","{}".format(date))
+    baserundir = os.path.join(os.getenv("SCRATCH"),"cesm2cam6."+date[5:7]+".00","run.00")
+    caminame = os.path.join(sdrestdir,"b.e21.f09_g17.cam.i.{date}-00000.nc".format(date=date))
+    outroot = "b.e21.f09_g17.cam.i."
 
-    create_cam_ic_perturbed(caminame,ensemble, date,baserundir, model, outroot=outroot)
+    create_cam_ic_perturbed(caminame,ensemble, date,baserundir, outroot=outroot)
 
 if __name__ == "__main__":
     _main_func(__doc__)
