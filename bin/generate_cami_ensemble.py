@@ -57,8 +57,9 @@ def get_rvals(date, ensemble_start,ensemble_end, model):
     print("Rvals are {}".format(rvals))
     rvals_file = os.path.join("/glade/p/cesm/espwg/CESM2-SMYLE/","cases","camic_"+date+".{}-{}.txt".format(ensemble_start,ensemble_end))
     #rvals_file = os.path.join("/glade/p/cesm/espwg/CESM2-SMYLE/","cases","camic_"+date+"."+ensemble_start+"-"+ensemble_end+".txt")
-    with open(rvals_file,"w") as fd:
-        fd.write("{}".format(rvals))
+    if not os.path.isfile(rvals_file):
+        with open(rvals_file,"w") as fd:
+            fd.write("{}".format(rvals))
 
     return rvals
 
