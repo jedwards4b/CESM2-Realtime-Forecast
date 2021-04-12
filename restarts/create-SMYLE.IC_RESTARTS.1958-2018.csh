@@ -9,15 +9,9 @@ echo "ERROR:  Must be run on Casper"
 endif
 
 
-#foreach  year ( 1954 1964 1974 1984 1994 2004 )
-set syr = 1959
-set eyr = 1970
-#set syr = 2007
-#set eyr = 2007
-#set syr = 1958
-#set eyr = 1970
-set syr = 1970
-set eyr = 2018
+#foreach  ye9r ( 1954 1964 1974 1984 1994 2004 )
+set syr = 1990
+set eyr = 1999
 
 @ ib = $syr
 @ ie = $eyr

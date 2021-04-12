@@ -137,6 +137,8 @@ def create_cam_ic_perturbed(original, ensemble_start,ensemble_end, date, baserun
               os.unlink(os.path.join(outdir1,origfile))
            os.symlink(outfile1, os.path.join(outdir1,origfile))
            print("I made it here = {} ".format(outdir))
+        if os.path.isfile(os.path.join(outdir2,origfile)):
+              os.unlink(os.path.join(outdir2,origfile))
         os.symlink(outfile2, os.path.join(outdir2,origfile))
 
 

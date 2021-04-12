@@ -8,18 +8,20 @@ setenv TSERIES1  /glade/scratch/sglanvil/SMYLE/timeseries
 setenv TSERIES1  /glade/scratch/nanr/SMYLE/timeseries
 setenv TSERIES1  /glade/p/cesm/espwg/CESM2-SMYLE/timeseries
 setenv TSERIES2  /glade/campaign/cesm/development/espwg/SMYLE/archive
+#setenv TSERIES2  /glade/campaign/cesm/development/espwg/SMYLE/archive/pre-1970
 
 set syr = 1963
 set eyr = 1963
 # ...
 set syr = 1970
-set eyr = 2018
+set eyr = 1979
 
 @ ib = $syr
 @ ie = $eyr
 
 foreach year ( `seq $ib $ie` )
-foreach mon ( 11 )
+#foreach mon ( 11 )
+foreach mon ( 02 )
 
 
 # case name counter
@@ -37,7 +39,7 @@ else
 endif
 
 
-echo "==================================    " 
+#echo "==================================    " 
 #echo $CASE 
 if (-d $TSERIES2/$CASE) then
     cd $TSERIES2/$CASE

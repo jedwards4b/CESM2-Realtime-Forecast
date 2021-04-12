@@ -10,7 +10,7 @@ setenv LOGSDIR  /glade/campaign/cesm/development/espwg/SMYLE/logs
 setenv RESTDIR  /glade/campaign/cesm/development/espwg/SMYLE/restarts
 setenv POPDDIR  /glade/campaign/cesm/development/espwg/SMYLE/popd
 
-set syr = 1971
+set syr = 1970
 set eyr = 1989
 
 @ ib = $syr
@@ -35,28 +35,45 @@ else
         set CASE = b.e21.BSMYLE.f09_g17.${year}-${mon}.0${mbr}
 endif
 
-if ($year >= 1980 && $year <= 1989) then
- set USEARCHDIR = $ARCHDIR2
-endif
 if ($year >= 1970 && $year <= 1979) then
- set USEARCHDIR = $ARCHDIR1
+ set USE_ARCHDIR = $ARCHDIR1
+endif
+if ($year >= 1990 && $year <= 1999) then
+ set USE_ARCHDIR = $ARCHDIR1
+endif
+if ($year >= 2000 && $year <= 2014) then
+ set USE_ARCHDIR = $ARCHDIR1
+endif
+if ($year >= 1980 && $year <= 1989) then
+ set USE_ARCHDIR = $ARCHDIR2
 endif
 
 if (! -d $TSERIES/$CASE/cpl/hist) then
 	mkdir -p $TSERIES/$CASE/cpl/hist
-        cp $USEARCHDIR/$CASE/cpl/hist/* $TSERIES/$CASE/cpl/hist/
+        cp $USE_ARCHDIR/$CASE/cpl/hist/* $TSERIES/$CASE/cpl/hist/
+else
+   echo "cpl done"
 endif
-
 if (! -e $LOGSDIR/$CASE.logs.tar) then
-   tar -cvf $LOGSDIR/$CASE.logs.tar $USEARCHDIR/$CASE/logs
+   cd $USE_ARCHDIR
+   tar -cvf $LOGSDIR/$CASE.logs.tar $CASE/logs/
+else
+   echo "logs done"
 endif
 if (! -e $RESTDIR/$CASE.rest.tar) then
-   tar -cvf $RESTDIR/$CASE.rest.tar $USEARCHDIR/$CASE/rest/
+   cd $USE_ARCHDIR
+   tar -cvf $RESTDIR/$CASE.rest.tar $CASE/rest/
+else
+   echo "rest done"
 endif
 if (! -e $POPDDIR/$CASE.popd.tar) then
-   tar -cvf $POPDDIR/$CASE.popd.tar $USEARCHDIR/$CASE/ocn/hist/*.pop.d*
+   cd $USE_ARCHDIR
+   tar -cvf $POPDDIR/$CASE.popd.tar $CASE/ocn/hist/*.pop.d*
+else
+   echo "popd done"
 endif
 
+end             # mon loop
 end             # member loop
 end             # year loop
 

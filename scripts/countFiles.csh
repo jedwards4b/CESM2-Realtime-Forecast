@@ -10,14 +10,15 @@ setenv TSERIES1  /glade/p/cesm/espwg/CESM2-SMYLE/timeseries
 setenv TSERIES2  /glade/campaign/cesm/development/espwg/SMYLE/archive
 
 # ...
-set syr = 2013
-set eyr = 2013
+set syr = 1970
+set eyr = 1973
 
 @ ib = $syr
 @ ie = $eyr
 
 foreach year ( `seq $ib $ie` )
-foreach mon ( 11 )
+#foreach mon ( 11 )
+foreach mon ( 02 )
 
 
 # case name counter

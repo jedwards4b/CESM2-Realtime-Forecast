@@ -24,8 +24,8 @@
 
 [scheduling]
   # Change the run start and end dates here
-    initial cycle point = "1970-02-01"
-    final cycle point = "1970-02-01"
+    initial cycle point = "1993-02-01"
+    final cycle point = "1993-02-01"
 
     # must start Feb 01, any year:
     initial cycle point constraints = "0201T00"
