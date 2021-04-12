@@ -1,15 +1,16 @@
 #!Jinja2
 # This will run the hind cast for each month from intial to final cycle point
 # one year at a time, all months for a given year run simultaniously
-{% set mnames = ["jan","feb","mar","apr","may","jun","jul","aug","sep","oct","nov","dec"] %}
-
+{% set mnames = ["JAN","FEB","MAR","APR","MAY","JUN","JUL","AUG","SEP","OCT","NOV","DEC"] %}
+{% set FCST_HOME = "$HOME/cesm2cam6/CESM2-Realtime-Forecast" %}
 [cylc]
    cycle point format = %Y
    [[parameters]]
       mnum = 1..12
+
 [scheduling]
-   initial cycle point = 2020
-   final cycle point = 2020
+   initial cycle point = 2021
+   final cycle point = 2021
    [[dependencies]]
        [[[R1]]]
            graph = prep => month<mnum>
@@ -29,15 +30,15 @@
   if [ -d $HOME/cylc-run/{{month}} ]; then
     mv $HOME/cylc-run/{{month}} $HOME/cylc_logs/$CYLC_TASK_CYCLE_POINT/
   fi
-  cylc register {{month}} ${FCST_HOME}/cylc/cesm2cam6/monthly
+  cylc register {{month}}.cesm2cam6 {{FCST_HOME}}/cylc/monthly
 {% endfor %}
 """
 {% for month in mnames %}
    # Use the following to set the months to actually run or comment the if and endif to run all months
- {% if month in ["apr"] %}
+    {% if month in ["APR"] %}
    [[month_mnum{{"{0:02d}".format(loop.index)}}]]
    script = """
-cylc run --no-detach --set=YEAR=$CYLC_TASK_CYCLE_POINT --set=MONTH={{"{0:02d}".format(loop.index)}} {{month}}
+cylc run --no-detach --set=YEAR=$CYLC_TASK_CYCLE_POINT --set=MONTH={{"{0:02d}".format(loop.index)}} {{month}}.cesm2cam6
 """
   {% endif %}
 {% endfor %}
