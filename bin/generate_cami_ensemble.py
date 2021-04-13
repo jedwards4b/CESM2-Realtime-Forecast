@@ -51,7 +51,7 @@ def get_rvals(date, ensemble_start, ensemble_end):
     random.seed(int(date[0:4])+int(date[5:7])+int(date[8:10]))
     rvals = random.sample(range(1001),k=ensemble_end//2)
     print("Rvals are {}".format(rvals))
-    rvals_file = os.path.join(os.getenv("WORK"),"cases","CESM2","camic_"+date+".txt")
+    rvals_file = os.path.join(os.getenv("WORK"),"camic_"+date+".txt")
     with open(rvals_file,"w") as fd:
         fd.write("{}".format(rvals))
     return rvals
@@ -77,7 +77,7 @@ def create_cam_ic_perturbed(original, ensemble_start, ensemble_end, date, baseru
 
     local_path = "/glade/campaign/cesm/development/cross-wg/S2S/CESM2/CAMI/RP"
     perturb_files = []
-    for i in range(1,ensemble, 2):
+    for i in range(ensemble_start,ensemble_end, 2):
         print "HERE rvals[{}] = {}".format(i//2,rvals[i//2])
         perturb_file = os.path.join("{}".format(month),
                                     "CESM2.cam.i.M{}.diff.{}.nc".format(month,rvals[i//2]))

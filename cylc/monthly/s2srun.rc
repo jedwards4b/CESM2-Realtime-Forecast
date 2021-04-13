@@ -1,4 +1,9 @@
 #!Jinja2
+{% set ensemble_start = 0 %}
+{% set ensemble_end   = 10 %}
+# Change the run start and end dates here
+{% set day_start      = '01' %}
+{% set day_end        = '31' %}
 [meta]
   title = CESM CYLC workflow for ensemble from cesm2cam6v2.MM.00 to cesm2cam6v2.MM.10
 [cylc]
@@ -6,16 +11,14 @@
   cycle point format = CCYY-MM-DD
   [[parameters]]
     # The number of ensemble members can be changed here
-#    member = 0..20
-    member = 5..5
+    member = {{ ensemble_start }}..{{ ensemble_end }}
 
   [[environment]]
     CYLC_TASK_CYCLE_MONTH = {{MONTH}}
 
 [scheduling]
-  # Change the run start and end dates here
-  initial cycle point = {{YEAR}}-{{MONTH}}-01
-  final cycle point = {{YEAR}}-{{MONTH}}-07
+  initial cycle point = {{YEAR}}-{{MONTH}}-{{ day_start }}
+  final cycle point = {{YEAR}}-{{MONTH}}-{{ day_end }}
 
   [[dependencies]]
   # Weekly Cycling on monday, new date will submit when st_archive is complete for each member
@@ -32,7 +35,7 @@
 module load ncl nco cesm2cam6
 cd ${FCST_HOME}/bin/
 ./getinitialdata.py
-./generate_cami_ensemble.py
+./generate_cami_ensemble.py  --ensemble-start {{ ensemble_start }} --ensemble-end {{ ensemble_end }}
 """
     [[[job]]]
       batch system = pbs
@@ -93,6 +96,7 @@ ${FCST_HOME}/bin/dispose_data.py
        inherit = run_family
     [[run_family]]
     script = """
+module load cesm2cam6
 cd ${WORK}/cesm2cam6.${CYLC_TASK_CYCLE_MONTH}.$(printf "%02d" ${CYLC_TASK_PARAM_member})
 # USE This to change dynamics subcycle
 #cp ${FCST_HOME}/user_mods/cesm2cam6.base/user_nl_cam.${CYLC_TASK_TRY_NUMBER} user_nl_cam
