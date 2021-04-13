@@ -1,9 +1,7 @@
 #!Jinja2
-{% set ensemble_start = 0 %}
-{% set ensemble_end   = 10 %}
-# Change the run start and end dates here
-{% set day_start      = '01' %}
-{% set day_end        = '31' %}
+# All settings are in month_wrapper.rc 
+# don't change anything below here
+
 [meta]
   title = CESM CYLC workflow for ensemble from cesm2cam6v2.MM.00 to cesm2cam6v2.MM.10
 [cylc]
@@ -32,7 +30,7 @@
 [runtime]
   [[get_data]]
     script = """
-module load ncl nco cesm2cam6
+module load ncl nco {{ model }}
 cd ${FCST_HOME}/bin/
 ./getinitialdata.py
 ./generate_cami_ensemble.py  --ensemble-start {{ ensemble_start }} --ensemble-end {{ ensemble_end }}
@@ -44,7 +42,7 @@ cd ${FCST_HOME}/bin/
     [[[directives]]]
        -r = n
        -j = oe
-       -v = FCST_HOME=/glade/u/home/ssfcst/cesm2cam6/CESM2-Realtime-Forcast
+       -v = FCST_HOME=/glade/u/home/ssfcst/{{ model }}/CESM2-Realtime-Forcast
        -S = /bin/bash
        -l = select=1:ncpus=18:ompthreads=18
 
@@ -66,7 +64,7 @@ cd ${FCST_HOME}/bin/
 
   [[st_archive<member>]]
     script = """
-cd ${WORK}/cesm2cam6.${CYLC_TASK_CYCLE_MONTH}.$(printf "%02d" ${CYLC_TASK_PARAM_member})
+cd ${WORK}/{{ model }}.${CYLC_TASK_CYCLE_MONTH}.$(printf "%02d" ${CYLC_TASK_PARAM_member})
 ./case.submit --job case.st_archive
 #./xmlchange CONTINUE_RUN=TRUE  don't want this for this workflow
 """
@@ -96,10 +94,9 @@ ${FCST_HOME}/bin/dispose_data.py
        inherit = run_family
     [[run_family]]
     script = """
-module load cesm2cam6
-cd ${WORK}/cesm2cam6.${CYLC_TASK_CYCLE_MONTH}.$(printf "%02d" ${CYLC_TASK_PARAM_member})
-# USE This to change dynamics subcycle
-#cp ${FCST_HOME}/user_mods/cesm2cam6.base/user_nl_cam.${CYLC_TASK_TRY_NUMBER} user_nl_cam
+module load {{ model }}
+filename={{ model }}.${CYLC_TASK_CYCLE_MONTH}.$(printf "%02d" ${CYLC_TASK_PARAM_member})
+cd ${WORK}/${filename}
  ./case.submit --job case.run
 """
     [[[job]]]
