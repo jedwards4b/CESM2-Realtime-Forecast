@@ -25,7 +25,6 @@ def parse_command_line(args, description):
     CIME.utils.setup_standard_logging_options(parser)
     parser.add_argument("--date",
                         help="Specify a start Date")
-    parser.add_argument("--model",help="Specify a case (cesm2cam6, 70Lwaccm6)", default="cesm2cam6")
 
     args = CIME.utils.parse_args_and_handle_standard_logging_options(args, parser)
     cdate = os.getenv("CYLC_TASK_CYCLE_POINT")
@@ -41,15 +40,14 @@ def parse_command_line(args, description):
         date = datetime.date.today()
         date = date.replace(day=date.day-1)
 
-    return date.strftime("%Y-%m-%d"), args.model
+    return date.strftime("%Y-%m-%d")
 
-def stage_refcase(rundir, refdir, date, basecasename):
+def stage_refcase(rundir, refdir, date):
     if not os.path.isdir(rundir):
         os.makedirs(rundir)
-    if basecasename == "70Lwaccm6":
-        nfname = "b.e21.BWHIST.SD.f09_g17.002.nudgedOcn"
-    else:
-        nfname = "b.e21.f09_g17"
+
+    nfname = "b.e21.BWHIST.SD.f09_g17.002.nudgedOcn"
+
     for reffile in glob.iglob(refdir+"/*"):
         if os.path.basename(reffile).startswith("rpointer"):
             safe_copy(reffile, rundir)
@@ -180,42 +178,34 @@ def clone_base_case(date, caseroot, ensemble, sdrestdir, user_mods_dir, overwrit
             per_run_case_updates(case, date, sdrestdir, user_mods_dir, rundir)
 
 def _main_func(description):
-    date, basecasename = parse_command_line(sys.argv, description)
+    date = parse_command_line(sys.argv, description)
 
     # TODO make these input vars
 
     basemonth = int(date[5:7])
     baseyear = int(date[0:4])
-    baseroot = os.path.join(os.getenv("WORK"),"cases",basecasename)
+    baseroot = os.getenv("WORK")
     res = "f09_g17"
     waccm = False
-    if basecasename == "70Lwaccm6":
-        waccm = True
-        if baseyear < 2014 or (baseyear == 2014 and basemonth < 10):
-            compset = "BWHIST"
-        else:
-            compset = "BWSSP585"
+
+    waccm = True
+    if baseyear < 2014 or (baseyear == 2014 and basemonth < 10):
+        compset = "BWHIST"
     else:
-        if baseyear < 2014 or (baseyear == 2014 and basemonth < 11):
-            compset = "BHIST"
-        else:
-            compset = "BSSP585"
+        compset = "BWSSP585"
         
     print ("baseyear is {} basemonth is {}".format(baseyear,basemonth))
     
     overwrite = True
-    if waccm:
-        sdrestdir = os.path.join(os.getenv("SCRATCH"),"S2S_70LIC_globus","SDnudgedOcn","rest","{}".format(date))
-        ensemble = 20
-    else:
-        sdrestdir = os.path.join(os.getenv("SCRATCH"),"CESM2","Ocean","rest","{}".format(date))
-        ensemble = 10
+
+    sdrestdir = os.path.join(os.getenv("SCRATCH"),"S2S_70LIC_globus","SDnudgedOcn","rest","{}".format(date))
+    ensemble = 20
 
     user_mods_dir = os.path.join(s2sfcstroot,"user_mods",basecasename)
 
     # END TODO
     print("basemonth = {}".format(basemonth))
-    caseroot = build_base_case(date, baseroot, basecasename, basemonth, res,
+    caseroot = build_base_case(date, baseroot, basemonth, res,
                             compset, overwrite, sdrestdir, user_mods_dir+'.base', pecount="S")
     clone_base_case(date, caseroot, ensemble, sdrestdir, user_mods_dir, overwrite)
 

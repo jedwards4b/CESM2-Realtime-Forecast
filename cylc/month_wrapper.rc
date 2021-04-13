@@ -1,15 +1,29 @@
 #!Jinja2
 # This will run the hind cast for each month from intial to final cycle point
 # one year at a time, all months for a given year run simultaniously
-{% set mnames = ["JAN","FEB","MAR","APR","MAY","JUN","JUL","AUG","SEP","OCT","NOV","DEC"] %}
+# change rnames to limit months run, do not change mnames
 
+{% set rnames = ["DEC"] %}
+{% set mnames = ["JAN","FEB","MAR","APR","MAY","JUN","JUL","AUG","SEP","OCT","NOV","DEC"] %}
+{% set model = "70Lwaccm6" %}
+{% set fyear = 2020 %}
+{% set lyear = 2020 %}
+{% set FCST_HOME = "$HOME/{{model}}/CESM2-Realtime-Forecast" %}
+{% set ensemble_start = 0 %}
+{% set ensemble_end   = 10 %}
+# Change the run start and end dates here
+{% set day_start      = '01' %}
+{% set day_end        = '31' %}
+
+# don't change anything below here
 [cylc]
    cycle point format = %Y
    [[parameters]]
       mnum = 1..12
+
 [scheduling]
-   initial cycle point = 2021
-   final cycle point = 2021
+   initial cycle point = {{ fyear }}
+   final cycle point = {{ lyear }}
    [[dependencies]]
        [[[R1]]]
            graph = prep => month<mnum>
@@ -29,15 +43,14 @@
   if [ -d $HOME/cylc-run/{{month}} ]; then
     mv $HOME/cylc-run/{{month}} $HOME/cylc_logs/$CYLC_TASK_CYCLE_POINT/
   fi
-  cylc register {{month}} ${FCST_HOME}/cylc/70Lwaccm6/monthly
+  cylc register {{model}}/{{month}} {{FCST_HOME}}/cylc/monthly
 {% endfor %}
 """
 {% for month in mnames %}
-   # Use the following to set the months to actually run or comment the if and endif to run all months
-    {% if month in ["APR"] %}
+    {% if month in rnames %}
    [[month_mnum{{"{0:02d}".format(loop.index)}}]]
    script = """
-cylc run --no-detach --set=YEAR=$CYLC_TASK_CYCLE_POINT --set=MONTH={{"{0:02d}".format(loop.index)}} {{month}}
+cylc run --no-detach --set=YEAR=$CYLC_TASK_CYCLE_POINT --set=MONTH={{"{0:02d}".format(loop.index)}} --set=model={{ model }} --set=ensemble_start={{ ensemble_start }} --set=ensemble_end={{ ensemble_end }} --set=day_start={{day_start}} --set=day_end={{day_end}} {{model}}/{{month}}
 """
   {% endif %}
 {% endfor %}

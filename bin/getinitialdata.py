@@ -27,8 +27,6 @@ def parse_command_line(args, description):
     parser.add_argument("--date",
                         help="Specify a start Date")
 
-    parser.add_argument("--model",help="Specify a case (cesm2cam6, 70Lwaccm6)", default="cesm2cam6")
-
     args = CIME.utils.parse_args_and_handle_standard_logging_options(args, parser)
     cdate = os.getenv("CYLC_TASK_CYCLE_POINT")
     
@@ -43,18 +41,14 @@ def parse_command_line(args, description):
         date = datetime.date.today()
         date = date.replace(day=date.day-1)
         
-    return date.strftime("%Y-%m-%d"), args.model
+    return date.strftime("%Y-%m-%d")
     
-def get_data_from_campaignstore(date, model):
+def get_data_from_campaignstore(date):
     oyr = int(date[:4]) - 1749
     odate = "{:04d}".format(oyr)+date[4:]
-    if model == "70Lwaccm6":
-        source_path = 'cesm/development/cross-wg/S2S/SDnudgedOcn/rest/{date}-00000/'.format(date=date)
-        dest_path = os.path.join(os.getenv("SCRATCH"),"S2S_70LIC_globus","SDnudgedOcn","rest","{}".format(date))
-    else:
-        source_path = 'cesm/development/cross-wg/S2S/CESM2/OCEANIC/{date}-00000/'.format(date=odate)
-        dest_path = os.path.join(os.getenv("SCRATCH"),"CESM2","Ocean","rest","{}".format(date))
 
+    source_path = 'cesm/development/cross-wg/S2S/SDnudgedOcn/rest/{date}-00000/'.format(date=date)
+    dest_path = os.path.join(os.getenv("SCRATCH"),"S2S_70LIC_globus","SDnudgedOcn","rest","{}".format(date))
 
     if os.path.exists(os.path.join(dest_path,"rpointer.ocn.restart")):
         print("Data already exists in {}".format(dest_path))
@@ -77,31 +71,18 @@ def get_data_from_campaignstore(date, model):
 lnd_source_path)))
         return
                               
-    if model == "cesm2cam6":
-        refname = "b.e21.f09_g17"
-    else:
-        refname = "b.e21.BWHIST.SD.f09_g17.002.nudgedOcn"
+    refname = "b.e21.BWHIST.SD.f09_g17.002.nudgedOcn"
     for lndfile in glob.iglob(dest_path+"I2000*"):
         newfile = lndfile.replace("I2000Clm50BgcCrop.002runRealtime",refname)
         newfile = lndfile.replace("I2000Clm50BgcCrop.002runContd",refname)
         newfile = lndfile.replace("I2000Clm50BgcCrop.002run",refname)
         print("Renaming {} to {}".format(lndfile,newfile))
         os.rename(os.path.join(dest_path,lndfile), os.path.join(dest_path,newfile))
-    if model == "cesm2cam6":
-        cam_source_path = "/glade/campaign/cesm/development/cross-wg/S2S/CESM2/CAMI/CFSv2/"
-        cami = os.path.join(cam_source_path,"CESM2_NCEP_0.9x1.25_L32.cam2.i.{}-00000.nc".format(date))
-        camo = os.path.join(dest_path, "b.e21.f09_g17.cam.i.{}-00000.nc".format(date))
-        if os.path.isfile(camo):
-            os.remove(camo)
-        if os.path.isfile(cami):
-            safe_copy(cami, camo)
-        else:
-            print("No cami file {} found".format(cami))
 
 def _main_func(description):
-    date, model = parse_command_line(sys.argv, description)
+    date = parse_command_line(sys.argv, description)
 
-    get_data_from_campaignstore(date, model)
+    get_data_from_campaignstore(date)
 
 if __name__ == "__main__":
     _main_func(__doc__)
