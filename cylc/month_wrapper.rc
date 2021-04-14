@@ -3,17 +3,18 @@
 # one year at a time, all months for a given year run simultaniously
 # change rnames to limit months run, do not change mnames
 
-{% set rnames = ["DEC"] %}
+{% set rnames = ["APR"] %}
 {% set mnames = ["JAN","FEB","MAR","APR","MAY","JUN","JUL","AUG","SEP","OCT","NOV","DEC"] %}
+{% set fyear = 2021 %}
+{% set lyear = 2021 %}
 {% set model = "70Lwaccm6" %}
-{% set fyear = 2020 %}
-{% set lyear = 2020 %}
-{% set FCST_HOME = "$HOME/{{model}}/CESM2-Realtime-Forecast" %}
+{% set FCST_HOME = "$HOME/70Lwaccm6/CESM2-Realtime-Forecast" %}
 {% set ensemble_start = 0 %}
-{% set ensemble_end   = 10 %}
+{% set ensemble_end   = 20 %}
 # Change the run start and end dates here
-{% set day_start      = '01' %}
-{% set day_end        = '31' %}
+{% set day_start      = '11' %}
+{% set day_end        = '15' %}
+{% set sendtoftp      = false %}
 
 # don't change anything below here
 [cylc]
@@ -50,7 +51,7 @@
     {% if month in rnames %}
    [[month_mnum{{"{0:02d}".format(loop.index)}}]]
    script = """
-cylc run --no-detach --set=YEAR=$CYLC_TASK_CYCLE_POINT --set=MONTH={{"{0:02d}".format(loop.index)}} --set=model={{ model }} --set=ensemble_start={{ ensemble_start }} --set=ensemble_end={{ ensemble_end }} --set=day_start={{day_start}} --set=day_end={{day_end}} {{model}}/{{month}}
+cylc run --no-detach --set=YEAR=$CYLC_TASK_CYCLE_POINT --set=MONTH={{"{0:02d}".format(loop.index)}} --set=model={{ model }} --set=ensemble_start={{ ensemble_start }} --set=ensemble_end={{ ensemble_end }} --set=day_start={{day_start}} --set=day_end={{day_end}} --set=sendtoftp={{ sendtoftp }} {{model}}/{{month}}
 """
   {% endif %}
 {% endfor %}
