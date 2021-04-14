@@ -10,11 +10,11 @@ setenv TSERIES1  /glade/p/cesm/espwg/CESM2-SMYLE/timeseries
 setenv TSERIES2  /glade/campaign/cesm/development/espwg/SMYLE/archive
 #setenv TSERIES2  /glade/campaign/cesm/development/espwg/SMYLE/archive/pre-1970
 
-set syr = 1963
-set eyr = 1963
+set syr = 2000
+set eyr = 1993
 # ...
-set syr = 1970
-set eyr = 1979
+set syr = 2000
+set eyr = 2000
 
 @ ib = $syr
 @ ie = $eyr

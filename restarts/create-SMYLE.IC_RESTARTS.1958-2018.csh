@@ -10,8 +10,10 @@ endif
 
 
 #foreach  ye9r ( 1954 1964 1974 1984 1994 2004 )
-set syr = 1990
-set eyr = 1999
+set syr = 2000
+set eyr = 2009
+set syr = 2010
+set eyr = 2018
 
 @ ib = $syr
 @ ie = $eyr
