@@ -107,9 +107,9 @@ cd ${WORK}/${filename}
 """
     [[[job]]]
       # Retry each run up to 2 times with different fv_nsplit values
-      # execution retry delays = 2*PT6S
+      execution retry delays = 2*PT6S
       batch system = pbs
-      batch submit command template = qsub -q {{run_queue}} -l walltime=02:00:00 -A {{account}} '%(job)s'
+      batch submit command template = qsub -q {{run_queue}} -l walltime=06:00:00 -A {{account}} '%(job)s'
     [[[directives]]]
        -r = n
        -j = oe
