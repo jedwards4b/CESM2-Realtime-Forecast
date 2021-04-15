@@ -26,6 +26,10 @@ def parse_command_line(args, description):
     CIME.utils.setup_standard_logging_options(parser)
     parser.add_argument("--date",
                         help="Specify a start Date")
+    parser.add_argument("--ensemble-start",default=0,
+                        help="Specify the first ensemble member")
+    parser.add_argument("--ensemble-end",default=10,
+                        help="Specify the last ensemble member")
 
     args = CIME.utils.parse_args_and_handle_standard_logging_options(args, parser)
     cdate = os.environ.get("CYLC_TASK_CYCLE_POINT")
@@ -41,9 +45,9 @@ def parse_command_line(args, description):
         date = datetime.date.today()
         date = date.replace(day=date.day-1)
 
-    return date.strftime("%Y-%m-%d")
+    return date.strftime("%Y-%m-%d"),int(args.ensemble_start),int(args.ensemble_end)
 
-def get_rvals(date, ensemble):
+def get_rvals(date, ensemble_start, ensemble_end):
     rvals_file = os.path.join(os.getenv("WORK"),"camic_"+date+".txt")
     rvals = []
     if os.path.isfile(rvals_file):
@@ -58,6 +62,7 @@ def get_rvals(date, ensemble):
             else:
                 rval = int(rval)
             rvals.append(rval)
+    ensemble = ensemble_end - ensemble_start
     if len(rvals) < ensemble//2:
         newrvals = random.sample(range(500),k=ensemble//2)
         if len(rvals)>0:
@@ -71,8 +76,8 @@ def get_rvals(date, ensemble):
     print "LEN of rvals is {}".format(len(rvals))
     return rvals
 
-def create_cam_ic_perturbed(original, ensemble, date, baserundir, outroot="b.e21.f09_g17.cam.i.", factor=0.15):
-    rvals = get_rvals(date, ensemble)
+def create_cam_ic_perturbed(original, ensemble_start, ensemble_end, date, baserundir, outroot="b.e21.f09_g17.cam.i.", factor=0.15):
+    rvals = get_rvals(date, ensemble_start, ensemble_end)
 
     outfile = os.path.join(baserundir,outroot+date+"-00000.nc")
     # first link the original ic file to the 0th ensemble member
@@ -92,7 +97,7 @@ def create_cam_ic_perturbed(original, ensemble, date, baserundir, outroot="b.e21
     local_path = "/glade/campaign/cesm/collections/S2Sfcst"
 
     perturb_files = []
-    for i in range(1,ensemble, 2):
+    for i in range(ensemble_start,ensemble_end, 2):
         print "HERE rvals[{}] = {}".format(i//2,rvals[i//2])
         perturb_file = os.path.join("S2S_70LIC",
                                     "{}".format(month),
@@ -104,7 +109,7 @@ def create_cam_ic_perturbed(original, ensemble, date, baserundir, outroot="b.e21
             os.makedirs(dirname)
         perturb_files.append(perturb_file)
 
-    for i in range(1,ensemble, 2):
+    for i in range(ensemble_start+1,ensemble_end, 2):
         perturb_file = os.path.join(local_path,perturb_files[i//2-1])
         outfile1 = os.path.join(baserundir[:-2]+"{:02d}".format(i), outroot+date+"-tmp.nc")
         outfile2 = os.path.join(baserundir[:-2]+"{:02d}".format(i+1), outroot+date+"-tmp.nc")
@@ -133,15 +138,14 @@ def create_perturbed_init_file(original, perturb_file, outfile, weight):
 
 
 def _main_func(description):
-    date = parse_command_line(sys.argv, description)
+    date, ensemble_start, ensemble_end = parse_command_line(sys.argv, description)
 
-    ensemble = 20
     baserundir = os.path.join(os.getenv("SCRATCH"),"70Lwaccm6."+date[5:7]+".00","run.00")
     sdrestdir = os.path.join(os.getenv("SCRATCH"),"S2S_70LIC_globus","SDnudgedOcn","rest","{}".format(date))
     caminame = os.path.join(sdrestdir,"b.e21.BWHIST.SD.f09_g17.002.nudgedOcn.cam.i.{date}-00000.nc".format(date=date))
     outroot = "b.e21.BWHIST.SD.f09_g17.002.nudgedOcn.cam.i."
 
-    create_cam_ic_perturbed(caminame,ensemble, date,baserundir, outroot=outroot)
+    create_cam_ic_perturbed(caminame,ensemble_start, ensemble_end, date,baserundir, outroot=outroot)
 
 if __name__ == "__main__":
     _main_func(__doc__)

@@ -1,6 +1,6 @@
-  fv_nsplit=32
-  fv_nspltrac=32
-  fv_nspltvrm=32
+  fv_nsplit=256
+  fv_nspltrac=256
+  fv_nspltvrm=256
   avgflag_pertape = 'A','A', 'A', 'I', 'A'
   nhtfrq = 0, -24, -24, -6, -24, 0, 0, 0
   mfilt  = 1, 46, 46, 181, 46
