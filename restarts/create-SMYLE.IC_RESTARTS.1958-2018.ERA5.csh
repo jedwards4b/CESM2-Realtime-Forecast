@@ -8,16 +8,24 @@ echo "ERROR:  Must be run on Casper"
 #exit
 endif
 
-set syr = 1979
-set eyr = 1979
+set syr = 1980
+set eyr = 1989
+set syr = 1990
+set eyr = 1999
+set syr = 2004
+set eyr = 2009
+set syr = 2010
+set eyr = 2018
+set syr = 1970
+set eyr = 1970
 
 @ ib = $syr
 @ ie = $eyr
 
 foreach year ( `seq $ib $ie` )
 #foreach mon ( 02 05 08 11 )
-#foreach mon ( 05 08 11 )
-foreach mon ( 11 )
+#foreach mon ( 01 10 11 12 )
+foreach mon ( 01 )
 
 set case = b.e21.SMYLE_ERA5_IC.f09_g17.${year}-${mon}.01
 
@@ -48,7 +56,8 @@ set roffname = ${lndcase}.mosart.r.${year}-${mon}-01-00000.nc
 # directories
 #set atmdir = /glade/p/cesm/espwg/CESM2-SMYLE/initial_conditions/cam/
 set atmdir = /glade/scratch/islas/analyses_output/
-set lnddir = /glade/p/cesm/espwg/CESM2-SMYLE/initial_conditions/clm/${year}-${mon}-01-00000/
+#set lnddir = /glade/p/cesm/espwg/CESM2-SMYLE/initial_conditions/clm/${year}-${mon}-01-00000/
+set lnddir = /glade/campaign/cesm/development/espwg/SMYLE/CLM5_init/rest/${year}-${mon}-01-00000/
 
 # rename atm, land IC files
 set atmfout = ${case}.cam.i.${year}-${mon}-01-00000.nc
@@ -81,7 +90,8 @@ set ocean_base_year = 306
 # atmyr 1958 = ocnyr 306
 @ offset = $first_rest_year - $ocean_base_year 
 @ ocnyr   = $year - $offset
-set ocndir = /glade/p/cesm/espwg/CESM2-SMYLE/initial_conditions/pop_cice/0${ocnyr}-${mon}-01-00000/
+#set ocndir = /glade/p/cesm/espwg/CESM2-SMYLE/initial_conditions/pop_cice/0${ocnyr}-${mon}-01-00000/
+set ocndir = /glade/campaign/cesm/development/espwg/SMYLE/SMYLE-FOSI/rest/0${ocnyr}-${mon}-01-00000/
 set icefout = ${case}.cice.r.${year}-${mon}-01-00000.nc
 set lndfout = ${case}.clm2.r.${year}-${mon}-01-00000.nc
 set roffout = ${case}.mosart.r.${year}-${mon}-01-00000.nc
@@ -106,13 +116,13 @@ if ($doThis2 == 1) then
 cp $ocndir/${icefname}    $icdir/${icefout}
 cp $ocndir/${poprfname}   $icdir/${poprfout}
 cp $ocndir/${poprofname}  $icdir/${poprofout}
-cp $ocndir/${poprhfname}  $icdir/${poprhfout}
+#cp $ocndir/${poprhfname}  $icdir/${poprhfout}
 cp $ocndir/${popwwfname}  $icdir/${popwwfout}
 
 ncatted -a OriginalFile,global,a,c,$icefname    $icdir/$icefout
 ncatted -a OriginalFile,global,a,c,$poprfname   $icdir/$poprfout
 #ncatted -a OriginalFile,global,a,c,$poprofname  $icdir/$poprofout
-ncatted -a OriginalFile,global,a,c,$poprhfname  $icdir/$poprhfout
+#ncatted -a OriginalFile,global,a,c,$poprhfname  $icdir/$poprhfout
 
 # create rpointer files
 

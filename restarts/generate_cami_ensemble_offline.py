@@ -58,8 +58,9 @@ def get_rvals(date, ensemble_start,ensemble_end, model):
     #rvals_file = os.path.join("/glade/scratch/nanr/SMYLE-ERA5/","cases","camic_era5_"+date+".{}-{}.txt".format(ensemble_start,ensemble_end))
     rvals_file = os.path.join("/glade/p/cesm/espwg/CESM2-SMYLE-ERA5/","cases","camic_era5_"+date+".{}-{}.txt".format(ensemble_start,ensemble_end))
     #rvals_file = os.path.join("/glade/p/cesm/espwg/CESM2-SMYLE-ERA5/","cases","camic_era5_"+date+"."+ensemble_start+"-"+ensemble_end+".txt")
-    with open(rvals_file,"w") as fd:
-        fd.write("{}".format(rvals))
+    if not os.path.isfile(rvals_file):
+        with open(rvals_file,"w") as fd:
+            fd.write("{}".format(rvals))
 
     return rvals
 
@@ -134,11 +135,20 @@ def create_cam_ic_perturbed(original, ensemble_start,ensemble_end, date, baserun
               os.mkdir(outdir)
               print("outdir = {} ".format(outdir))
         if i != 1:
+           print("outfile2 ===================== {} {}".format(outdir2,outfile2))
            if os.path.isfile(os.path.join(outdir1,origfile)):
               os.unlink(os.path.join(outdir1,origfile))
+              print("I made it here = {} ".format(outdir1))
            os.symlink(outfile1, os.path.join(outdir1,origfile))
-           print("I made it here = {} ".format(outdir))
-        os.symlink(outfile2, os.path.join(outdir2,origfile))
+           print("I made it here = {} ".format(outdir1))
+        if os.path.isfile(os.path.join(outdir2,origfile)):
+              os.unlink(os.path.join(outdir2,origfile))
+              print("I made it unlink = {} ".format(outdir1))
+        if not os.path.isfile(os.path.join(outdir2,origfile)):
+           print("creating new pert file= {} ".format(outfile2))
+           os.symlink(outfile2, os.path.join(outdir2,origfile))
+        else:
+           print("pert file already exists= {} ".format(outfile2))
 
 
 def create_perturbed_init_file(original, perturb_file, outfile, weight):
