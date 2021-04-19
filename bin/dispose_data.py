@@ -65,7 +65,7 @@ def _main_func(description):
     # TODO make these input vars
     basecasename = "70Lwaccm6"
     basemonth = date[5:7]
-    baseroot = os.path.join(os.getenv("WORK"),"cases",basecasename)
+    baseroot = os.getenv("WORK")
     sdrestdir = os.path.join(scratch,"S2S_70LIC_globus","SDnudgedOcn","rest","{}".format(date))
     if os.path.isdir(sdrestdir):
         shutil.rmtree(sdrestdir)        

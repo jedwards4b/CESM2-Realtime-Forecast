@@ -31,8 +31,6 @@ def parse_command_line(args, description):
     parser.add_argument("--member",
                         help="Specify an ensemble member")
 
-    parser.add_argument("--model",help="Specify a case (cesm2cam6, 70Lwaccm6)", default="cesm2cam6")
-
     parser.add_argument("--sendtoftp",help="Send output to ftp server", default=False, action='store_true')
 
     args = CIME.utils.parse_args_and_handle_standard_logging_options(args, parser)
@@ -56,12 +54,11 @@ def parse_command_line(args, description):
         date = datetime.date.today()
         date = date.replace(day=date.day-1)
 
-    return date.strftime("%Y-%m-%d"), member, args.model, args.sendtoftp
+    return date.strftime("%Y-%m-%d"), member, args.sendtoftp
 
-def run_ncl_scripts(basecasename):
+def run_ncl_scripts():
     scripts = ["pp_priority2.ncl","pp_priority1.ncl","pp_priority3.ncl","pp_h1vertical.ncl"]
-    if basecasename == "70Lwaccm6":
-        scripts.append("pp_h4vertical.ncl")
+    scripts.append("pp_h4vertical.ncl")
 
     outfiles = []
     processes = []
@@ -101,11 +98,11 @@ def send_data_to_campaignstore(source_path):
     complete_transfer_request(tc, transfer_data)
 
 def _main_func(description):
-    date, member, basecasename, sendtoftp = parse_command_line(sys.argv, description)
-
+    date, member, sendtoftp = parse_command_line(sys.argv, description)
+    basecasename = "70Lwaccm6"
     basemonth = date[5:7]
-    baseroot = os.path.join(os.getenv("WORK"),"cases",basecasename)
-    ftproot = " jedwards@thorodin.cgd.ucar.edu:/ftp/pub/jedwards/" + basecasename
+    baseroot = os.getenv("WORK")
+    ftproot = " jedwards@thorodin.cgd.ucar.edu:/ftp/pub/jedwards/70Lwaccm6"
     
 
     if member < 0:
@@ -123,10 +120,10 @@ def _main_func(description):
         with Case(caseroot, read_only=True) as case:
             rundir = case.get_value("RUNDIR")
             dout_s_root = case.get_value("DOUT_S_ROOT")
+            print("HERE caseroot {} dout_s_root {} date {} curmem {}".format(caseroot, dout_s_root,date,curmem))
             dout_s_root = dout_s_root[:-13] + date + ".{0:02d}".format(curmem)
             os.environ["DOUT_S_ROOT"] = dout_s_root
-        #print("HERE rundir {} dout_s_root {}".format(rundir,dout_s_root))
-        outfiles = run_ncl_scripts(basecasename)
+        outfiles = run_ncl_scripts()
         # Copy data to ftp site
         if sendtoftp:
             for _file in outfiles:
@@ -135,7 +132,7 @@ def _main_func(description):
                 # path for hindcasts
                 # rsynccmd = "rsync -azvh --rsync-path=\"mkdir -p /ftp/pub/jedwards/70Lwaccm6/"+fpath+" && rsync\" "+_file+" "+ftproot+fpath
                 # path for realtime
-                rsynccmd = "rsync -azvh --rsync-path=\"mkdir -p /ftp/pub/jedwards/"+basecasename+"/realtime && rsync\" {} {}/realtime/{}".format(_file, ftproot,os.path.basename(_file))
+                rsynccmd = "rsync -azvh --rsync-path=\"mkdir -p /ftp/pub/jedwards/70Lwaccm6/realtime && rsync\" {} {}/realtime/{}".format(_file, ftproot,os.path.basename(_file))
                 print("copying file {} to ftp server location {}".format(_file,ftproot+"/realtime/"))
                 run_cmd(rsynccmd,verbose=True)
 
@@ -213,10 +210,7 @@ def _main_func(description):
 #            print("Copying {} file into {}".format(_file, outdir))
 #            run_cmd("nccopy -4 -d 1 -VU10,TGCLDIWP,TGCLDLWP,lev,ilev,lat,lon,date,time_bnds,time,gw,ndcur,nscur,nsteph {} {}".format(_file, os.path.join(outdir,os.path.basename(_file))), verbose=True, from_dir=atmhistpath)
 
-        if basecasename == "cesm2cam6":
-             outdir = "/glade/scratch/ssfcst/cesm2cam6v2/lnd/"
-        else:
-             outdir="/glade/scratch/ssfcst/{}/lnd".format(basecasename)
+        outdir="/glade/scratch/ssfcst/{}/lnd".format(basecasename)
 
         print("LND OUTDIR:")
         print(outdir)
