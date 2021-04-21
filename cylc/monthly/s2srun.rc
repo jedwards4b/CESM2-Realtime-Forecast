@@ -105,6 +105,7 @@ ${FCST_HOME}/bin/dispose_data.py
 module load {{ model }}
 filename={{ model }}.${CYLC_TASK_CYCLE_MONTH}.$(printf "%02d" ${CYLC_TASK_PARAM_member})
 cd ${WORK}/${filename}
+cp ${FCST_HOME}/user_mods/70Lwaccm6.base/user_nl_cam.${CYLC_TASK_TRY_NUMBER} user_nl_cam
  ./case.submit --job case.run
 """
     [[[job]]]

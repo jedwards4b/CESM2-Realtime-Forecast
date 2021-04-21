@@ -9,11 +9,11 @@
 {% set FCST_HOME = "$HOME/70Lwaccm6/CESM2-Realtime-Forecast" %}
 {% set ensemble_start = 0 %}
 {% set ensemble_end   = 20 %}
-{% set day_start      = '11' %}
-{% set day_end        = '15' %}
-{% set sendtoftp      = false %}
+{% set day_start      = '18' %}
+{% set day_end        = '22' %}
+{% set sendtoftp      = true %}
 {% set account = "P93300007" %}
-{% set run_queue = "regular" %}
+{% set run_queue = "economy" %}
 
 # don't change anything below here
 
