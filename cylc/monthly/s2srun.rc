@@ -37,7 +37,7 @@ cd ${FCST_HOME}/bin/
 """
     [[[job]]]
       batch system = pbs
-      batch submit command template = qsubcasper -q casper -l walltime=01:00:00 -A CESM0021 '%(job)s'
+      batch submit command template = qsubcasper -q casper -l walltime=01:00:00 -A {{ account }} '%(job)s'
       shell = /bin/bash
     [[[directives]]]
        -r = n
@@ -48,12 +48,13 @@ cd ${FCST_HOME}/bin/
 
   [[build_model]]
     script = """
+module load {{model}}
 cd ${FCST_HOME}/bin/
-./buildcase.py
+./buildcase.py 
 """
     [[[job]]]
       batch system = pbs
-      batch submit command template = qsub -q share -l walltime=01:00:00 -A CESM0021 '%(job)s'
+      batch submit command template = qsub -q share -l walltime=01:00:00 -A {{ account }} '%(job)s'
       shell = /bin/bash
     [[[directives]]]
        -r = n
@@ -64,6 +65,7 @@ cd ${FCST_HOME}/bin/
 
   [[st_archive<member>]]
     script = """
+    module load {{ model }}
 cd ${WORK}/{{ model }}.${CYLC_TASK_CYCLE_MONTH}.$(printf "%02d" ${CYLC_TASK_PARAM_member})
 ./case.submit --job case.st_archive
 #./xmlchange CONTINUE_RUN=TRUE  don't want this for this workflow
@@ -73,7 +75,7 @@ cd ${WORK}/{{ model }}.${CYLC_TASK_CYCLE_MONTH}.$(printf "%02d" ${CYLC_TASK_PARA
     [[postprocess_family]]
       script = """
 module load ncl nco {{model}}
-{% if sendtoftp == true %} 
+{% if sendtoftp %} 
   ${FCST_HOME}/bin/postprocess.py --sendtoftp
 {% else %}
   ${FCST_HOME}/bin/postprocess.py 
@@ -81,7 +83,7 @@ module load ncl nco {{model}}
 """
     [[[job]]]
       batch system = pbs
-      batch submit command template = qsub -q economy -l walltime=01:00:00 -A CESM0021 '%(job)s'
+      batch submit command template = qsub -q economy -l walltime=01:00:00 -A {{ account }} '%(job)s'
     [[[directives]]]
        -r = n
        -j = oe
@@ -92,6 +94,7 @@ module load ncl nco {{model}}
     [[dispose]]
     # Globus process, must run on host
       script = """
+    module load {{ model }}
 ${FCST_HOME}/bin/dispose_data.py
 """
     [[run<member>]]
@@ -104,10 +107,8 @@ cd ${WORK}/${filename}
  ./case.submit --job case.run
 """
     [[[job]]]
-      # Retry each run up to 2 times with different fv_nsplit values
-      # execution retry delays = 2*PT6S
       batch system = pbs
-      batch submit command template = qsub -q economy -l walltime=02:00:00 -A CESM0021 '%(job)s'
+      batch submit command template = qsub -q {{ run_queue }} -l walltime=02:00:00 -A {{ account }} '%(job)s'
     [[[directives]]]
        -r = n
        -j = oe

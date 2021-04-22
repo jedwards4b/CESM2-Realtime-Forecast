@@ -25,6 +25,10 @@ def parse_command_line(args, description):
     CIME.utils.setup_standard_logging_options(parser)
     parser.add_argument("--date",
                         help="Specify a start Date")
+    parser.add_argument("--ensemble-start",default=0,
+                        help="Specify the first ensemble member")
+    parser.add_argument("--ensemble-end",default=10,
+                        help="Specify the last ensemble member")
 
     args = CIME.utils.parse_args_and_handle_standard_logging_options(args, parser)
     cdate = os.getenv("CYLC_TASK_CYCLE_POINT")
@@ -40,9 +44,9 @@ def parse_command_line(args, description):
         date = datetime.date.today()
         date = date.replace(day=date.day-1)
 
-    return date.strftime("%Y-%m-%d")
+    return date.strftime("%Y-%m-%d"),int(args.ensemble_start),int(args.ensemble_end)
 
-def stage_refcase(rundir, refdir, date, basecasename):
+def stage_refcase(rundir, refdir, date):
     if not os.path.isdir(rundir):
         os.makedirs(rundir)
     nfname = "b.e21.f09_g17"
@@ -92,7 +96,7 @@ def per_run_case_updates(case, date, sdrestdir, user_mods_dir, rundir):
 
     case.case_setup()
 
-    stage_refcase(rundir, sdrestdir, date, basecasename)
+    stage_refcase(rundir, sdrestdir, date)
     case.set_value("BATCH_SYSTEM", "none")
     safe_copy(os.path.join(caseroot,"env_batch.xml"),os.path.join(caseroot,"LockedFiles","env_batch.xml"))
     # this doesnt appear to work correctly
@@ -149,19 +153,19 @@ def build_base_case(date, baseroot, basemonth,res, compset, overwrite,
 
         return caseroot
 
-def clone_base_case(date, caseroot, ensemble, sdrestdir, user_mods_dir, overwrite):
+def clone_base_case(date, caseroot, ensemble_start, ensemble_end, sdrestdir, user_mods_dir, overwrite):
 
     startval = "01"
     nint = len(startval)
     cloneroot = caseroot
-    for i in range(int(startval), int(startval)+ensemble):
+    for i in range(ensemble_start+1, ensemble_end+1):
         member_string = '{{0:0{0:d}d}}'.format(nint).format(i)
-        if ensemble > 1:
-            caseroot = caseroot[:-nint] + member_string
+        caseroot = caseroot[:-nint] + member_string
         if overwrite and os.path.isdir(caseroot):
             shutil.rmtree(caseroot)
         if not os.path.isdir(caseroot):
             with Case(cloneroot, read_only=False) as clone:
+                print("Cloning case {} to {}".format(cloneroot,caseroot))
                 clone.create_clone(caseroot, keepexe=True,
                                    user_mods_dir=user_mods_dir)
         with Case(caseroot, read_only=True) as case:
@@ -172,7 +176,7 @@ def clone_base_case(date, caseroot, ensemble, sdrestdir, user_mods_dir, overwrit
             per_run_case_updates(case, date, sdrestdir, user_mods_dir, rundir)
 
 def _main_func(description):
-    date = parse_command_line(sys.argv, description)
+    date, ensemble_start, ensemble_end = parse_command_line(sys.argv, description)
 
     # TODO make these input vars
 
@@ -180,7 +184,6 @@ def _main_func(description):
     baseyear = int(date[0:4])
     baseroot = os.getenv("WORK")
     res = "f09_g17"
-    waccm = False
 
     if baseyear < 2014 or (baseyear == 2014 and basemonth < 11):
         compset = "BHIST"
@@ -192,7 +195,6 @@ def _main_func(description):
     overwrite = True
 
     sdrestdir = os.path.join(os.getenv("SCRATCH"),"CESM2","Ocean","rest","{}".format(date))
-    ensemble = 10
 
     user_mods_dir = os.path.join(s2sfcstroot,"user_mods","cesm2cam6")
 
@@ -200,7 +202,7 @@ def _main_func(description):
     print("basemonth = {}".format(basemonth))
     caseroot = build_base_case(date, baseroot, basemonth, res,
                             compset, overwrite, sdrestdir, user_mods_dir+'.base', pecount="S")
-    clone_base_case(date, caseroot, ensemble, sdrestdir, user_mods_dir, overwrite)
+    clone_base_case(date, caseroot, ensemble_start, ensemble_end, sdrestdir, user_mods_dir, overwrite)
 
 if __name__ == "__main__":
     _main_func(__doc__)

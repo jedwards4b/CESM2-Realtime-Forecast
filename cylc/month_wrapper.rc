@@ -1,23 +1,24 @@
 #!Jinja2
 # This will run the hind cast for each month from intial to final cycle point
 # one year at a time, all months for a given year run simultaniously
-# change rnames to limit months run, do not change mnames
 
 {% set rnames = ["APR"] %}
-{% set mnames = ["JAN","FEB","MAR","APR","MAY","JUN","JUL","AUG","SEP","OCT","NOV","DEC"] %}
-{% set fyear = 2021 %}
-{% set lyear = 2021 %}
+{% set fyear = "2021" %}
+{% set lyear = "2021" %}
 {% set model = "cesm2cam6" %}
 {% set FCST_HOME = "$HOME/cesm2cam6/CESM2-Realtime-Forecast" %}
 {% set ensemble_start = 0 %}
 {% set ensemble_end   = 20 %}
-# Change the run start and end dates here
 {% set day_start      = '11' %}
 {% set day_end        = '15' %}
-# true or false
 {% set sendtoftp      = false %}
+{% set account = "CESM0021" %}
+{% set run_queue = "regular" %}
 
 # don't change anything below here
+
+{% set mnames = ["JAN","FEB","MAR","APR","MAY","JUN","JUL","AUG","SEP","OCT","NOV","DEC"] %}
+
 [cylc]
    cycle point format = %Y
    [[parameters]]
@@ -34,25 +35,17 @@
 [runtime]
    [[prep]]
       script = """
-      if [ ! -d "$HOME/cylc_logs/$CYLC_TASK_CYCLE_POINT" ]; then
-        mkdir "$HOME/cylc_logs/$CYLC_TASK_CYCLE_POINT" 
-      fi
 {% for month in mnames %}
-  if [ -d "$HOME/cylc_logs/$CYLC_TASK_CYCLE_POINT/{{month}}" ]; then
-    rm -fr  $HOME/cylc_logs/$CYLC_TASK_CYCLE_POINT/{{month}}.old
-    mv $HOME/cylc_logs/$CYLC_TASK_CYCLE_POINT/{{month}} $HOME/cylc_logs/$CYLC_TASK_CYCLE_POINT/{{month}}.old
-  fi
-  if [ -d $HOME/cylc-run/{{month}} ]; then
-    mv $HOME/cylc-run/{{month}} $HOME/cylc_logs/$CYLC_TASK_CYCLE_POINT/
-  fi
-  cylc register {{model}}/{{month}} {{FCST_HOME}}/cylc/monthly
+    {% if month in rnames %}
+      cylc register $CYLC_SUITE_NAME/{{month}} {{FCST_HOME}}/cylc/monthly
+    {% endif %}
 {% endfor %}
 """
 {% for month in mnames %}
     {% if month in rnames %}
    [[month_mnum{{"{0:02d}".format(loop.index)}}]]
    script = """
-cylc run --no-detach --set=YEAR=$CYLC_TASK_CYCLE_POINT --set=MONTH={{"{0:02d}".format(loop.index)}} --set=model={{ model }} --set=ensemble_start={{ ensemble_start }} --set=ensemble_end={{ ensemble_end }} --set=day_start={{day_start}} --set=day_end={{day_end}} --set=sendtoftp={{ sendtoftp }} {{model}}/{{month}}
+cylc run --no-detach --set=YEAR=$CYLC_TASK_CYCLE_POINT --set=MONTH={{"{0:02d}".format(loop.index)}} --set=model={{ model }} --set=ensemble_start={{ ensemble_start }} --set=ensemble_end={{ ensemble_end }} --set=day_start={{day_start}} --set=day_end={{day_end}} --set=sendtoftp={{ sendtoftp }} --set=account={{account}} --set=run_queue={{run_queue}} $CYLC_SUITE_NAME/{{month}}
 """
   {% endif %}
 {% endfor %}

@@ -100,9 +100,9 @@ def _main_func(description):
     date, member, sendtoftp = parse_command_line(sys.argv, description)
 
     basemonth = date[5:7]
-    baseroot = os.getenv("WORK"),"cases"
-    ftproot = " jedwards@thorodin.cgd.ucar.edu:/ftp/pub/jedwards/" + basecasename
+    baseroot = os.getenv("WORK")
     basecasename = "cesm2cam6"
+    ftproot = " jedwards@thorodin.cgd.ucar.edu:/ftp/pub/jedwards/" + basecasename
 
     if member < 0:
         firstmember = 0
