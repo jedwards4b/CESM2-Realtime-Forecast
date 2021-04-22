@@ -50,7 +50,7 @@ cd ${FCST_HOME}/bin/
     script = """
 module load {{model}}
 cd ${FCST_HOME}/bin/
-./buildcase.py 
+./buildcase.py --ensemble-start {{ensemble_start}} --ensemble-end {{ensemble_end}}
 """
     [[[job]]]
       batch system = pbs
