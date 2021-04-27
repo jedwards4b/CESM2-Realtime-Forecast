@@ -2,18 +2,18 @@
 # This will run the hind cast for each month from intial to final cycle point
 # one year at a time, all months for a given year run simultaniously
 
-{% set rnames = ["APR"] %}
+{% set rnames = ["JAN"] %}
 {% set fyear = "2021" %}
 {% set lyear = "2021" %}
 {% set model = "cesm2cam6" %}
 {% set FCST_HOME = "$HOME/cesm2cam6/CESM2-Realtime-Forecast" %}
 {% set ensemble_start = 0 %}
 {% set ensemble_end   = 20 %}
-{% set day_start      = '11' %}
-{% set day_end        = '15' %}
+{% set day_start      = '01' %}
+{% set day_end        = '31' %}
 {% set sendtoftp      = false %}
 {% set account = "CESM0021" %}
-{% set run_queue = "regular" %}
+{% set run_queue = "economy" %}
 
 # don't change anything below here
 

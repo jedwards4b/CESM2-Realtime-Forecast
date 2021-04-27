@@ -74,12 +74,9 @@ cd ${WORK}/{{ model }}.${CYLC_TASK_CYCLE_MONTH}.$(printf "%02d" ${CYLC_TASK_PARA
       inherit = postprocess_family
     [[postprocess_family]]
       script = """
-module load ncl nco {{model}}
-{% if sendtoftp %} 
-  ${FCST_HOME}/bin/postprocess.py --sendtoftp
-{% else %}
-  ${FCST_HOME}/bin/postprocess.py 
-{% endif %}
+  module load ncl nco {{model}}
+  ${FCST_HOME}/bin/postprocess.py --sendtoftp {{sendtoftp}}
+
 """
     [[[job]]]
       batch system = pbs

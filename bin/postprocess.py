@@ -31,7 +31,8 @@ def parse_command_line(args, description):
     parser.add_argument("--member",
                         help="Specify an ensemble member")
 
-    parser.add_argument("--sendtoftp",help="Send output to ftp server", default=False, action='store_true')
+    parser.add_argument("--sendtoftp",help="Send output to ftp server", default=False, 
+                        const=True, nargs='?')
 
     args = CIME.utils.parse_args_and_handle_standard_logging_options(args, parser)
     cdate = os.environ.get("CYLC_TASK_CYCLE_POINT")
