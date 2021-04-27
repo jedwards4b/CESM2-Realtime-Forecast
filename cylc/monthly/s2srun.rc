@@ -74,13 +74,9 @@ cd ${WORK}/{{ model }}.${CYLC_TASK_CYCLE_MONTH}.$(printf "%02d" ${CYLC_TASK_PARA
       inherit = postprocess_family
     [[postprocess_family]]
       script = """
-module load ncl nco {{ model }}
-cd ${WORK}/{{ model }}.${CYLC_TASK_CYCLE_MONTH}.$(printf "%02d" ${CYLC_TASK_PARAM_member})
-{% if sendtoftp == true %} 
-  ${FCST_HOME}/bin/postprocess.py --sendtoftp --member ${CYLC_TASK_PARAM_member}
-{% else %}
-  ${FCST_HOME}/bin/postprocess.py --member ${CYLC_TASK_PARAM_member}
-{% endif %}
+  module load ncl nco {{ model }}
+  cd ${WORK}/{{ model }}.${CYLC_TASK_CYCLE_MONTH}.$(printf "%02d" ${CYLC_TASK_PARAM_member})
+  ${FCST_HOME}/bin/postprocess.py --sendtoftp {{sendtoftp}} --member ${CYLC_TASK_PARAM_member}
 """
     [[[job]]]
       batch system = pbs
