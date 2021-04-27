@@ -22,6 +22,16 @@ from CIME.utils            import run_cmd
 from argparse              import RawTextHelpFormatter
 from globus_utils          import *
 
+def str2bool(v):
+    if isinstance(v, bool):
+       return v
+    if v.lower() in ('yes', 'true', 't', 'y', '1'):
+        return True
+    elif v.lower() in ('no', 'false', 'f', 'n', '0'):
+        return False
+    else:
+        raise argparse.ArgumentTypeError('Boolean value expected.')
+
 def parse_command_line(args, description):
     parser = argparse.ArgumentParser(description=description,
                                      formatter_class=RawTextHelpFormatter)
@@ -32,7 +42,7 @@ def parse_command_line(args, description):
                         help="Specify an ensemble member")
 
     parser.add_argument("--sendtoftp",help="Send output to ftp server", default=False, 
-                        const=True, nargs='?')
+                        const=True, nargs='?', type=str2bool)
 
     args = CIME.utils.parse_args_and_handle_standard_logging_options(args, parser)
     cdate = os.environ.get("CYLC_TASK_CYCLE_POINT")
