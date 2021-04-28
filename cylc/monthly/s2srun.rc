@@ -21,7 +21,7 @@
   [[dependencies]]
   # Weekly Cycling on monday, new date will submit when st_archive is complete for each member
   # run needs to finish, not nessasarily successfully for next step to start
-    [[[R/W-1/P1W]]]
+    [[[R/W-{{dayofweek}}/P1W]]]
       graph = """
         st_archive<member>[-P1W] => get_data => build_model => run_family:finish-all
         postprocess_family:finish-all => dispose
