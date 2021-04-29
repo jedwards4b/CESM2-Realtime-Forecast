@@ -1,7 +1,7 @@
 #!Jinja2
+# All settings are in month_wrapper.rc 
+# don't change anything below here
 
-{% set ensemble_start = 1%}
-{% set ensemble_end   = 20%}
 [meta]
   title = CESM CYLC workflow for ensemble from cesm2smyle
 [cylc]
@@ -24,14 +24,13 @@
 
 
 [scheduling]
-  # Change the run start and end dates here
-    initial cycle point = "1979-11-01"
-    final cycle point = "1979-11-01"
+ initial cycle point = {{YEAR}}-{{MONTH}}-{{ day_start }}
+ final cycle point = {{YEAR}}-{{MONTH}}-{{ day_end }}
 
-    # must start Feb 01, any year:
-    # initial cycle point constraints = "0201T00"
-    # must start Nov 01, any year:
-    initial cycle point constraints = "1101T00"
+ # must start Feb 01, any year:
+ # initial cycle point constraints = "0201T00"
+ # must start day 01 any month, any year:
+ initial cycle point constraints = "01T00"
 
   [[dependencies]]
   # Weekly Cycling on monday, new date will submit when st_archive is complete for each member
@@ -57,7 +56,7 @@ cd ${FCST_HOME}/bin/
        --nodes=1
        --cpus-per-task=8
        --time=01:00:00
-       --account=csg100
+       --account={{ account }}
     [[[environment]]]
        SMYLE_ROOT = "/home/smyle/work/cesm/CESM2-SMYLE-ERA5"
 
@@ -73,7 +72,7 @@ cd ${FCST_HOME}/bin/
        --nodes=1
        --cpus-per-task=16
        --time=01:00:00
-       --account=csg100
+       --account={{ account }}
 
   [[st_archive<mbr>]]
     script = """
@@ -107,7 +106,7 @@ mpirun ./timeseries > ./logs/timeseries.log.${today} 2>&1
     [[[directives]]]
        --nodes=1
        --time=12:00:00
-       --account=csg100
+       --account={{ account }}
 
     [[dispose]]
     # Globus process, must run on host
@@ -131,7 +130,11 @@ cd ${SMYLE_ROOT}/cases/b.e21.BSMYLE-ERA5.f09_g17.${CYLC_TASK_CYCLE_DATE}.$(print
     [[[directives]]]
        # dont forget to change these lines if you change pelayout
        # How can we connect this to the pelayout?
-       --nodes=20
+       --nodes=25
        --ntasks-per-node=24
+       --account={{ account }}
+       --switches=1
+       --time=06:00:00
+#      --qos=cw3e
     [[[events]]]
         handler events = retry, failed

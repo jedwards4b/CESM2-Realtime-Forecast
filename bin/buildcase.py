@@ -94,7 +94,7 @@ def per_run_case_updates(case, date, sdrestdir, user_mods_dir, rundir):
     case.set_value("RUN_REFDATE",date)
     case.set_value("RUN_STARTDATE",date)
     case.set_value("RUN_REFDIR",sdrestdir)
-    case.set_value("PROJECT","NCGD0047")
+#    case.set_value("PROJECT","NCGD0047")
     case.set_value("OCN_TRACER_MODULES","iage cfc ecosys")
 #    dout_s_root = case.get_value("DOUT_S_ROOT")
 #    dout_s_root = os.path.join(os.path.dirname(dout_s_root),casename)
@@ -145,13 +145,14 @@ def build_base_case(date, baseroot, basecasename, basemonth,res, ensemble_start,
 
             case.set_value("RUN_TYPE","hybrid")
             #case.set_value("JOB_QUEUE","economy",subgroup="case.run")
-            case.set_value("JOB_QUEUE","economy")
+            #case.set_value("JOB_QUEUE","economy")
             case.set_value("GET_REFCASE",False)
             case.set_value("RUN_REFDIR",sdrestdir)
             case.set_value("RUN_REFCASE", "b.e21.SMYLE_ERA5_IC.f09_g17.{}.01".format(date[:7]))
             case.set_value("OCN_TRACER_MODULES","")
             case.set_value("OCN_TRACER_MODULES","iage")
             case.set_value("OCN_CHL_TYPE","diagnostic")
+            case.set_value("PIO_NETCDF_FORMAT","64bit_data")
             case.set_value("NTHRDS", 1)
             # pelayout for cesm2cam6 case
 #            case.set_value("NTASKS_ATM",1152)
@@ -167,9 +168,9 @@ def build_base_case(date, baseroot, basecasename, basemonth,res, ensemble_start,
 
 
             case.set_value("STOP_OPTION","nmonths")
-            case.set_value("STOP_N", 24)
+            case.set_value("STOP_N", 12)
             case.set_value("REST_OPTION","nmonths")
-            case.set_value("REST_N", 24)
+            case.set_value("REST_N", 6)
 
             case.set_value("CCSM_BGC","CO2A")
             case.set_value("EXTERNAL_WORKFLOW",True)

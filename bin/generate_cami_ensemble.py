@@ -56,8 +56,9 @@ def get_rvals(date, ensemble_start,ensemble_end, model):
     rvals = random.sample(range(1001),k=ensemble_end//2)
     print("Rvals are {}".format(rvals))
     rvals_file = os.path.join("/home/smyle/work/cesm/CESM2-SMYLE-ERA5/","cases","camic_"+date+".{}-{}.txt".format(ensemble_start,ensemble_end))
-    with open(rvals_file,"w") as fd:
-        fd.write("{}".format(rvals))
+    if not os.path.isfile(rvals_file):
+        with open(rvals_file,"w") as fd:
+            fd.write("{}".format(rvals))
 
     return rvals
 
@@ -135,6 +136,8 @@ def create_cam_ic_perturbed(original, ensemble_start,ensemble_end, date, baserun
               os.unlink(os.path.join(outdir1,origfile))
            os.symlink(outfile1, os.path.join(outdir1,origfile))
            print("I made it here = {} ".format(outdir))
+        if os.path.isfile(os.path.join(outdir2,origfile)):
+            os.unlink(os.path.join(outdir2,origfile))
         os.symlink(outfile2, os.path.join(outdir2,origfile))
 
 
@@ -162,7 +165,7 @@ def _main_func(description):
 
     sdrestdir = os.path.join("/home/smyle/work/cesm/inputdata/cesm2_init","b.e21.SMYLE_ERA5_IC.f09_g17."+date[0:7]+".01","{}".format(date))
     user = os.getenv("USER")
-    baserundir = os.path.join("/home/smyle/work/cesm/scratch/{}/".format(user),"SMYLE-ERA5","b.e21.BSMYLE-ERA5.f09_g17."+date[0:7]+".001","run.{:03d}".format(ensemble_start))
+    baserundir = os.path.join("/home/smyle/work/cesm/scratch/SMYLE-ERA5","b.e21.BSMYLE-ERA5.f09_g17."+date[0:7]+".001","run.{:03d}".format(ensemble_start))
     caminame = os.path.join(sdrestdir,"b.e21.SMYLE_ERA5_IC.f09_g17.{}.01.cam.i.{date}-00000.nc".format(date[:7],date=date))
     outroot = "b.e21.SMYLE_ERA5_IC.pert.f09_g17.cam.i."
 
