@@ -88,7 +88,6 @@ cd ${SMYLE_ROOT}/cases/b.e21.BSMYLE-ERA5.f09_g17.${CYLC_TASK_CYCLE_DATE}.$(print
       script = """
 cd ${SMYLE_ROOT}/cases/b.e21.BSMYLE-ERA5.f09_g17.${CYLC_TASK_CYCLE_DATE}.$(printf "%03d" ${CYLC_TASK_PARAM_mbr})
 unset PYTHONPATH
-module use /glade/work/bdobbins/Software/Modules
 module load cesm_postprocessing
 if [ ! -d "postprocess" ]; then
    create_postprocess -caseroot=`pwd`
