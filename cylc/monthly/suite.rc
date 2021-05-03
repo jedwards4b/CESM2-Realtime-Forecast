@@ -134,7 +134,7 @@ cd ${SMYLE_ROOT}/cases/b.e21.BSMYLE-ERA5.f09_g17.${CYLC_TASK_CYCLE_DATE}.$(print
        --ntasks-per-node=24
        --account={{ account }}
        --switches=1
-       --time=06:00:00
-#      --qos=cw3e
+       --time=12:00:00
+       --qos=cw3e
     [[[events]]]
         handler events = retry, failed

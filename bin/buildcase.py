@@ -135,7 +135,7 @@ def build_base_case(date, baseroot, basecasename, basemonth,res, ensemble_start,
             exeroot = os.path.join("/home/smyle/work/cesm/scratch/SMYLE-ERA5/exerootdir/bld")
             case.set_value("CIME_OUTPUT_ROOT",cimeoutputroot)
             #case.set_value("CIME_OUTPUT_ROOT","/glade/scratch/nanr/SMYLE")
-            if exeroot and os.path.exists(os.path.join(exeroot,"cesm.exe")):
+            if exeroot and os.path.exists(exeroot):
                 case.set_value("EXEROOT",exeroot)
             else:
                 case.set_value("EXEROOT",case.get_value("EXEROOT", resolved=True))
@@ -170,7 +170,7 @@ def build_base_case(date, baseroot, basecasename, basemonth,res, ensemble_start,
             case.set_value("STOP_OPTION","nmonths")
             case.set_value("STOP_N", 12)
             case.set_value("REST_OPTION","nmonths")
-            case.set_value("REST_N", 6)
+            case.set_value("REST_N", 12)
 
             case.set_value("CCSM_BGC","CO2A")
             case.set_value("EXTERNAL_WORKFLOW",True)
@@ -188,7 +188,7 @@ def build_base_case(date, baseroot, basecasename, basemonth,res, ensemble_start,
         print("rundir 3 = {}".format(rundir))
         case.set_value("RUNDIR",rundir)
         per_run_case_updates(case, date, sdrestdir, user_mods_dir, rundir)
-        if not exeroot:
+        if not os.path.isfile(os.path.join(exeroot,"cesm.exe")):
             build.case_build(caseroot, case=case)
 
         return caseroot

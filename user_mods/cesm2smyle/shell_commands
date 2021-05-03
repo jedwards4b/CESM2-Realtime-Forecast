@@ -1,2 +1,1 @@
 ./xmlchange CLM_NAMELIST_OPTS="use_init_interp=.true."
-./xmlchange STOP_OPTION='nyears',STOP_N=1

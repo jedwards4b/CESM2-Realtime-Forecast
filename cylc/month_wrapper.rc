@@ -3,8 +3,8 @@
 # one year at a time, all months for a given year run simultaniously
 
 {% set rnames = ["NOV"] %}
-{% set fyear = "1979" %}
-{% set lyear = "1979" %}
+{% set fyear = "1970" %}
+{% set lyear = "1970" %}
 {% set model = "cesm2smyle" %}
 {% set FCST_HOME = "/home/smyle/work/cesm/CESM2-Realtime-Forecast/" %}
 {% set ensemble_start = 1 %}
