@@ -41,6 +41,7 @@
     [[[R/P1Y]]]
       graph = """
         st_archive<mbr>[-P1Y] => get_data => build_model => run_family:finish-all
+        pp_family:finish-all => dispose
         run<mbr> => st_archive<mbr> => pp<mbr>
              """
 [runtime]
@@ -110,8 +111,10 @@ mpirun ./timeseries > ./logs/timeseries.log.${today} 2>&1
     [[dispose]]
     # Globus process, must run on host
       script = """
-#${FCST_HOME}/bin/dispose_data.py
+      ${FCST_HOME}/bin/dispose_data.py --date ${CYLC_TASK_CYCLE_DATE}
 """
+    [[[environment]]]
+      CYLC_TASK_CYCLE_DATE = $(cylc cyclepoint --template=%Y-%m)
     [[run<mbr>]]
        inherit = run_family
     [[run_family]]
@@ -123,8 +126,8 @@ cd ${SMYLE_ROOT}/cases/b.e21.BSMYLE-ERA5.f09_g17.${CYLC_TASK_CYCLE_DATE}.$(print
       CYLC_TASK_CYCLE_MONTH = $(cylc cyclepoint --template=%m)
       CYLC_TASK_CYCLE_DATE = $(cylc cyclepoint --template=%Y-%m)
     [[[job]]]
-      # Retry each run up to 2 times with different fv_nsplit values
-      # execution retry delays = 2*PT6S
+      # Retry each run up to 3 times after a short delay
+      execution retry delays = 3*PT30S
       batch system = slurm
     [[[directives]]]
        # dont forget to change these lines if you change pelayout

@@ -3,8 +3,8 @@
 # one year at a time, all months for a given year run simultaniously
 
 {% set rnames = ["NOV"] %}
-{% set fyear = "1970" %}
-{% set lyear = "1970" %}
+{% set fyear = "1984" %}
+{% set lyear = "2020" %}
 {% set model = "cesm2smyle" %}
 {% set FCST_HOME = "/home/smyle/work/cesm/CESM2-Realtime-Forecast/" %}
 {% set ensemble_start = 1 %}
@@ -35,7 +35,7 @@
       script = """
 {% for month in mnames %}
   {% if month in rnames %}
-    cylc register $CYLC_SUITE_NAME/{{month}} ${FCST_HOME}/cylc/monthly
+    cylc register $CYLC_SUITE_NAME/$CYLC_TASK_CYCLE_POINT/{{month}} ${FCST_HOME}/cylc/monthly
   {% endif %}
 {% endfor %}
 """
@@ -44,7 +44,7 @@
  {% if month in rnames %}
    [[month_mnum{{"{0:02d}".format(loop.index)}}]]
    script = """
-cylc run --no-detach --set=YEAR=$CYLC_TASK_CYCLE_POINT --set=MONTH={{"{0:02d}".format(loop.index)}} --set=model={{ model }} --set=ensemble_start={{ ensemble_start }} --set=ensemble_end={{ ensemble_end }} --set=day_start={{day_start}} --set=day_end={{day_end}} --set=sendtoftp={{ sendtoftp }} --set=account={{account}} --set=run_queue={{run_queue}} $CYLC_SUITE_NAME/{{month}}
+cylc run --no-detach --set=YEAR=$CYLC_TASK_CYCLE_POINT --set=MONTH={{"{0:02d}".format(loop.index)}} --set=model={{ model }} --set=ensemble_start={{ ensemble_start }} --set=ensemble_end={{ ensemble_end }} --set=day_start={{day_start}} --set=day_end={{day_end}} --set=sendtoftp={{ sendtoftp }} --set=account={{account}} --set=run_queue={{run_queue}} $CYLC_SUITE_NAME/$CYLC_TASK_CYCLE_POINT/{{month}}
 """
   {% endif %}
 {% endfor %}
