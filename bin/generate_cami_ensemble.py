@@ -116,7 +116,7 @@ def _main_func(description):
     date, ensemble_start, ensemble_end = parse_command_line(sys.argv, description)
 
     sdrestdir = os.path.join(os.getenv("SCRATCH"),"CESM2","Ocean","rest","{}".format(date))
-    baserundir = os.path.join(os.getenv("SCRATCH"),"cesm2cam6."+date[5:7]+".00","run.00")
+    baserundir = os.path.join(os.getenv("SCRATCH"),"cesm2cam6NS."+date[5:7]+".00","run.00")
     caminame = os.path.join(sdrestdir,"b.e21.f09_g17.cam.i.{date}-00000.nc".format(date=date))
     outroot = "b.e21.f09_g17.cam.i."
 

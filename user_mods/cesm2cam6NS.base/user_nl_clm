@@ -1,4 +1,6 @@
   hist_empty_htapes  = .true.
   hist_fincl1 = 'TLAI', 'NPP', 'GPP', 'AR', 'ER', 'NBP', 'QVEGT', 'CPHASE', 'TWS', 'QRUNOFF', 'H2OSOI','FSNO','H2OSNO','H2OCAN','SOILICE','QOVER','SOILWATER_10CM','SNOWDP','SOILLIQ','RAIN','SNOW','QSOIL','QVEGE','QVEGT','QRGWL','QOVER','QDRAI','HR','NEE','FIRE','FAREA_BURNED','BTRAN2','FUELC','TOTECOSYSC','TOTVEGC','CWDC','COL_FIRE_CLOSS'
-  hist_mfilt = 46
-  hist_nhtfrq = -24
+  hist_fincl2 = 'SNOWLIQ:I','SNOWICE:I','SNOWDP:I','SOILWATER_10CM:I','SOILLIQ:I','SOILICE:I'
+  hist_avgflag_pertape='A','I'
+  hist_mfilt = 46, 181
+  hist_nhtfrq = -24, -6

@@ -24,7 +24,6 @@
     [[[R/W-{{dayofweek}}/P1W]]]
       graph = """
         st_archive<member>[-P1W] => get_data => build_model => run_family:finish-all
-        postprocess_family:finish-all => dispose
         run<member> => st_archive<member> => postprocess<member>
              """
 [runtime]
