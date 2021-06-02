@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 import os, sys
 cesmroot = os.environ.get('CESM_ROOT')
 s2sfcstroot = os.path.join(os.path.dirname(os.path.join(os.path.abspath(__file__))), os.path.pardir)
@@ -44,11 +44,28 @@ def parse_command_line(args, description):
 
     return date.strftime("%Y-%m-%d")
 
-def get_data_from_campaignstore(date):
+def get_ocn_src_path(src_root, date, count=0):
     oyr = int(date[:4]) - 1749
     odate = "{:04d}".format(oyr)+date[4:]
+    src_dir_path = os.path.join(src_root,"cesm","development","cross-wg","S2S","CESM2","OCEANIC")
+    src_path = os.path.join(src_dir_path, "{}-00000".format(odate))
+    if os.path.isdir(src_path):
+        return(src_path)
+    if count > 30:
+        print("No suitable ocean restart file found")
+        return None
+    ndate = datetime.strptime(date, '%Y-%m-%d') - timedelta(days=1)
+    return(get_ocn_src_path(src_root, ndate.strftime("%Y-%m-%d"), count=count+1))
 
-    source_path = 'cesm/development/cross-wg/S2S/CESM2/OCEANIC/{date}-00000/'.format(date=odate)
+
+
+def get_data_from_campaignstore(date):
+
+    source_root_local = "/glade/campaign"
+    source_path = 'cesm/development/cross-wg/S2S/CESM2/OCEANIC/{date}-00000/'.format(date=date)
+
+    source_path = get_ocn_src_path(source_root_local, date)
+
     dest_path = os.path.join(os.getenv("SCRATCH"),"CESM2","Ocean","rest","{}".format(date))
 
 
@@ -59,7 +76,6 @@ def get_data_from_campaignstore(date):
         os.makedirs(dest_path)
     lnd_source_path = 'cesm/development/cross-wg/S2S/land/rest/{}-00000/'.format(date)
 
-    source_root_local = "/glade/campaign"
 
     if os.path.isdir(os.path.join(source_root_local,source_path)) and os.path.isdir(os.path.join(source_root_local,lnd_source_path)):
         source_path = os.path.join(source_root_local,source_path)

@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 import os, sys
 cesmroot = os.environ.get('CESM_ROOT')
 _LIBDIR = os.path.join(cesmroot,"cime","scripts","Tools")

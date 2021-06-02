@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 # coding: utf-8
 import sys
 _LIBDIR="/glade/u/home/jedwards/.local/lib/python3.6/site-packages/"
