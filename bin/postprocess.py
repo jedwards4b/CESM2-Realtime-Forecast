@@ -14,7 +14,8 @@ sys.path.append(_LIBDIR)
 _LIBDIR = os.path.join(cesmroot,"cime","scripts","lib")
 sys.path.append(_LIBDIR)
 
-import datetime, shutil, glob
+import glob
+from datetime import datetime, timedelta
 from subprocess import Popen, PIPE
 from standard_script_setup import *
 from CIME.case             import Case
@@ -24,7 +25,7 @@ from globus_utils          import *
 
 def str2bool(v):
     if isinstance(v, bool):
-       return v
+        return v
     if v.lower() in ('yes', 'true', 't', 'y', '1'):
         return True
     elif v.lower() in ('no', 'false', 'f', 'n', '0'):
@@ -41,7 +42,7 @@ def parse_command_line(args, description):
     parser.add_argument("--member",
                         help="Specify an ensemble member")
 
-    parser.add_argument("--sendtoftp",help="Send output to ftp server", default=False, 
+    parser.add_argument("--sendtoftp",help="Send output to ftp server", default=False,
                         const=True, nargs='?', type=str2bool)
 
     args = CIME.utils.parse_args_and_handle_standard_logging_options(args, parser)
@@ -55,19 +56,18 @@ def parse_command_line(args, description):
 
     if args.date:
         try:
-            date = datetime.datetime.strptime(args.date, '%Y-%m-%d')
-        except ValueError:
-            raise ValueError("Incorrect data format, should be YYYY-MM-DD or YYYY-MM")
+            date = datetime.strptime(args.date, '%Y-%m-%d')
+        except ValueError as verr:
+            raise ValueError("Incorrect data format, should be YYYY-MM-DD or YYYY-MM") from verr
         os.environ["CYLC_TASK_CYCLE_POINT"] = args.date
     elif cdate:
-        date = datetime.datetime.strptime(cdate, '%Y-%m-%d')
+        date = datetime.strptime(cdate, '%Y-%m-%d')
     else:
-        date = datetime.date.today()
-        date = date.replace(day=date.day-1)
+        date = datetime.today() - timedelta(days=1)
 
     return date.strftime("%Y-%m-%d"), member, args.sendtoftp
 
-def run_ncl_scripts(basecasename):
+def run_ncl_scripts():
     scripts = ["pp_priority2.ncl","pp_priority1.ncl","pp_priority3.ncl","pp_h1vertical.ncl"]
 
     outfiles = []
@@ -128,17 +128,14 @@ def _main_func(description):
         caseroot = os.path.join(baseroot,basecasename+"."+basemonth+".{0:02d}".format(curmem))
 
         with Case(caseroot, read_only=True) as case:
-            rundir = case.get_value("RUNDIR")
             dout_s_root = case.get_value("DOUT_S_ROOT")
             dout_s_root = dout_s_root[:-13] + date + ".{0:02d}".format(curmem)
             os.environ["DOUT_S_ROOT"] = dout_s_root
         #print("HERE rundir {} dout_s_root {}".format(rundir,dout_s_root))
-        outfiles = run_ncl_scripts(basecasename)
+        outfiles = run_ncl_scripts()
         # Copy data to ftp site
         if sendtoftp:
             for _file in outfiles:
-                fsplit = _file.find(basecasename + os.sep)+10
-                fpath = os.path.dirname(_file[fsplit-1:])
                 # path for realtime
                 rsynccmd = "rsync -azvh --rsync-path=\"mkdir -p /ftp/pub/jedwards/"+basecasename+"/realtime && rsync\" {} {}/realtime/{}".format(_file, ftproot,os.path.basename(_file))
                 print("copying file {} to ftp server location {}".format(_file,ftproot+"/realtime/"))
@@ -207,9 +204,9 @@ def _main_func(description):
         print(outdir)
 
         for _file in glob.iglob(os.path.join(lndhistpath,"*clm2.h0*.nc")):
-           print("Copying {} file into {}".format(_file, outdir))
-           newfname = os.path.basename(_file).replace("cesm2cam6.","cesm2cam6v2.")
-           run_cmd("nccopy -4 -d 1 {} {}".format(_file, os.path.join(outdir,newfname)), verbose=True, from_dir=lndhistpath)
+            print("Copying {} file into {}".format(_file, outdir))
+            newfname = os.path.basename(_file).replace("cesm2cam6.","cesm2cam6v2.")
+            run_cmd("nccopy -4 -d 1 {} {}".format(_file, os.path.join(outdir,newfname)), verbose=True, from_dir=lndhistpath)
 
 
 if __name__ == "__main__":

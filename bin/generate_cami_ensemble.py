@@ -14,7 +14,8 @@ sys.path.append(_LIBDIR)
 _LIBDIR = os.path.join(cesmroot,"cime","scripts","lib")
 sys.path.append(_LIBDIR)
 
-import datetime, random, threading, time, shutil
+import random, threading, time, shutil
+from datetime import timedelta, datetime
 from standard_script_setup import *
 from CIME.utils            import run_cmd, safe_copy, expect
 from argparse              import RawTextHelpFormatter
@@ -36,17 +37,17 @@ def parse_command_line(args, description):
 
     if args.date:
         try:
-            date = datetime.datetime.strptime(args.date, '%Y-%m-%d')
-        except ValueError:
-            raise ValueError("Incorrect data format, should be YYYY-MM-DD or YYYY-MM")
+            date = datetime.strptime(args.date, '%Y-%m-%d')
+        except ValueError as verr:
+            raise ValueError("Incorrect data format, should be YYYY-MM-DD or YYYY-MM") from verr
     elif cdate:
-        date = datetime.datetime.strptime(cdate, '%Y-%m-%d')
+        date = datetime.strptime(cdate, '%Y-%m-%d')
     else:
-        date = datetime.date.today()
-        date = date.replace(day=date.day-1)
+        date = datetime.today() - timedelta(days=1)
 
     return date.strftime("%Y-%m-%d"),int(args.ensemble_start),int(args.ensemble_end)
 
+#pylint: disable=unused-argument
 def get_rvals(date, ensemble_start, ensemble_end):
     random.seed(int(date[0:4])+int(date[5:7])+int(date[8:10]))
     rvals = random.sample(range(1001),k=ensemble_end//2)
@@ -78,7 +79,6 @@ def create_cam_ic_perturbed(original, ensemble_start, ensemble_end, date, baseru
     local_path = "/glade/campaign/cesm/development/cross-wg/S2S/CESM2/CAMI/RP"
     perturb_files = []
     for i in range(ensemble_start+1,ensemble_end+1, 2):
-        print "HERE rvals[{}] = {}".format(i//2,rvals[i//2])
         perturb_file = os.path.join("{}".format(month),
                                     "CESM2.cam.i.M{}.diff.{}.nc".format(month,rvals[i//2]))
         dirname = os.path.dirname(os.path.join(local_path,perturb_file))
@@ -100,14 +100,14 @@ def create_cam_ic_perturbed(original, ensemble_start, ensemble_end, date, baseru
         time.sleep(1)
 #    for perturb_file in perturb_files:
 #        os.unlink(os.path.join(local_path,perturb_file))
-    
+
 
 def create_perturbed_init_file(original, perturb_file, outfile, weight):
     ncflint = "ncflint"
     if not os.path.isdir(os.path.dirname(outfile)):
         os.makedirs(os.path.dirname(outfile))
     safe_copy(original, outfile)
-    cmd = ncflint+" -O -C -v lat,lon,slat,slon,lev,ilev,hyai,hybi,hyam,hybm,US,VS,T,Q,PS -w {},1.0 {} {} {}".format(weight, perturb_file, original, outfile)    
+    cmd = ncflint+" -O -C -v lat,lon,slat,slon,lev,ilev,hyai,hybi,hyam,hybm,US,VS,T,Q,PS -w {},1.0 {} {} {}".format(weight, perturb_file, original, outfile)
     run_cmd(cmd, verbose=True)
     os.rename(outfile, outfile.replace("-tmp.nc","-00000.nc"))
 

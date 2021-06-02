@@ -3,7 +3,7 @@ import os, sys
 cesmroot = os.environ.get('CESM_ROOT')
 _LIBDIR = os.path.join(cesmroot,"cime","scripts","Tools")
 sys.path.append(_LIBDIR)
-import datetime
+from datetime import timedelta, datetime
 from standard_script_setup import *
 from CIME.utils            import run_cmd, expect
 from argparse              import RawTextHelpFormatter
@@ -19,16 +19,15 @@ def parse_command_line(args, description):
     fullmonth = False
     if args.date:
         try:
-            date = datetime.datetime.strptime(args.date, '%Y-%m-%d')
+            date = datetime.strptime(args.date, '%Y-%m-%d')
         except ValueError:
             try:
-                date = datetime.datetime.strptime(args.date, '%Y-%m')
+                date = datetime.strptime(args.date, '%Y-%m')
                 fullmonth = True
             except ValueError:
                 raise ValueError("Incorrect data format, should be YYYY-MM-DD or YYYY-MM")
     else:
-        date = datetime.date.today()
-        date = date.replace(day=date.day-1)
+        date = datetime.today() - timedelta(days=1)
 
     return date, fullmonth
 

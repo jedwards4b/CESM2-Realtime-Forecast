@@ -14,7 +14,8 @@ sys.path.append(_LIBDIR)
 _LIBDIR = os.path.join(cesmroot,"cime","scripts","lib")
 sys.path.append(_LIBDIR)
 
-import datetime, glob
+import glob
+from datetime import datetime, timedelta
 from standard_script_setup import *
 from argparse              import RawTextHelpFormatter
 from globus_utils          import *
@@ -29,20 +30,20 @@ def parse_command_line(args, description):
 
     args = CIME.utils.parse_args_and_handle_standard_logging_options(args, parser)
     cdate = os.getenv("CYLC_TASK_CYCLE_POINT")
-    
+
     if args.date:
         try:
-            date = datetime.datetime.strptime(args.date, '%Y-%m-%d')
-        except ValueError:
-            raise ValueError("Incorrect data format, should be YYYY-MM-DD or YYYY-MM")
+            date = datetime.strptime(args.date, '%Y-%m-%d')
+        except ValueError as verr:
+            raise ValueError("Incorrect data format, should be YYYY-MM-DD or YYYY-MM") from verr
     elif cdate:
-        date = datetime.datetime.strptime(cdate, '%Y-%m-%d')
+        date = datetime.strptime(cdate, '%Y-%m-%d')
     else:
-        date = datetime.date.today()
-        date = date.replace(day=date.day-1)
-        
+        date = datetime.today() - timedelta(days=1)
+
+
     return date.strftime("%Y-%m-%d")
-    
+
 def get_data_from_campaignstore(date):
     oyr = int(date[:4]) - 1749
     odate = "{:04d}".format(oyr)+date[4:]
@@ -54,10 +55,10 @@ def get_data_from_campaignstore(date):
     if os.path.exists(os.path.join(dest_path,"rpointer.ocn.restart")):
         print("Data already exists in {}".format(dest_path))
         return
-    if(not os.path.exists(dest_path)):        
+    if(not os.path.exists(dest_path)):
         os.makedirs(dest_path)
     lnd_source_path = 'cesm/development/cross-wg/S2S/land/rest/{}-00000/'.format(date)
-                      
+
     source_root_local = "/glade/campaign"
 
     if os.path.isdir(os.path.join(source_root_local,source_path)) and os.path.isdir(os.path.join(source_root_local,lnd_source_path)):
@@ -71,7 +72,7 @@ def get_data_from_campaignstore(date):
         print( "path {} {}".format(os.path.join(source_root_local,source_path),os.path.join(source_root_local,\
 lnd_source_path)))
         return
-                              
+
     refname = "b.e21.f09_g17"
 
     for lndfile in glob.iglob(dest_path+"I2000*"):

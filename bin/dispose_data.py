@@ -14,7 +14,8 @@ sys.path.append(_LIBDIR)
 _LIBDIR = os.path.join(cesmroot,"cime","scripts","lib")
 sys.path.append(_LIBDIR)
 
-import datetime, time, shutil, glob
+import time, shutil, glob
+from datetime import datetime, timedelta
 from subprocess import Popen
 from standard_script_setup import *
 from CIME.case             import Case
@@ -34,20 +35,20 @@ def parse_command_line(args, description):
 
     if args.date:
         try:
-            date = datetime.datetime.strptime(args.date, '%Y-%m-%d')
+            date = datetime.strptime(args.date, '%Y-%m-%d')
         except ValueError:
             raise ValueError("Incorrect data format, should be YYYY-MM-DD or YYYY-MM")
     elif cdate:
-        date = datetime.datetime.strptime(cdate, '%Y-%m-%d')
+        date = datetime.strptime(cdate, '%Y-%m-%d')
     else:
-        date = datetime.date.today()
-        date = date.replace(day=date.day-1)
+        date = datetime.today() - timedelta(days=1)
+
 
     return date.strftime("%Y-%m-%d")
 
 def send_data_to_campaignstore(source_path):
     dest_path = '/gpfs/csfs1/cesm/collections/S2Sfcst/'
-    
+
     client = initialize_client()
     globus_transfer_data = get_globus_transfer_data_struct(client)
     tc = get_transfer_client(client, globus_transfer_data)
@@ -58,7 +59,7 @@ def send_data_to_campaignstore(source_path):
     activate_endpoint(tc, src_endpoint)
     activate_endpoint(tc, dest_endpoint)
     complete_transfer_request(tc, transfer_data)
-    
+
 def _main_func(description):
     date = parse_command_line(sys.argv, description)
     scratch = os.getenv("SCRATCH")
@@ -68,7 +69,7 @@ def _main_func(description):
     baseroot = os.getenv("WORK")
     sdrestdir = os.path.join(scratch,"S2S_70LIC_globus","SDnudgedOcn","rest","{}".format(date))
     if os.path.isdir(sdrestdir):
-        shutil.rmtree(sdrestdir)        
+        shutil.rmtree(sdrestdir)
     for i in range(0,10):
         member = "{0:02d}".format(i)
         caseroot = os.path.join(baseroot,basecasename+"."+basemonth+"."+member)
@@ -91,7 +92,7 @@ def _main_func(description):
 #                if "h1" in histfile or "h4" in histfile:
 #                    os.unlink(os.path.join(atmhistpath,histfile))
 #            send_data_to_campaignstore(dout_s_root+os.sep )
-        
-        
+
+
 if __name__ == "__main__":
     _main_func(__doc__)

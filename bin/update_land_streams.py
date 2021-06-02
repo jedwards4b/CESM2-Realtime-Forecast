@@ -4,7 +4,8 @@ cesmroot = os.getenv("CESM_ROOT")
 _LIBDIR = os.path.join(cesmroot,"cime","scripts","Tools")
 sys.path.append(_LIBDIR)
 
-import datetime, glob
+import glob
+from datetime import datetime, timedelta
 from standard_script_setup import *
 from CIME.case             import Case
 #from CIME.utils            import run_cmd, expect
@@ -25,12 +26,11 @@ def parse_command_line(args, description):
     args = CIME.utils.parse_args_and_handle_standard_logging_options(args, parser)
     if args.date:
         try:
-            date = datetime.datetime.strptime(args.date, '%Y-%m-%d')
+            date = datetime.strptime(args.date, '%Y-%m-%d')
         except ValueError:
-            raise ValueError("Incorrect data format, should be YYYY-MM-DD or YYYY-MM")
+            raise ValueError("Incorrect data format, should be YYYY-MM-DD")
     else:
-        date = datetime.date.today()
-        date = date.replace(day=date.day-1)
+        date = datetime.today() - timedelta(days=1)
 
     return args.case, date
 
@@ -73,4 +73,3 @@ def _main_func(description):
 
 if __name__ == "__main__":
     _main_func(__doc__)
-

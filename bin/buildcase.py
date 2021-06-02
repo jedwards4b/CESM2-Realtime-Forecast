@@ -11,7 +11,8 @@ sys.path.append(_LIBDIR)
 _LIBDIR = os.path.join(cesmroot,"cime","scripts","lib")
 sys.path.append(_LIBDIR)
 
-import datetime, glob, shutil
+import glob, shutil
+from datetime import timedelta, datetime
 import CIME.build as build
 from standard_script_setup import *
 from CIME.case             import Case
@@ -35,14 +36,13 @@ def parse_command_line(args, description):
 
     if args.date:
         try:
-            date = datetime.datetime.strptime(args.date, '%Y-%m-%d')
-        except ValueError:
-            raise ValueError("Incorrect data format, should be YYYY-MM-DD or YYYY-MM")
+            date = datetime.strptime(args.date, '%Y-%m-%d')
+        except ValueError as verr:
+            raise ValueError("Incorrect data format, should be YYYY-MM-DD or YYYY-MM") from verr
     elif cdate:
-        date = datetime.datetime.strptime(cdate, '%Y-%m-%d')
+        date = datetime.strptime(cdate, '%Y-%m-%d')
     else:
-        date = datetime.date.today()
-        date = date.replace(day=date.day-1)
+        date = datetime.today() - timedelta(days=1)
 
     return date.strftime("%Y-%m-%d"),int(args.ensemble_start),int(args.ensemble_end)
 
@@ -62,7 +62,7 @@ def stage_refcase(rundir, refdir, date):
                 newfile = newfile.replace("I2000Clm50BgcCrop.002runRealtime",nfname)
                 newfile = newfile.replace("I2000Clm50BgcCrop.002runContd", nfname)
                 newfile = newfile.replace("I2000Clm50BgcCrop.002run",nfname)
-            newfile = os.path.join(rundir,newfile)            
+            newfile = os.path.join(rundir,newfile)
             if not "cam.i" in newfile:
                 if os.path.lexists(newfile):
                     os.unlink(newfile)
@@ -110,7 +110,7 @@ def build_base_case(date, baseroot, basemonth,res, compset, overwrite,
     caseroot = os.path.join(baseroot,"cesm2cam6.{:02d}".format(basemonth)+".00")
     if overwrite and os.path.isdir(caseroot):
         shutil.rmtree(caseroot)
-            
+
     with Case(caseroot, read_only=False) as case:
         if not os.path.isdir(caseroot):
             case.create(os.path.basename(caseroot), cesmroot, compset, res,
@@ -142,7 +142,7 @@ def build_base_case(date, baseroot, basemonth,res, compset, overwrite,
             case.set_value("STOP_OPTION","ndays")
             case.set_value("STOP_N", 45)
             case.set_value("REST_OPTION","none")
-            
+
             case.set_value("CCSM_BGC","CO2A")
             case.set_value("EXTERNAL_WORKFLOW",True)
             case.set_value("CLM_NAMELIST_OPTS", "use_init_interp=.true.")
@@ -189,9 +189,9 @@ def _main_func(description):
         compset = "BHIST"
     else:
         compset = "BSSP585"
-        
+
     print ("baseyear is {} basemonth is {}".format(baseyear,basemonth))
-    
+
     overwrite = True
 
     sdrestdir = os.path.join(os.getenv("SCRATCH"),"CESM2","Ocean","rest","{}".format(date))
