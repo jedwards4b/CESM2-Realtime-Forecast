@@ -1,3 +1,0 @@
-rtmhist_fincl2 = 'RIVER_DISCHARGE_OVER_LAND_LIQ','TOTAL_DISCHARGE_TO_OCEAN_LIQ'
-rtmhist_nhtfrq = 0,-24
-rtmhist_mfilt = 1,365

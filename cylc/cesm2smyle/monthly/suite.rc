@@ -1,6 +1,6 @@
 #!Jinja2
 
-{% set ensemble_start = 1%}
+{% set ensemble_start = 11%}
 {% set ensemble_end   = 20 %}
 [meta]
   title = CESM CYLC workflow for ensemble from cesm2smyle
@@ -8,13 +8,13 @@
   UTC mode = True
   cycle point format = CCYY-MM-DD
   [[environment]]
-    FCST_HOME = "/glade/work/nanr/cesm_tags/CASE_tools/cesm2-smyle/"
+    FCST_HOME = "/glade/work/nanr/cesm_tags/CASE_tools/cesm2-smyle-extend/"
     CESM_ROOT = "/glade/work/nanr/cesm_tags/cesm2.1.4-SMYLE/"
     SCRATCH   = "/glade/scratch/nanr/"
-    USECASE   = "cesm2smyle"
-    REFDIR    = "/glade/scratch/nanr/SMYLE/inputdata/cesm2_init/"
+    USECASE   = "cesm2smyle-extend"
+    REFDIR    = "/glade/scratch/nanr/SMYLE-EXTEND/archive/"
     POSTPROCESS_PATH = "/glade/work/jedwards/sandboxes/CESM_postprocessing"
-    SMYLE_ROOT = "/glade/p/cesm/espwg/CESM2-SMYLE"
+    SMYLE_ROOT = "/glade/p/cesm/espwg/CESM2-SMYLE-EXTEND"
   [[parameters]]
     # The number of ensemble members can be changed here
     # The first number here should always be 1 and the second the number of members to run
@@ -24,16 +24,15 @@
 
 [scheduling]
   # Change the run start and end dates here
-    initial cycle point = "2005-02-01"
-    final cycle point = "2005-02-01"
+    initial cycle point = "2018-11-01"
+    final cycle point = "2018-11-01"
 
     # must start Feb 01, any year:
-    initial cycle point constraints = "0201T00"
+    # initial cycle point constraints = "0201T00"
     # must start Nov 01, any year:
-    #initial cycle point constraints = "1101T00"
+    initial cycle point constraints = "1101T00"
 
   [[dependencies]]
-  # Weekly Cycling on monday, new date will submit when st_archive is complete for each member
   # run needs to finish, not nessasarily successfully for next step to start
   # 3 month cycle
   # [[[R/P3M]]]
@@ -41,8 +40,8 @@
     [[[R/P1Y]]]
       graph = """
         pp_family:finish-all 
-        st_archive<mbr>[-P1Y] => get_data => build_model => run_family:finish-all
-        run<mbr> => st_archive<mbr> => pp<mbr>
+        st_archive<mbr>[-P1Y] => build_model => run_family:finish-all
+        run<mbr> => st_archive<mbr> => run<mbr> => st_archive<mbr> => run<mbr> => st_archive<mbr> => run<mbr> => st_archive<mbr> => pp<mbr>
              """
 [runtime]
   [[get_data]]
@@ -53,16 +52,16 @@ cd ${FCST_HOME}/bin/
 """
     [[[job]]]
       batch system = pbs
-      batch submit command template = qsubcasper -q casper -l walltime=01:00:00 -A NCGD0047 '%(job)s'
+      batch submit command template = qsubcasper -q casper -l walltime=01:00:00 -A P06010014 '%(job)s'
       shell = /bin/bash
     [[[directives]]]
        -r = n
        -j = oe
-       -v = FCST_HOME=/glade/work/nanr/cesm_tags/CASE_tools/cesm2-smyle/
+       -v = FCST_HOME=/glade/work/nanr/cesm_tags/CASE_tools/cesm2-smyle-extend/
        -S = /bin/bash
        -l = select=1:ncpus=8:ompthreads=1
     [[[environment]]]
-       SMYLE_ROOT = "/glade/p/cesm/espwg/CESM2-SMYLE"
+       SMYLE_ROOT = "/glade/p/cesm/espwg/CESM2-SMYLE-EXTEND"
 
   [[build_model]]
     script = """
@@ -71,7 +70,7 @@ cd ${FCST_HOME}/bin/
 """
     [[[job]]]
       batch system = pbs
-      batch submit command template = qsub -q share -l walltime=01:00:00 -A NCGD0047 '%(job)s'
+      batch submit command template = qsub -q share -l walltime=01:00:00 -A P06010014 '%(job)s'
       shell = /bin/bash
     [[[directives]]]
        -r = n
@@ -92,7 +91,7 @@ cd ${SMYLE_ROOT}/cases/b.e21.BSMYLE.f09_g17.${CYLC_TASK_CYCLE_DATE}.$(printf "%0
       inherit = pp_family
     [[pp_family]]
       script = """
-cd ${SMYLE_ROOT}/cases/b.e21.BSMYLE.f09_g17.${CYLC_TASK_CYCLE_DATE}.$(printf "%03d" ${CYLC_TASK_PARAM_mbr})
+cd ${SMYLE_ROOT}/cases/SMYLE-EXTEND/b.e21.BSMYLE.f09_g17.${CYLC_TASK_CYCLE_DATE}.$(printf "%03d" ${CYLC_TASK_PARAM_mbr})
 unset PYTHONPATH
 module use /glade/work/bdobbins/Software/Modules
 module load cesm_postprocessing
@@ -100,22 +99,22 @@ if [ ! -d "postprocess" ]; then
    create_postprocess_cylc -caseroot=`pwd`
 fi
 cd postprocess
-pp_config --set TIMESERIES_OUTPUT_ROOTDIR=/glade/campaign/cesm/development/espwg/SMYLE/archive/b.e21.BSMYLE.f09_g17.${CYLC_TASK_CYCLE_DATE}.$(printf "%03d" ${CYLC_TASK_PARAM_mbr})
+pp_config --set TIMESERIES_OUTPUT_ROOTDIR=/glade/campaign/cesm/development/espwg/SMYLE-EXTEND/timeseries/b.e21.BSMYLE.f09_g17.${CYLC_TASK_CYCLE_DATE}.$(printf "%03d" ${CYLC_TASK_PARAM_mbr})
 today=`date '+%Y%m%d-%H%M%S'`
 mpirun ./timeseries > ./logs/timeseries.log.${today} 2>&1
 """
     [[[environment]]]
       #CYLC_TASK_CYCLE_MONTH = $(cylc cyclepoint --template=%m)
       CYLC_TASK_CYCLE_DATE = $(cylc cyclepoint --template=%Y-%m)
-      SMYLE_ROOT = "/glade/p/cesm/espwg/CESM2-SMYLE"
+      SMYLE_ROOT = "/glade/p/cesm/espwg/CESM2-SMYLE-EXTEND"
     [[[job]]]
       batch system = pbs
-      batch submit command template = qsubcasper -q casper -l walltime=02:00:00 -A NCGD0047 '%(job)s'
+      batch submit command template = qsubcasper -q casper -l walltime=02:00:00 -A P06010014 '%(job)s'
       shell = /bin/bash
     [[[directives]]]
        -r = n
        -j = oe
-       -v = FCST_HOME=/glade/work/nanr/cesm_tags/CASE_tools/cesm2-smyle/,SMYLE_ROOT=/glade/p/cesm/espwg/CESM2-SMYLE
+       -v = FCST_HOME=/glade/work/nanr/cesm_tags/CASE_tools/cesm2-smyle-extend/,SMYLE_ROOT=/glade/p/cesm/espwg/CESM2-SMYLE
        -S = /bin/bash
        -l = select=1:ncpus=36:mpiprocs=36:ompthreads=1
 
@@ -133,7 +132,7 @@ cd ${SMYLE_ROOT}/cases/b.e21.BSMYLE.f09_g17.${CYLC_TASK_CYCLE_DATE}.$(printf "%0
       # Retry each run up to 2 times with different fv_nsplit values
       # execution retry delays = 2*PT6S
       batch system = pbs
-      batch submit command template = qsub -q economy -l walltime=12:00:00 -A NCGD0047 '%(job)s'
+      batch submit command template = qsub -q economy -l walltime=12:00:00 -A P06010014 '%(job)s'
     [[[directives]]]
        -r = n
        -j = oe
