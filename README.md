@@ -13,3 +13,5 @@ There are 5 basic steps:
  * dispose the data
 
 The repository has several branches, each branch is run for a different project.
+If you would like to consider these tools for your project open an issue here and we
+can discuss the best option for you and your project.
