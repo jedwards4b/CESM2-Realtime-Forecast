@@ -1,15 +1,15 @@
-Files in the bin directory:
+The tools in this repository are designed to facilitate Realtime Forecasting and hindcasting with CESM2.
 
-* getNASAdata.py: Get data from the NASA eosdis server.
-  Accepts --date in form yyyy-mm-dd as an input argument
-  The ip address of the local system must be registered with NASA contact
-  Lei, Guang-dih (GSFC-610.2)[ADNET SYSTEMS INC] <guang-dih.lei@nasa.gov>
+There are 5 basic steps:
 
-* getCDASdata.py: Untar and rename sfluxgrbf files from /glade/collections/rda/data
-  Accepts --date in form yyyy-mm-dd or yyyy-mm (do entire month) as an input argument
+ * gather input and boundary data
 
-* create_landforcing_from_NCEPCFC.ncl: Create datm stream files from CDAS data
-  Accepts year and month as inputs and converts all files for that time period
-  Updates existing files with new data.
+ * build the model ensemble
 
-streamfilelib.ncl: Support file for create_landforcing_from_NCEPCFC.ncl
+ * run the model
+
+ * postprocess the output
+
+ * dispose the data
+
+The repository has several branches, each branch is run for a different project.
