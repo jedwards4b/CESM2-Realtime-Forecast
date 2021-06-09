@@ -24,8 +24,8 @@
 
 [scheduling]
   # Change the run start and end dates here
-    initial cycle point = "2018-11-01"
-    final cycle point = "2018-11-01"
+    initial cycle point = "2014-11-01"
+    final cycle point = "2014-11-01"
 
     # must start Feb 01, any year:
     # initial cycle point constraints = "0201T00"
@@ -41,7 +41,7 @@
       graph = """
         pp_family:finish-all 
         st_archive<mbr>[-P1Y] => build_model => run_family:finish-all
-        run<mbr> => st_archive<mbr> => run<mbr> => st_archive<mbr> => run<mbr> => st_archive<mbr> => run<mbr> => st_archive<mbr> => pp<mbr>
+        run1<mbr> => run2<mbr> => run3<mbr> => run4<mbr> => st_archive<mbr> => pp<mbr>
              """
 [runtime]
   [[get_data]]
@@ -91,7 +91,7 @@ cd ${SMYLE_ROOT}/cases/b.e21.BSMYLE.f09_g17.${CYLC_TASK_CYCLE_DATE}.$(printf "%0
       inherit = pp_family
     [[pp_family]]
       script = """
-cd ${SMYLE_ROOT}/cases/SMYLE-EXTEND/b.e21.BSMYLE.f09_g17.${CYLC_TASK_CYCLE_DATE}.$(printf "%03d" ${CYLC_TASK_PARAM_mbr})
+cd ${SMYLE_ROOT}/cases/b.e21.BSMYLE.f09_g17.${CYLC_TASK_CYCLE_DATE}.$(printf "%03d" ${CYLC_TASK_PARAM_mbr})
 unset PYTHONPATH
 module use /glade/work/bdobbins/Software/Modules
 module load cesm_postprocessing
@@ -118,7 +118,13 @@ mpirun ./timeseries > ./logs/timeseries.log.${today} 2>&1
        -S = /bin/bash
        -l = select=1:ncpus=36:mpiprocs=36:ompthreads=1
 
-    [[run<mbr>]]
+    [[run1<mbr>]]
+       inherit = run_family
+    [[run2<mbr>]]
+       inherit = run_family
+    [[run3<mbr>]]
+       inherit = run_family
+    [[run4<mbr>]]
        inherit = run_family
     [[run_family]]
     script = """

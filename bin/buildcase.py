@@ -89,7 +89,7 @@ def per_run_case_updates(case, date, sdrestdir, user_mods_dir, rundir):
     case.flush()
     lock_file("env_case.xml",caseroot=caseroot)
 
-    case.set_value("CONTINUE_RUN",False)
+    case.set_value("CONTINUE_RUN",True)
     case.set_value("BUILD_COMPLETE",True)
     case.set_value("RUN_REFDATE",date)
     case.set_value("RUN_STARTDATE",date)
@@ -110,10 +110,6 @@ def per_run_case_updates(case, date, sdrestdir, user_mods_dir, rundir):
     stage_refcase(rundir, sdrestdir, date, basecasename)
     case.set_value("BATCH_SYSTEM", "none")
     safe_copy(os.path.join(caseroot,"env_batch.xml"),os.path.join(caseroot,"LockedFiles","env_batch.xml"))
-    # this doesnt appear to work correctly
-#    unlock_file("env_batch.xml",caseroot=caseroot)
-#    case.flush()
-#    lock_file("env_batch.xml",caseroot=caseroot)
 
 
 def build_base_case(date, baseroot, basecasename, basemonth,res, ensemble_start, compset, overwrite,
@@ -141,11 +137,10 @@ def build_base_case(date, baseroot, basecasename, basemonth,res, ensemble_start,
             case.set_value("CAM_CONFIG_OPTS",case.get_value("CAM_CONFIG_OPTS")+" -cosp ")
 
             case.set_value("RUN_TYPE","hybrid")
-            case.set_value("CONTINUE_RUN","TRUE")
             case.set_value("JOB_QUEUE","economy")
             case.set_value("GET_REFCASE",False)
             case.set_value("RUN_REFDIR",sdrestdir)
-            case.set_value("RUN_REFCASE", "b.e21.BSMYLE.f09_g17.{}.01".format(date[:7]))
+            case.set_value("RUN_REFCASE", "b.e21.BSMYLE.f09_g17."+date[0:7]+".{0:03d}".format(ensemble_start))
             case.set_value("OCN_TRACER_MODULES","")
             case.set_value("OCN_TRACER_MODULES","iage")
             case.set_value("OCN_CHL_TYPE","diagnostic")
@@ -197,6 +192,7 @@ def clone_base_case(date, caseroot, ensemble_start, ensemble_end, sdrestdir, use
             rundir = case.get_value("RUNDIR")
             rundir = rundir[:-nint]+member_string
             case.set_value("RUNDIR",rundir)
+            case.set_value("RUN_REFCASE", "b.e21.BSMYLE.f09_g17."+date[0:7]+".{0:03d}".format(i))
             per_run_case_updates(case, date, sdrestdir, user_mods_dir, rundir)
 
 def _main_func(description):
@@ -217,7 +213,6 @@ def _main_func(description):
     print ("baseyear is {} basemonth is {}".format(baseyear,basemonth))
 
     overwrite = True
-    #sdrestdir = os.path.join("/glade/p/cesm/espwg/CESM2-SMYLE-EXTEND/inputdata/cesm2_init","b.e21.SMYLE_IC.f09_g17."+date[0:7]+".01","{}".format(date))
     sdrestdir = os.path.join("/glade/scratch/nanr/SMYLE-EXTEND/archive","b.e21.BSMYLE.f09_g17."+date[0:7]+".{0:03d}".format(ensemble_start),"rest","{0:04d}-11-01-00000".format(baseyear+2))
 
     user_mods_dir = os.path.join(s2sfcstroot,"user_mods","cesm2smyle-extend")
