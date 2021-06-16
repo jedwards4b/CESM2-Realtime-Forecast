@@ -3,7 +3,7 @@
 # don't change anything below here
 
 [meta]
-  title = CESM CYLC workflow for ensemble from cesm2cam6v2.MM.00 to cesm2cam6v2.MM.10
+  title = CESM CYLC workflow for ensemble from cesm2cam6climoOCNv2.MM.00 to cesm2cam6climoOCNv2.MM.10
 [cylc]
   UTC mode = True
   cycle point format = CCYY-MM-DD

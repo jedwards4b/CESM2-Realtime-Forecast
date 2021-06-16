@@ -64,7 +64,7 @@ def _main_func(description):
     date = parse_command_line(sys.argv, description)
     scratch = os.getenv("SCRATCH")
     # TODO make these input vars
-    basecasename = "cesm2cam6"
+    basecasename = "cesm2cam6climoOCN"
     basemonth = date[5:7]
     baseroot = os.getenv("WORK")
     sdrestdir = os.path.join(scratch,"S2S_70LIC_globus","SDnudgedOcn","rest","{}".format(date))
