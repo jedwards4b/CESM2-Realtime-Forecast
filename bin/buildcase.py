@@ -131,8 +131,8 @@ def build_base_case(date, baseroot, basecasename, basemonth,res, ensemble_start,
                         user_mods_dir=user_mods_dir, pecount=pecount, project="NCGD0047", workflowid="timeseries")
             # make sure that changing the casename will not affect these variables
             user = os.getenv("USER")
-            cimeoutputroot = os.path.join("/home/smyle/work/cesm/scratch/SMYLE-ERA5")
-            exeroot = os.path.join("/home/smyle/work/cesm/scratch/SMYLE-ERA5/exerootdir/bld")
+            cimeoutputroot = os.path.join("/home/smyle/work/cesm/scratch/SMYLE-CW3E")
+            exeroot = os.path.join("/home/smyle/work/cesm/scratch/SMYLE-CW3E/exerootdir/bld")
             case.set_value("CIME_OUTPUT_ROOT",cimeoutputroot)
             #case.set_value("CIME_OUTPUT_ROOT","/glade/scratch/nanr/SMYLE")
             if exeroot and os.path.exists(os.path.join(exeroot,"cesm.exe")):
@@ -216,14 +216,14 @@ def clone_base_case(date, caseroot, ensemble_start, ensemble_end, sdrestdir, use
 def _main_func(description):
     #date, basecasename = parse_command_line(sys.argv, description)
     date, model, ensemble_start, ensemble_end = parse_command_line(sys.argv, description)
-    basecasename = "b.e21.BSMYLE-ERA5.f09_g17"
+    basecasename = "b.e21.BSMYLE-CW3E.f09_g17"
 
     # TODO make these input vars
 
     basemonth = int(date[5:7])
     baseyear = int(date[0:4])
     #baseroot = os.path.join(os.getenv("SMYLE_ROOT"),"cases")
-    baseroot = "/home/smyle/work/cesm/CESM2-SMYLE-ERA5/cases"
+    baseroot = "/home/smyle/work/cesm/CESM2-SMYLE-CW3E/cases"
     res = "f09_g17"
     waccm = False
     if model == "cesm2smyle":

@@ -52,10 +52,10 @@ def parse_command_line(args, description):
     return date.strftime("%Y-%m-%d"), args.model,int(args.ensemble_start),int(args.ensemble_end)
 
 def get_rvals(date, ensemble_start,ensemble_end, model):
-    random.seed(int(date[0:4])+int(date[5:7])+int(date[8:10]))
+    random.seed(int(date[0:4])+int(date[5:7])+int(date[8:10])+5)
     rvals = random.sample(range(1001),k=ensemble_end//2)
     print("Rvals are {}".format(rvals))
-    rvals_file = os.path.join("/home/smyle/work/cesm/CESM2-SMYLE-ERA5/","cases","camic_"+date+".{}-{}.txt".format(ensemble_start,ensemble_end))
+    rvals_file = os.path.join("/home/smyle/work/cesm/CESM2-SMYLE-CW3E/","cases","camic_"+date+".{}-{}.txt".format(ensemble_start,ensemble_end))
     with open(rvals_file,"w") as fd:
         fd.write("{}".format(rvals))
 
@@ -163,7 +163,7 @@ def _main_func(description):
 
     sdrestdir = os.path.join("/home/smyle/work/cesm/inputdata/cesm2_init","b.e21.SMYLE_ERA5_IC.f09_g17."+date[0:7]+".01","{}".format(date))
     user = os.getenv("USER")
-    baserundir = os.path.join("/home/smyle/work/cesm/scratch/{}/".format(user),"SMYLE-ERA5","b.e21.BSMYLE-ERA5.f09_g17."+date[0:7]+".001","run.{:03d}".format(ensemble_start))
+    baserundir = os.path.join("/home/smyle/work/cesm/scratch/{}/".format(user),"SMYLE-CW3E","b.e21.BSMYLE-CW3E.f09_g17."+date[0:7]+".001","run.{:03d}".format(ensemble_start))
     caminame = os.path.join(sdrestdir,"b.e21.SMYLE_ERA5_IC.f09_g17.{}.01.cam.i.{date}-00000.nc".format(date[:7],date=date))
     outroot = "b.e21.SMYLE_ERA5_IC.pert.f09_g17.cam.i."
 

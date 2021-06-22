@@ -7,7 +7,7 @@ setenv ARCHDIR1  /glade/scratch/$USER/SMYLE-ERA5/inputdata/cesm2_init/
 setenv CAMPAIGN  /glade/campaign/cesm/development/espwg/SMYLE-ERA5/inputdata/cesm2_init/
 
 set syr = 1970
-set eyr = 1970
+set eyr = 2018
 
 @ ib = $syr
 @ ie = $eyr

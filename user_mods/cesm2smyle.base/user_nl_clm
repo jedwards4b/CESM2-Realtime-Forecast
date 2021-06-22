@@ -168,8 +168,10 @@ use_c14 = .false.
          'FSDSNI', 'SNOWLIQ', 'QINTR', 'SNOBCMSL', 'SNOTXMASS', 'SNOWICE', 
          'QRUNOFF', 'RAIN', 'SNOW', 'GPP', 'NPP', 'AR', 'HR', 'ALT', 'FAREA_BURNED', 'NFIRE','LAKEICETHICK',
          'NBP','NEP','JCONVECT:X','QRGWL','EFLX_GRND_LAKE','UST_LAKE','BTRANMN','TSOI_10CM','CPHASE',
-	 'FSR','FSDSVDLN','FSRVDLN','FSDSNDLN','FSRNDLN','FSDSVI', 'FSRVI','FSDSNI','FSRNI','FSH','FCTR','FCEV','FGEV'
-! removed from hist_fincl6 'SOILICE','SOILLIQ','TSOI','TLAKE' 
+	 'FSR','FSDSVDLN','FSRVDLN','FSDSNDLN','FSRNDLN','FSDSVI', 'FSRVI','FSDSNI','FSRNI','FSH','FCTR','FCEV','FGEV',
+         'SOILICE', 'SOILLIQ', 'H2OSOI'
+! removed from hist_fincl6 'TSOI','TLAKE' 
+! adding for comet hist_fincl6:  'SOILICE', 'SOILLIQ', 'H2OSOI'
 
 ! h6 stream (daily average, landunit-level)
  hist_fincl7 = 'TREFMXAV', 'TREFMNAV', 'WBT:X', 'WBT:M', 'HIA:X', 'HIA:M', 'RH2M', 'QRUNOFF'
@@ -230,7 +232,8 @@ hist_fincl1 += 'DWT_CONV_CFLUX_PATCH', 'PCT_CFT', 'QICE_FORC', 'SoilAlpha_U', 'T
 !----------------------------------------------------------------------------------
 !! h5
 hist_fexcl6 += 'BTRANMN', 'CPHASE', 'EFLX_GRND_LAKE', 'FAREA_BURNED', 'FCEV', 'FCTR', 'FGEV', 'FSDSNDLN', 'FSDSVDLN',
-	'FSDSVI', 'FSR', 'FSRNDLN', 'FSRNI', 'FSRVDLN', 'FSRVI', 'SNOWICE', 'SOILICE', 'SOILLIQ', 'TSOI', 'UST_LAKE'
+	'FSDSVI', 'FSR', 'FSRNDLN', 'FSRNI', 'FSRVDLN', 'FSRVI', 'SNOWICE', 'TSOI', 'UST_LAKE'
+!! removed 'SOILICE', 'SOILLIQ' from the fexcl list for comet runs, and added them to the fincl6 list above
 
 !! h5
 hist_fincl6 += 'EFLX_LH_TOT', 'FGR', 'FIRA', 'FIRE', 'FLDS', 'FSM', 'SABG', 'TKE1', 'TREFMNAV', 'TREFMXAV'
