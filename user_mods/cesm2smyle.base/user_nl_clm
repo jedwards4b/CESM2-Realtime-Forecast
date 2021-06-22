@@ -90,7 +90,7 @@ hist_fincl3 += 'FSR', 'H2OSNO', 'Q2M', 'SNOWDP', 'TSA', 'TREFMNAV', 'TREFMXAV', 
 ! (No fields for SMYLE)
 hist_mfilt(4) = 1
 hist_dov2xy(4) = .true.
-hist_nhtfrq(4) = -8760
+hist_nhtfrq(4) = 8760
 hist_type1d_pertape(4) = ' '
 !hist_fincl4 += 'PCT_GLC_MEC', 'QICE_FORC', 'TSRF_FORC', 'TOPO_FORC', 'PCT_NAT_PFT','PCT_LANDUNIT','FSNO_ICE'
 
@@ -99,9 +99,11 @@ hist_type1d_pertape(4) = ' '
 ! (No fields in base, but other usermods add to this stream)
 hist_mfilt(5) = 1
 hist_dov2xy(5) = .false.
-hist_nhtfrq(5) = -8760
+hist_nhtfrq(5) = 8760
 hist_type1d_pertape(5) = 'LAND'
 
+! h5 stream - one file per month
+hist_mfilt(6) = 730
 !----------------------------------------------------------------------------------
 ! Settings from output_bgc
 !----------------------------------------------------------------------------------
@@ -237,6 +239,5 @@ hist_fexcl6 += 'BTRANMN', 'CPHASE', 'EFLX_GRND_LAKE', 'FAREA_BURNED', 'FCEV', 'F
 
 !! h5
 hist_fincl6 += 'EFLX_LH_TOT', 'FGR', 'FIRA', 'FIRE', 'FLDS', 'FSM', 'SABG', 'TKE1', 'TREFMNAV', 'TREFMXAV'
-
 
 

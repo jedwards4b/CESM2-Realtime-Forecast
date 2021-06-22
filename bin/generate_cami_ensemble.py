@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 import os, sys
 #cesmroot = os.getenv("CESM_ROOT")
-cesmroot = "/home/smyle/work/cesm/cesm2.1.x/"
+cesmroot = "/home/smyle/work/cesm/cesm2.1.4-SMYLE/"
 s2sfcstroot = os.path.join(os.path.dirname(os.path.join(os.path.abspath(__file__))), os.path.pardir)
 
 if cesmroot is None:
@@ -90,7 +90,6 @@ def create_cam_ic_perturbed(original, ensemble_start,ensemble_end, date, baserun
         local_path = "/glade/campaign/cesm/development/cross-wg/S2S/CESM2/CAMI/RP"
     perturb_files = []
     for i in range(ensemble_start,ensemble_end, 2):
-        print "HERE rvals[{}] = {}".format((i-1)//2,rvals[(i-1)//2])
         if model == "cesm2smyle":
             perturb_file = os.path.join("{}".format(month),
                                         "CESM2.cam.i.M{}.diff.{}.nc".format(month,rvals[(i-1)//2]))
@@ -136,6 +135,8 @@ def create_cam_ic_perturbed(original, ensemble_start,ensemble_end, date, baserun
               os.unlink(os.path.join(outdir1,origfile))
            os.symlink(outfile1, os.path.join(outdir1,origfile))
            print("I made it here = {} ".format(outdir))
+        if os.path.isfile(os.path.join(outdir2,origfile)):
+            os.unlink(os.path.join(outdir2,origfile))
         os.symlink(outfile2, os.path.join(outdir2,origfile))
 
 

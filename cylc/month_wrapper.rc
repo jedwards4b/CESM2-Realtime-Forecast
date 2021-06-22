@@ -1,0 +1,50 @@
+#!Jinja2
+# This will run the hind cast for each month from intial to final cycle point
+# one year at a time, all months for a given year run simultaniously
+
+{% set rnames = ["NOV"] %}
+{% set fyear = "1984" %}
+{% set lyear = "2020" %}
+{% set model = "cesm2smyle" %}
+{% set FCST_HOME = "/home/smyle/work/cesm/CESM2-Realtime-Forecast/" %}
+{% set ensemble_start = 1 %}
+{% set ensemble_end   = 20 %}
+{% set day_start      = '01' %}
+{% set day_end        = '01' %}
+{% set sendtoftp      = false %}
+{% set run_queue = "compute" %}
+{% set account = "csg100" %}
+# don't change anything below here
+
+{% set mnames = ["JAN","FEB","MAR","APR","MAY","JUN","JUL","AUG","SEP","OCT","NOV","DEC"] %}
+
+[cylc]
+   cycle point format = %Y
+   [[parameters]]
+      mnum = 1..12
+[scheduling]
+   initial cycle point = {{ fyear }}
+   final cycle point = {{ lyear }}
+   [[dependencies]]
+       [[[R1]]]
+           graph = prep => month<mnum>
+       [[[P1Y]]]
+           graph = month<mnum>[-P1Y] => month<mnum>
+[runtime]
+   [[prep]]
+      script = """
+{% for month in mnames %}
+  {% if month in rnames %}
+    cylc register $CYLC_SUITE_NAME/$CYLC_TASK_CYCLE_POINT/{{month}} ${FCST_HOME}/cylc/monthly
+  {% endif %}
+{% endfor %}
+"""
+{% for month in mnames %}
+   # Use the following to set the months to actually run or comment the if and endif to run all months
+ {% if month in rnames %}
+   [[month_mnum{{"{0:02d}".format(loop.index)}}]]
+   script = """
+cylc run --no-detach --set=YEAR=$CYLC_TASK_CYCLE_POINT --set=MONTH={{"{0:02d}".format(loop.index)}} --set=model={{ model }} --set=ensemble_start={{ ensemble_start }} --set=ensemble_end={{ ensemble_end }} --set=day_start={{day_start}} --set=day_end={{day_end}} --set=sendtoftp={{ sendtoftp }} --set=account={{account}} --set=run_queue={{run_queue}} $CYLC_SUITE_NAME/$CYLC_TASK_CYCLE_POINT/{{month}}
+"""
+  {% endif %}
+{% endfor %}
