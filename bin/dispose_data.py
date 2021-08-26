@@ -46,7 +46,7 @@ def parse_command_line(args, description):
     return date.strftime("%Y-%m")
 
 def send_data_to_campaignstore(timeseriesdir, source_file_list):
-    dest_path = '/glade/campaign/cesm/development/espwg/SMYLE-ERA5/timeseries/'
+    dest_path = '/glade/campaign/cesm/development/espwg/SMYLE-CW3E/timeseries/'
     
     client = initialize_client()    
 #    token = get_globus_token(client)
@@ -65,13 +65,15 @@ def send_data_to_campaignstore(timeseriesdir, source_file_list):
     complete_transfer_request(tc, transfer_data)
     
 def _main_func(description):
+    # disable this until globus is fixed
+    # return
     date = parse_command_line(sys.argv, description)
     scratch = os.getenv("SCRATCH")
     # TODO make these input vars
-    basecasename = "b.e21.BSMYLE-ERA5.f09_g17"
+    basecasename = "b.e21.BSMYLE-CW3E.f09_g17"
     basemonth = date[5:7]
     baseroot = os.path.join(os.getenv("WORK"),"cases",basecasename)
-    timeseriesdir = os.path.join(scratch,"SMYLE-ERA5","timeseries")
+    timeseriesdir = os.path.join(scratch,"SMYLE-CW3E","timeseries")
 
     filepatterns = [os.path.join("ocn","proc","tseries","month_1","*.TEMP.*.nc"),
                     os.path.join("atm","proc","tseries","day_1","*.PSL.*.nc"),

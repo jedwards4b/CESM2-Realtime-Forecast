@@ -58,6 +58,8 @@ cd ${FCST_HOME}/bin/
        --cpus-per-task=8
        --time=01:00:00
        --account={{ account }}
+       --qos=cw3e
+       --res=SMYLERES
     [[[environment]]]
        SMYLE_ROOT = "/home/smyle/work/cesm/CESM2-SMYLE-CW3E"
 
@@ -74,6 +76,8 @@ cd ${FCST_HOME}/bin/
        --cpus-per-task=16
        --time=01:00:00
        --account={{ account }}
+       --qos=cw3e
+       --res=SMYLERES
 
   [[st_archive<mbr>]]
     script = """
@@ -107,6 +111,8 @@ mpirun ./timeseries > ./logs/timeseries.log.${today} 2>&1
        --nodes=1
        --time=12:00:00
        --account={{ account }}
+       --qos=cw3e
+       --res=SMYLERES
 
     [[dispose]]
     # Globus process, must run on host
@@ -138,5 +144,6 @@ cd ${SMYLE_ROOT}/cases/b.e21.BSMYLE-CW3E.f09_g17.${CYLC_TASK_CYCLE_DATE}.$(print
        --switches=1
        --time=12:00:00
        --qos=cw3e
+       --res=SMYLERES
     [[[events]]]
         handler events = retry, failed
