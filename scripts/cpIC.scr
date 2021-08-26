@@ -1,0 +1,50 @@
+#!/bin/csh 
+### set env variables
+module load ncl nco
+
+setenv CESM2_TOOLS_ROOT /glade/work/nanr/cesm_tags/CASE_tools/cesm2-smyle/
+
+# ...
+set syr = 2019
+set eyr = 2019
+
+@ ib = $syr
+@ ie = $eyr
+
+foreach year ( `seq $ib $ie` )
+#foreach mon ( 11 )
+foreach mon ( 02 05 08 11 )
+
+# case name counter
+set smbr =  1
+set embr =  20
+
+@ mb = $smbr
+@ me = $embr
+
+foreach mbr ( `seq $mb $me` )
+if ($mbr < 10) then
+        set CASE = b.e21.BSMYLE.f09_g17.${year}-${mon}.00${mbr}
+        set RUNDIR = /glade/scratch/$USER/SMYLE/b.e21.BSMYLE.f09_g17.${year}-${mon}.001/run.00${mbr}/
+        set PERTDIR = /glade/p/cesm/espwg/CESM2-SMYLE/inputdata/cesm2_init/b.e21.SMYLE_IC.f09_g17.2019-${mon}.01/pert.0${mbr}
+else
+        set CASE = b.e21.BSMYLE.f09_g17.${year}-${mon}.0${mbr}
+        set RUNDIR = /glade/scratch/$USER/SMYLE/b.e21.BSMYLE.f09_g17.${year}-${mon}.001/run.0${mbr}/
+        set PERTDIR = /glade/p/cesm/espwg/CESM2-SMYLE/inputdata/cesm2_init/b.e21.SMYLE_IC.f09_g17.2019-${mon}.01/pert.${mbr}
+endif
+
+cd $RUNDIR
+cp /glade/p/cesm/espwg/CESM2-SMYLE/inputdata/cesm2_init/b.e21.SMYLE_IC.f09_g17.2019-${mon}.01/2019-${mon}-01/rpointer.* .
+ln -s /glade/p/cesm/espwg/CESM2-SMYLE/inputdata/cesm2_init/b.e21.SMYLE_IC.f09_g17.2019-${mon}.01/2019-${mon}-01/*pop* .  
+ln -s /glade/p/cesm/espwg/CESM2-SMYLE/inputdata/cesm2_init/b.e21.SMYLE_IC.f09_g17.2019-${mon}.01/2019-${mon}-01/*cice* .
+ln -s /glade/p/cesm/espwg/CESM2-SMYLE/inputdata/cesm2_init/b.e21.SMYLE_IC.f09_g17.2019-${mon}.01/2019-${mon}-01/*clm2* .
+ln -s /glade/p/cesm/espwg/CESM2-SMYLE/inputdata/cesm2_init/b.e21.SMYLE_IC.f09_g17.2019-${mon}.01/2019-${mon}-01/*mosart* .
+ln -s /glade/p/cesm/espwg/CESM2-SMYLE/inputdata/cesm2_init/b.e21.SMYLE_IC.f09_g17.2019-${mon}.01/2019-${mon}-01/*ww3* .
+ln -s ${PERTDIR}/b.e21.SMYLE_IC.pert.f09_g17.cam.i.2019-${mon}-01-00000.nc ./b.e21.SMYLE_IC.f09_g17.2019-02.01.cam.i.2019-02-01-00000.nc
+
+end             # member loop
+end             # member loop
+end             # member loop
+
+exit
+

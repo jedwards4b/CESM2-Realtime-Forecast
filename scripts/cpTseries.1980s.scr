@@ -1,0 +1,27 @@
+#!/bin/bash -l
+#
+#SBATCH -n 1
+#SBATCH -t 24:00:00
+#SBATCH -p dav
+#SBATCH -J smyle
+#SBATCH --account=NCGD0047
+#SBATCH -e m1980s%J
+#SBATCH -o m1980s%J
+#SBATCH --mail-type=ALL
+#SBATCH --mail-user=nanr@ucar.edu
+#
+
+cp -pR /glade/scratch/sglanvil/SMYLE/timeseries/b.e21.BSMYLE.f09_g17.198?-11.011 /glade/campaign/cesm/development/espwg/SMYLE/archive/
+cp -pR /glade/scratch/sglanvil/SMYLE/timeseries/b.e21.BSMYLE.f09_g17.198?-11.012 /glade/campaign/cesm/development/espwg/SMYLE/archive/
+cp -pR /glade/scratch/sglanvil/SMYLE/timeseries/b.e21.BSMYLE.f09_g17.198?-11.013 /glade/campaign/cesm/development/espwg/SMYLE/archive/
+cp -pR /glade/scratch/sglanvil/SMYLE/timeseries/b.e21.BSMYLE.f09_g17.198?-11.014 /glade/campaign/cesm/development/espwg/SMYLE/archive/
+cp -pR /glade/scratch/sglanvil/SMYLE/timeseries/b.e21.BSMYLE.f09_g17.198?-11.015 /glade/campaign/cesm/development/espwg/SMYLE/archive/
+cp -pR /glade/scratch/sglanvil/SMYLE/timeseries/b.e21.BSMYLE.f09_g17.198?-11.016 /glade/campaign/cesm/development/espwg/SMYLE/archive/
+cp -pR /glade/scratch/sglanvil/SMYLE/timeseries/b.e21.BSMYLE.f09_g17.198?-11.017 /glade/campaign/cesm/development/espwg/SMYLE/archive/
+cp -pR /glade/scratch/sglanvil/SMYLE/timeseries/b.e21.BSMYLE.f09_g17.198?-11.018 /glade/campaign/cesm/development/espwg/SMYLE/archive/
+cp -pR /glade/scratch/sglanvil/SMYLE/timeseries/b.e21.BSMYLE.f09_g17.198?-11.019 /glade/campaign/cesm/development/espwg/SMYLE/archive/
+cp -pR /glade/scratch/sglanvil/SMYLE/timeseries/b.e21.BSMYLE.f09_g17.198?-11.020 /glade/campaign/cesm/development/espwg/SMYLE/archive/
+
+#
+exit
+

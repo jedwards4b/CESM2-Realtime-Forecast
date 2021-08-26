@@ -4,13 +4,10 @@ module load ncl nco
 
 setenv CESM2_TOOLS_ROOT /glade/work/nanr/cesm_tags/CASE_tools/cesm2-smyle/
 setenv ARCHDIR  /glade/scratch/$USER/SMYLE/archive/
-setenv TSERIES2  /glade/p/cesm/espwg/CESM2-SMYLE/timeseries
-#setenv TSERIES2  /glade/campaign/cesm/development/espwg/SMYLE/archive
-#setenv TSERIES2  /glade/campaign/cesm/development/espwg/SMYLE/archive/pre-1970
 
 # ...
-set syr = 2005
-set eyr = 2005
+set syr = 1970
+set eyr = 2018
 
 @ ib = $syr
 @ ie = $eyr
@@ -18,6 +15,7 @@ set eyr = 2005
 foreach year ( `seq $ib $ie` )
 #foreach mon ( 11 )
 foreach mon ( 08 )
+
 
 # case name counter
 set smbr =  1
@@ -36,16 +34,11 @@ endif
 
 #echo "==================================    " 
 #echo $CASE 
-if (-d $TSERIES2/$CASE) then
-    cd $TSERIES2/$CASE
-    #set t1 = `ls  $TSERIES2/$CASE/atm/proc/tseries/month_1/*ZM_CLUBB* | wc -l`
-    set t2 = `ls -lR $TSERIES2/$CASE | wc -l`
+if (-d $ARCHDIR/$CASE) then
+    cd $ARCHDIR/$CASE
+    set t2 = `ls -lR $ARCHDIR/$CASE | wc -l`
     set s2 = `du . -sh`
-    if ($t2 < 1814 ) then
-       echo  $CASE " ==============    " $t2  $s2
-    else
-       echo  $CASE " ===    " $t2  $s2
-    endif
+    echo  $CASE " ===    " $t2  $s2
 else
     echo " missing   ===    " $CASE
 endif

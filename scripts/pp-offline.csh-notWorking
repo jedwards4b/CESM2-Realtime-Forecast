@@ -10,8 +10,10 @@ setenv TSERIES1  /glade/p/cesm/espwg/CESM2-SMYLE/timeseries
 setenv TSERIES2  /glade/campaign/cesm/development/espwg/SMYLE/archive
 setenv CASEROOT  /glade/p/cesm/espwg/CESM2-SMYLE/cases
 
+unset PYTHONPATH
 module use /glade/work/bdobbins/Software/Modules
 module load cesm_postprocessing
+
 
 # ...
 set syr = 2005
@@ -24,7 +26,7 @@ foreach year ( `seq $ib $ie` )
 foreach mon ( 08 )
 
 # case name counter
-set smbr =  20
+set smbr =  1
 set embr =  20
 
 @ mb = $smbr
@@ -32,10 +34,9 @@ set embr =  20
 
 foreach mbr ( `seq $mb $me` )
 if ($mbr < 10) then
-        set CASE = btestpp.e21.BSMYLE.f09_g17.${year}-${mon}.00${mbr}
+        set CASE = b.e21.BSMYLE.f09_g17.${year}-${mon}.00${mbr}
 else
-        set CASE = btestpp.e21.BSMYLE.f09_g17.${year}-${mon}.0${mbr}
-        set CASE = btestpp.e21.BSMYLE.f09_g17.2001-08.020
+        set CASE = b.e21.BSMYLE.f09_g17.${year}-${mon}.0${mbr}
 endif
 
 cd $CASEROOT/$CASE
@@ -45,8 +46,7 @@ if ( ! -d "postprocess" ) then
 endif
 
 cd postprocess
-pp_config --set TIMESERIES_OUTPUT_ROOTDIR=/glade/scratch/nanr/timeseries/$CASE/
-#pp_config --set TIMESERIES_OUTPUT_ROOTDIR=/glade/p/cesm/espwg/CESM2-SMYLE/timeseries/$CASE/
+pp_config --set TIMESERIES_OUTPUT_ROOTDIR=/glade/p/cesm/espwg/CESM2-SMYLE/timeseries/$CASE/
 #qsub ./timeseries 
 
 if ($mbr < 10) then
@@ -78,6 +78,7 @@ cat >> timeseries << EOF
 ##
 ##########
 
+unset PYTHONPATH
 module use /glade/work/bdobbins/Software/Modules
 module load cesm_postprocessing
 
@@ -88,8 +89,7 @@ mpirun singularity run -B /glade,/var /glade/work/bdobbins/Containers/CESM_Postp
 
 EOF
 
-# qsubcasper ./timeseries
-qsubcasper -q casper -l walltime=02:00:00 -A NCGD0047 ./timeseries
+qsubcasper ./timeseries
 
 end             # member loop
 end             # member loop

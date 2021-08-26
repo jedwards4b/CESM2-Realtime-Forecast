@@ -10,8 +10,8 @@ endif
 
 
 #foreach  ye9r ( 1954 1964 1974 1984 1994 2004 )
-set syr = 1970
-set eyr = 1970
+set syr = 2021
+set eyr = 2021
 
 @ ib = $syr
 @ ie = $eyr
@@ -19,12 +19,9 @@ set eyr = 1970
 foreach year ( `seq $ib $ie` )
 #foreach mon ( 02 05 08 11 )
 #foreach mon ( 05 08 11 )
-foreach mon ( 11 )
-#foreach mon ( 02 )
-#foreach mon ( 05 )
-#foreach mon ( 08 )
+foreach mon ( 05 )
 
-set case = b.e21.SMYLE_IC.f09_g17.${year}-${mon}.01
+set case = b.e21.SMYLE_IC_2020clm.f09_g17.${year}-${mon}.01
 
 
 #set icdir = /glade/p/cesm/cseg/inputdata/ccsm4_init/{$case} 

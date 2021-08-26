@@ -10,16 +10,16 @@ endif
 
 
 #foreach  ye9r ( 1954 1964 1974 1984 1994 2004 )
-set syr = 1970
-set eyr = 1970
+set syr = 2019
+set eyr = 2019
 
 @ ib = $syr
 @ ie = $eyr
 
 foreach year ( `seq $ib $ie` )
-#foreach mon ( 02 05 08 11 )
+foreach mon ( 02 05 08 11 )
 #foreach mon ( 05 08 11 )
-foreach mon ( 11 )
+#foreach mon ( 11 )
 #foreach mon ( 02 )
 #foreach mon ( 05 )
 #foreach mon ( 08 )
@@ -52,7 +52,8 @@ set roffname = ${lndcase}.mosart.r.${year}-${mon}-01-00000.nc
 
 # directories
 set atmdir = /glade/p/cesm/espwg/CESM2-SMYLE/initial_conditions/cam/
-set lnddir = /glade/p/cesm/espwg/CESM2-SMYLE/initial_conditions/clm/${year}-${mon}-01-00000/
+#set lnddir = /glade/p/cesm/espwg/CESM2-SMYLE/initial_conditions/clm/${year}-${mon}-01-00000/
+set lnddir = /glade/campaign/cesm/development/espwg/SMYLE/initial_conditions/CLM5_SMYLE-Trendy/rest/${year}-${mon}-01-00000/
 
 # rename atm, land IC files
 set atmfout = ${case}.cam.i.${year}-${mon}-01-00000.nc
@@ -75,7 +76,8 @@ endif
 
 # ocn/ice
 # years used for ICs:   0306 (1958) - 0366 (2018)
-set ocncase = g.e22.GOMIPECOIAF_JRA-1p4-2018.TL319_g17.SMYLE.005
+#set ocncase = g.e22.GOMIPECOIAF_JRA-1p4-2018.TL319_g17.SMYLE.005
+set ocncase = g.e22.GOMIPECOIAF_JRA-1p4-2018.TL319_g17.SMYLE.005.2019_2020
 set first_rest_year = 1958
 set ocean_base_year = 306
 

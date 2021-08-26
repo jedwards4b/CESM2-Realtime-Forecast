@@ -1,0 +1,8 @@
+ls -1 > flist
+cat flist | cut -d"." -f5 | uniq -c | nl -v 1972 -i 1 > flistc
+
+
+foreach i (`seq 1 10`)
+foreach? ls -lR b.e21.BSMYLE.f09_g17.1963-11.00${i} | wc
+foreach? end
+
