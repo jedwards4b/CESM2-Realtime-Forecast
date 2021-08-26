@@ -1,0 +1,5 @@
+https://cylc.github.io/cylc-doc/current/html/appendices/command-ref.html
+
+cylc register mysuite
+cylc run mysuite
+cylc info cat-state mysuite

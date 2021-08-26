@@ -18,15 +18,15 @@ set syr = 2010
 set eyr = 2018
 set syr = 1972
 #set eyr = 1971
-set syr = 2020
-set eyr = 2020
+set syr = 2021
+set eyr = 2021
 
 @ ib = $syr
 @ ie = $eyr
 
 foreach year ( `seq $ib $ie` )
 #foreach mon ( 02 05 08 11 )
-foreach mon ( 01 10 11 12 )
+foreach mon ( 01 02 09 10 11 12 )
 #foreach mon ( 01 )
 #foreach mon ( 02 09 )
 
@@ -84,7 +84,7 @@ endif
 
 # ocn/ice
 # years used for ICs:   0306 (1958) - 0366 (2018)
-set ocncase = g.e22.GOMIPECOIAF_JRA-1p4-2018.TL319_g17.SMYLE.005
+set ocncase = g.e22.GOMIPECOIAF_JRA-1p4-2018.TL319_g17.SMYLE.005.2021
 set first_rest_year = 1958
 set ocean_base_year = 306
 
@@ -95,7 +95,7 @@ set ocean_base_year = 306
 @ offset = $first_rest_year - $ocean_base_year 
 @ ocnyr   = $year - $offset
 #set ocndir = /glade/p/cesm/espwg/CESM2-SMYLE/initial_conditions/pop_cice/0${ocnyr}-${mon}-01-00000/
-set ocndir = /glade/campaign/cesm/development/espwg/SMYLE/SMYLE-FOSI/rest/0${ocnyr}-${mon}-01-00000/
+set ocndir = /glade/campaign/cesm/development/espwg/SMYLE/initial_conditions/SMYLE-FOSI_ext2/rest/0${ocnyr}-${mon}-01-00000/
 set icefout = ${case}.cice.r.${year}-${mon}-01-00000.nc
 set lndfout = ${case}.clm2.r.${year}-${mon}-01-00000.nc
 set roffout = ${case}.mosart.r.${year}-${mon}-01-00000.nc

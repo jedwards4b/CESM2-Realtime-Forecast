@@ -1,6 +1,6 @@
 #! /bin/csh -fxv 
 
-setenv CESM2_TOOLS_ROOT /glade/work/nanr/cesm_tags/CASE_tools/cesm2-scripps/
+setenv CESM2_TOOLS_ROOT /glade/work/nanr/cesm_tags/CASE_tools/cesm2-comet-smyle/
 setenv CESMROOT /glade/work/nanr/cesm_tags/cesm2.1.4-SMYLE
 
 if ($HOST != casper10) then
@@ -18,15 +18,15 @@ set syr = 2010
 set eyr = 2018
 set syr = 1972
 #set eyr = 1971
-set syr = 2020
-set eyr = 2020
+set syr = 2019
+set eyr = 2019
 
 @ ib = $syr
 @ ie = $eyr
 
 foreach year ( `seq $ib $ie` )
 #foreach mon ( 02 05 08 11 )
-foreach mon ( 01 10 11 12 )
+foreach mon ( 01 02 09 10 11 12 )
 #foreach mon ( 01 )
 #foreach mon ( 02 09 )
 
@@ -59,9 +59,8 @@ set roffname = ${lndcase}.mosart.r.${year}-${mon}-01-00000.nc
 # directories
 #set atmdir = /glade/p/cesm/espwg/CESM2-SMYLE/initial_conditions/cam/
 set atmdir = /glade/scratch/islas/analyses_output/
-
 #set lnddir = /glade/p/cesm/espwg/CESM2-SMYLE/initial_conditions/clm/${year}-${mon}-01-00000/
-set lnddir = /glade/campaign/cesm/development/espwg/SMYLE/CLM5_init/rest/${year}-${mon}-01-00000/
+set lnddir = /glade/campaign/cesm/development/espwg/SMYLE/initial_conditions/CLM5_SMYLE-Trendy/rest/${year}-${mon}-01-00000/
 
 # rename atm, land IC files
 set atmfout = ${case}.cam.i.${year}-${mon}-01-00000.nc
@@ -84,7 +83,7 @@ endif
 
 # ocn/ice
 # years used for ICs:   0306 (1958) - 0366 (2018)
-set ocncase = g.e22.GOMIPECOIAF_JRA-1p4-2018.TL319_g17.SMYLE.005
+set ocncase = g.e22.GOMIPECOIAF_JRA-1p4-2018.TL319_g17.SMYLE.005.2019_2020
 set first_rest_year = 1958
 set ocean_base_year = 306
 
@@ -95,7 +94,7 @@ set ocean_base_year = 306
 @ offset = $first_rest_year - $ocean_base_year 
 @ ocnyr   = $year - $offset
 #set ocndir = /glade/p/cesm/espwg/CESM2-SMYLE/initial_conditions/pop_cice/0${ocnyr}-${mon}-01-00000/
-set ocndir = /glade/campaign/cesm/development/espwg/SMYLE/SMYLE-FOSI/rest/0${ocnyr}-${mon}-01-00000/
+set ocndir = /glade/campaign/cesm/development/espwg/SMYLE/initial_conditions/SMYLE-FOSI_ext1/rest/0${ocnyr}-${mon}-01-00000/
 set icefout = ${case}.cice.r.${year}-${mon}-01-00000.nc
 set lndfout = ${case}.clm2.r.${year}-${mon}-01-00000.nc
 set roffout = ${case}.mosart.r.${year}-${mon}-01-00000.nc

@@ -56,7 +56,8 @@ def get_rvals(date, ensemble_start,ensemble_end, model):
     rvals = random.sample(range(1001),k=ensemble_end//2)
     print("Rvals are {}".format(rvals))
     #rvals_file = os.path.join("/glade/scratch/nanr/SMYLE-ERA5/","cases","camic_era5_"+date+".{}-{}.txt".format(ensemble_start,ensemble_end))
-    rvals_file = os.path.join("/glade/p/cesm/espwg/CESM2-SMYLE-ERA5/","cases","camic_era5_"+date+".{}-{}.txt".format(ensemble_start,ensemble_end))
+    #rvals_file = os.path.join("/glade/p/cesm/espwg/CESM2-SMYLE-ERA5/","cases","camic_era5_"+date+".{}-{}.txt".format(ensemble_start,ensemble_end))
+    rvals_file = os.path.join("/glade/campaign/cesm/development/espwg/SMYLE-ERA5/inputdata/","camic","camic_era5_"+date+".{}-{}.txt".format(ensemble_start,ensemble_end))
     #rvals_file = os.path.join("/glade/p/cesm/espwg/CESM2-SMYLE-ERA5/","cases","camic_era5_"+date+"."+ensemble_start+"-"+ensemble_end+".txt")
     if not os.path.isfile(rvals_file):
         with open(rvals_file,"w") as fd:

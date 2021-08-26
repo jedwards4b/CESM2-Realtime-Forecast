@@ -7,14 +7,17 @@ setenv ARCHDIR1  /glade/scratch/$USER/SMYLE-ERA5/inputdata/cesm2_init/
 setenv CAMPAIGN  /glade/campaign/cesm/development/espwg/SMYLE-ERA5/inputdata/cesm2_init/
 
 set syr = 1970
-set eyr = 2018
+set syr = 2019
+set eyr = 2019
 
 @ ib = $syr
 @ ie = $eyr
 
 foreach year ( `seq $ib $ie` )
-#foreach mon ( 10 11 12 01 )
-foreach mon ( 10 )
+foreach mon ( 09 10 11 12 01 02 )
+#foreach mon ( 10 )
+#foreach mon ( 11 12 01 )
+#foreach mon ( 02 09 )
 
 
 # case name counter
