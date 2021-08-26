@@ -109,7 +109,7 @@ mpirun ./timeseries > ./logs/timeseries.log.${today} 2>&1
       batch system = slurm
     [[[directives]]]
        --nodes=1
-       --time=12:00:00
+       --time=24:00:00
        --account={{ account }}
        --qos=cw3e
        --res=SMYLERES
@@ -142,7 +142,7 @@ cd ${SMYLE_ROOT}/cases/b.e21.BSMYLE-CW3E.f09_g17.${CYLC_TASK_CYCLE_DATE}.$(print
        --ntasks-per-node=24
        --account={{ account }}
        --switches=1
-       --time=12:00:00
+       --time=8:00:00
        --qos=cw3e
        --res=SMYLERES
     [[[events]]]

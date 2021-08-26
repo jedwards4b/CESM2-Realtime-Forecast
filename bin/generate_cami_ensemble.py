@@ -102,7 +102,7 @@ def create_cam_ic_perturbed(original, ensemble_start,ensemble_end, date, baserun
             os.makedirs(dirname)
         perturb_files.append(perturb_file)
 
-    pertroot = os.path.join("/home/smyle/work/cesm/inputdata/cesm2_init","b.e21.SMYLE_ERA5_IC.f09_g17."+date[0:7]+".01","pert2.01")
+    pertroot = os.path.join("/home/smyle/work/cesm/inputdata/cesm2_init","b.e21.SMYLE_ERA5_IC.f09_g17."+date[0:7]+".01","pert.01")
 
     for i in range(ensemble_start,ensemble_end, 2):
         pfile = os.path.join(local_path, perturb_files.pop(0))

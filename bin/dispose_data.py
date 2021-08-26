@@ -87,6 +87,7 @@ def _main_func(description):
             filelist.append(_file)
 
     print("filelist is {}".format(filelist))
+# comment out if NCAR systems are down    
     send_data_to_campaignstore(timeseriesdir, filelist)
         
         
