@@ -1,7 +1,7 @@
 #!Jinja2
 
 {% set ensemble_start = 1%}
-{% set ensemble_end   = 20 %}
+{% set ensemble_end   = 20%}
 [meta]
   title = CESM CYLC workflow for ensemble from cesm2smyle
 [cylc]
@@ -24,13 +24,17 @@
 
 [scheduling]
   # Change the run start and end dates here
-    initial cycle point = "2005-02-01"
-    final cycle point = "2005-02-01"
+    initial cycle point = "2020-08-01"
+    final cycle point = "2020-08-01"
 
+    # must start May 01, any year:
+    # initial cycle point constraints = "0501T00"
+    # must start Aug 01, any year:
+    initial cycle point constraints = "0801T00"
     # must start Feb 01, any year:
-    initial cycle point constraints = "0201T00"
+    # initial cycle point constraints = "0201T00"
     # must start Nov 01, any year:
-    #initial cycle point constraints = "1101T00"
+    # initial cycle point constraints = "1101T00"
 
   [[dependencies]]
   # Weekly Cycling on monday, new date will submit when st_archive is complete for each member
@@ -53,7 +57,7 @@ cd ${FCST_HOME}/bin/
 """
     [[[job]]]
       batch system = pbs
-      batch submit command template = qsubcasper -q casper -l walltime=01:00:00 -A NCGD0047 '%(job)s'
+      batch submit command template = qsubcasper -q casper -l walltime=01:00:00 -A CESM0021 '%(job)s'
       shell = /bin/bash
     [[[directives]]]
        -r = n
@@ -71,7 +75,7 @@ cd ${FCST_HOME}/bin/
 """
     [[[job]]]
       batch system = pbs
-      batch submit command template = qsub -q share -l walltime=01:00:00 -A NCGD0047 '%(job)s'
+      batch submit command template = qsub -q share -l walltime=01:00:00 -A CESM0021 '%(job)s'
       shell = /bin/bash
     [[[directives]]]
        -r = n
@@ -100,7 +104,7 @@ if [ ! -d "postprocess" ]; then
    create_postprocess_cylc -caseroot=`pwd`
 fi
 cd postprocess
-pp_config --set TIMESERIES_OUTPUT_ROOTDIR=/glade/campaign/cesm/development/espwg/SMYLE/archive/b.e21.BSMYLE.f09_g17.${CYLC_TASK_CYCLE_DATE}.$(printf "%03d" ${CYLC_TASK_PARAM_mbr})
+pp_config --set TIMESERIES_OUTPUT_ROOTDIR=/glade/campaign/cesm/development/espwg/SMYLE-realtime/timeseries/b.e21.BSMYLE.f09_g17.${CYLC_TASK_CYCLE_DATE}.$(printf "%03d" ${CYLC_TASK_PARAM_mbr})
 today=`date '+%Y%m%d-%H%M%S'`
 mpirun ./timeseries > ./logs/timeseries.log.${today} 2>&1
 """
@@ -110,7 +114,7 @@ mpirun ./timeseries > ./logs/timeseries.log.${today} 2>&1
       SMYLE_ROOT = "/glade/p/cesm/espwg/CESM2-SMYLE"
     [[[job]]]
       batch system = pbs
-      batch submit command template = qsubcasper -q casper -l walltime=02:00:00 -A NCGD0047 '%(job)s'
+      batch submit command template = qsubcasper -q casper -l walltime=03:00:00 -A CESM0021 '%(job)s'
       shell = /bin/bash
     [[[directives]]]
        -r = n
@@ -133,7 +137,7 @@ cd ${SMYLE_ROOT}/cases/b.e21.BSMYLE.f09_g17.${CYLC_TASK_CYCLE_DATE}.$(printf "%0
       # Retry each run up to 2 times with different fv_nsplit values
       # execution retry delays = 2*PT6S
       batch system = pbs
-      batch submit command template = qsub -q economy -l walltime=12:00:00 -A NCGD0047 '%(job)s'
+      batch submit command template = qsub -q economy -l walltime=12:00:00 -A CESM0021 '%(job)s'
     [[[directives]]]
        -r = n
        -j = oe
