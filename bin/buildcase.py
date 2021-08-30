@@ -194,7 +194,7 @@ def _main_func(description):
 
     overwrite = True
 
-    sdrestdir = os.path.join(os.getenv("SCRATCH"),"CESM2","Ocean","rest","{}".format(date))
+    sdrestdir = os.path.join(os.getenv("SCRATCH"),"cesm2cam6","Ocean","rest","{}".format(date))
 
     user_mods_dir = os.path.join(s2sfcstroot,"user_mods","cesm2cam6")
 

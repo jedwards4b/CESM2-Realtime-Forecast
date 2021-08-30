@@ -14,7 +14,7 @@ sys.path.append(_LIBDIR)
 _LIBDIR = os.path.join(cesmroot,"cime","scripts","lib")
 sys.path.append(_LIBDIR)
 
-import glob
+import glob, shutil
 from datetime import datetime, timedelta
 from subprocess import Popen, PIPE
 from standard_script_setup import *
@@ -45,6 +45,9 @@ def parse_command_line(args, description):
     parser.add_argument("--sendtoftp",help="Send output to ftp server", default=False,
                         const=True, nargs='?', type=str2bool)
 
+    parser.add_argument("--sendtoglobus",help="Send output to globus datashare directory", default=True,
+                        const=True, nargs='?', type=str2bool)
+
     args = CIME.utils.parse_args_and_handle_standard_logging_options(args, parser)
     cdate = os.environ.get("CYLC_TASK_CYCLE_POINT")
 
@@ -65,7 +68,7 @@ def parse_command_line(args, description):
     else:
         date = datetime.today() - timedelta(days=1)
 
-    return date.strftime("%Y-%m-%d"), member, args.sendtoftp
+    return date.strftime("%Y-%m-%d"), member, args.sendtoftp, args.sendtoglobus
 
 def run_ncl_scripts():
     scripts = ["pp_priority2.ncl","pp_priority1.ncl","pp_priority3.ncl","pp_h1vertical.ncl"]
@@ -93,22 +96,29 @@ def run_ncl_scripts():
     return outfiles
 
 
-def send_data_to_campaignstore(source_path):
-    dest_path = '/gpfs/csfs1/cesm/development/cross-wg/S2S/'
+def send_data_to_campaignstore(source_path, filelist):
+#    dest_path = '/gpfs/csfs1/cesm/development/cross-wg/S2S/'
+    # just run on casper and cp files
+    dest_path = '/glade/p/datashare/ssfcst/cesm2cam6v2/'
+    
+    for _file in filelist:
+        shutil.copy2(_file, dest_path)
 
-    client = initialize_client()
-    globus_transfer_data = get_globus_transfer_data_struct(client)
-    tc = get_transfer_client(client, globus_transfer_data)
-    dest_endpoint = get_endpoint_id(tc,"NCAR Campaign Storage")
-    src_endpoint = get_endpoint_id(tc,"NCAR GLADE")
-    transfer_data = get_globus_transfer_object(tc, src_endpoint, dest_endpoint, 'S2S data transfer')
-    transfer_data = add_to_transfer_request(transfer_data, source_path, dest_path)
-    activate_endpoint(tc, src_endpoint)
-    activate_endpoint(tc, dest_endpoint)
-    complete_transfer_request(tc, transfer_data)
+
+#    client = initialize_client()
+#    globus_transfer_data = get_globus_transfer_data_struct(client)
+#    tc = get_transfer_client(client, globus_transfer_data)
+#    dest_endpoint = get_endpoint_id(tc,"NCAR Campaign Storage")
+#    src_endpoint = get_endpoint_id(tc,"NCAR GLADE")
+#    transfer_data = get_globus_transfer_object(tc, src_endpoint, dest_endpoint, 'S2S data transfer')
+#    for _file in filelist:
+#        transfer_data = add_to_transfer_request(transfer_data, os.path.join(source_path,_file), dest_path)
+#    activate_endpoint(tc, src_endpoint)
+#    activate_endpoint(tc, dest_endpoint)
+#    complete_transfer_request(tc, transfer_data)
 
 def _main_func(description):
-    date, member, sendtoftp = parse_command_line(sys.argv, description)
+    date, member, sendtoftp, sendtoglobus = parse_command_line(sys.argv, description)
 
     basemonth = date[5:7]
     baseroot = os.getenv("WORK")
@@ -140,6 +150,14 @@ def _main_func(description):
                 rsynccmd = "rsync -azvh --rsync-path=\"mkdir -p /ftp/pub/jedwards/"+basecasename+"/realtime && rsync\" {} {}/realtime/{}".format(_file, ftproot,os.path.basename(_file))
                 print("copying file {} to ftp server location {}".format(_file,ftproot+"/realtime/"))
                 run_cmd(rsynccmd,verbose=True)
+        if sendtoglobus:
+            for _file in outfiles:
+                if "p1" in _file:
+                    newfile = _file.replace("scratch","p/datashare")
+                    if not os.path.isdir(os.path.dirname(newfile)):
+                        os.makedirs(os.path.dirname(newfile))
+                    shutil.copy2(_file, _file.replace("scratch","p/datashare"))
+
 
 
         # Clean up
@@ -179,7 +197,7 @@ def _main_func(description):
             newfname = os.path.basename(_file).replace("cesm2cam6.","cesm2cam6v2.")
             run_cmd("nccopy -4 -d 1 {}  {}".format(_file, os.path.join(outdir,newfname)), verbose=True, from_dir=ocnhistpath)
 
-        #    send_data_to_campaignstore(dout_s_root+os.sep )
+
         outdir = "/glade/scratch/ssfcst/cesm2cam6v2/6hourly"
 
         for _file in glob.iglob(os.path.join(atmhistpath,"*cam.h3*.nc")):
