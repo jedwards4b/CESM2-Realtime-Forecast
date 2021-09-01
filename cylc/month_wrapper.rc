@@ -11,8 +11,8 @@
 {% set FCST_HOME = "$HOME/cesm2cam6/CESM2-Realtime-Forecast" %}
 {% set ensemble_start = 0 %}
 {% set ensemble_end   = 20 %}
-{% set day_start      = '20' %}
-{% set day_end        = '25' %}
+{% set day_start      = '28' %}
+{% set day_end        = '31' %}
 {% set sendtoftp      = true %}
 {% set account = "CESM0020" %}
 {% set run_queue = "premium" %}
