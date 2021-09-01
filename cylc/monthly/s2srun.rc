@@ -91,11 +91,8 @@ cd ${WORK}/{{ model }}.${CYLC_TASK_CYCLE_MONTH}.$(printf "%02d" ${CYLC_TASK_PARA
       batch system = pbs
       batch submit command template = qsub -q casper@casper-pbs.hpc.ucar.edu -l walltime=01:00:00 -A {{ account }} '%(job)s'
     [[[directives]]]
-       -r = n
        -j = oe
-       -V =
-       -S = /bin/bash
-       -l = select=1:ncpus=36:ompthreads=36
+       -l = select=1:ncpus=1:ompthreads=1
 
     [[dispose]]
     # Globus process, must run on host
