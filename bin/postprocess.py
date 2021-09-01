@@ -43,6 +43,8 @@ def parse_command_line(args, description):
 
     parser.add_argument("--sendtoftp",help="Send output to ftp server", default=False, const=True, nargs='?', type=str2bool)
 
+    parser.add_argument("--sendtoglobus",help="Send output to globus datashare", default=True, const=True, nargs='?', type=str2bool)
+
     args = CIME.utils.parse_args_and_handle_standard_logging_options(args, parser)
     cdate = os.environ.get("CYLC_TASK_CYCLE_POINT")
 
@@ -64,7 +66,7 @@ def parse_command_line(args, description):
         date = datetime.date.today()
         date = date.replace(day=date.day-1)
 
-    return date.strftime("%Y-%m-%d"), member, args.sendtoftp
+    return date.strftime("%Y-%m-%d"), member, args.sendtoftp, args.sendtoglobus
 
 def run_ncl_scripts():
     scripts = ["pp_priority2.ncl","pp_priority1.ncl","pp_priority3.ncl","pp_h1vertical.ncl"]
@@ -84,7 +86,8 @@ def run_ncl_scripts():
             print ("ERROR in ncl stat is {}".format(stat))
             errored.append(p)
         else:
-            if '/p1/' in result or '/p2/' in result or '/p3/' in result:
+            #if '/p1/' in result or '/p2/' in result or '/p3/' in result:
+            if True:
                 for line in result.splitlines():
                     if "Completed file:" in line:
                         print ("{}".format(line))
@@ -108,7 +111,7 @@ def send_data_to_campaignstore(source_path):
     complete_transfer_request(tc, transfer_data)
 
 def _main_func(description):
-    date, member, sendtoftp = parse_command_line(sys.argv, description)
+    date, member, sendtoftp, sendtoglobus = parse_command_line(sys.argv, description)
     basecasename = "70Lwaccm6"
     basemonth = date[5:7]
     baseroot = os.getenv("WORK")
@@ -145,6 +148,21 @@ def _main_func(description):
                 rsynccmd = "rsync -azvh --rsync-path=\"mkdir -p /ftp/pub/jedwards/70Lwaccm6/realtime && rsync\" {} {}/realtime/{}".format(_file, ftproot,os.path.basename(_file))
                 print("copying file {} to ftp server location {}".format(_file,ftproot+"/realtime/"))
                 run_cmd(rsynccmd,verbose=True)
+        if sendtoglobus:
+            for _file in outfiles:
+                fname = os.path.basename(_file)
+                if "p1" in _file or \
+                   "OMEGA_7" in fname or \
+                   "U_7" in fname or \
+                   "V_7" in fname or \
+                   "T_7" in fname or \
+                   "Z3_7" in fname or \
+                   "RELHUM_7" in fname:
+                    newfile = _file.replace("scratch","p/datashare")
+                    if not os.path.isdir(os.path.dirname(newfile)):
+                        os.makedirs(os.path.dirname(newfile))
+                    print("Copy {} to datashare".format(fname))
+                    shutil.copy2(_file, newfile)
 
 
         # Clean up
@@ -173,7 +191,8 @@ def _main_func(description):
         print("ICE PATH")
         print(outdir)
         print("Combining cice files into {} in {}".format(fnameout,icehistpath))
-
+        if not os.path.isdir(icehistpath):
+            os.makedirs(icehistpath)
         if glob.iglob(os.path.join(icehistpath,"*.cice.h.*.nc")):
             run_cmd("ncrcat -4 -L 1 *.cice.h.*.nc -O {}".format(os.path.join(outdir,fnameout)),from_dir=icehistpath,verbose=True)
             for _file in glob.iglob(os.path.join(icehistpath,"*ice.h.*.nc")):

@@ -74,18 +74,19 @@ cd ${WORK}/{{ model }}.${CYLC_TASK_CYCLE_MONTH}.$(printf "%02d" ${CYLC_TASK_PARA
       inherit = postprocess_family
     [[postprocess_family]]
       script = """
+  source /etc/profile.d/modules.sh
+  module purge
+  module use $HOME/modulefiles
+  module load intel python netcdf
   module load ncl nco {{ model }}
-  cd ${WORK}/{{ model }}.${CYLC_TASK_CYCLE_MONTH}.$(printf "%02d" ${CYLC_TASK_PARAM_member})
+  cd ${WORK}/{{ model }}.{{ MONTH }}.$(printf "%02d" ${CYLC_TASK_PARAM_member})
   ${FCST_HOME}/bin/postprocess.py --sendtoftp {{sendtoftp}} --member ${CYLC_TASK_PARAM_member}
 """
     [[[job]]]
       batch system = pbs
-      batch submit command template = qsub -q economy -l walltime=01:00:00 -A {{account}} '%(job)s'
+      batch submit command template = qsub -q casper@casper-pbs.hpc.ucar.edu -l walltime=01:00:00 -A {{account}} '%(job)s'
     [[[directives]]]
-       -r = n
        -j = oe
-       -V =
-       -S = /bin/bash
        -l = select=1:ncpus=36:ompthreads=36
 
     [[dispose]]

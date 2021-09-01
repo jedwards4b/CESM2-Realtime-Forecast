@@ -19,7 +19,7 @@ P0mb=0.01*f[0]->P0
 waccm = isStrSubset(getenv("DOUT_S_ROOT"),"70Lwaccm6")
 if (waccm) then
   lev_p = todouble((/0.0001,0.001,0.01,0.1,0.5,1,2,3,5,10,20,30,50,70,100,200,300,500,700,850,925,1000/))
-  varStrings = (/ "U","V","T","OMEGA","Z3","Q","UQ","VQ","O3","RELHUM" /)
+  varStrings = (/ "U","V","T","OMEGA","Z3","Q","UQ","VQ","O3","RELHUM","QRS_TOT","QRL_TOT" /)
 else
   lev_p = todouble((/5,10,20,30,50,70,100,200,300,500,700,850,925,1000/))
   varStrings = (/ "U","V","T","OMEGA","Z3","Q","UQ","VQ","RELHUM" /)
@@ -55,6 +55,7 @@ lev_p@positive  = "down"
         filedimdef(ncdf,"time",-1,True)
 
         ncdf->$varStrings(i)$=vnew
+	print("Completed file: "+fout)
   end do
 end
 
