@@ -84,7 +84,15 @@ cd ${WORK}/{{ model }}.${CYLC_TASK_CYCLE_MONTH}.$(printf "%02d" ${CYLC_TASK_PARA
   module load nco 
   module load {{model}}
   cd ${WORK}/{{ model }}.{{ MONTH }}.$(printf "%02d" ${CYLC_TASK_PARAM_member})
-  ${FCST_HOME}/bin/postprocess.py --sendtoftp {{sendtoftp}} --sendtoglobus --member ${CYLC_TASK_PARAM_member}
+  CLA="--member ${CYLC_TASK_PARAM_member} "
+  if [ "{{sendtoftp}}" == "true" ] ; then
+    CLA="$CLA --sendtoftp "
+  fi
+  if [ "{{sendtoglobus}}" == "true" ]; then
+    CLA="$CLA --sendtoglobus "
+  fi  
+  echo "CLA is $CLA"
+  ${FCST_HOME}/bin/postprocess.py $CLA
 
 """
     [[[job]]]

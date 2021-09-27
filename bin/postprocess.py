@@ -193,7 +193,7 @@ def _main_func(description):
         print("Copying ocn daily files into {}".format(fnameout))
         outdir = "/glade/scratch/ssfcst/cesm2cam6v2/ocn"
 
-        for _file in glob.iglob(os.path.join(ocnhistpath,"*pop.h.[no]*.nc")):
+        for _file in glob.iglob(os.path.join(ocnhistpath,"*pop.h.*.nc")):
             newfname = os.path.basename(_file).replace("cesm2cam6.","cesm2cam6v2.")
             run_cmd("nccopy -4 -d 1 {}  {}".format(_file, os.path.join(outdir,newfname)), verbose=True, from_dir=ocnhistpath)
 

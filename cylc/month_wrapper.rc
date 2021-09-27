@@ -2,7 +2,7 @@
 # This will run the hind cast for each month from intial to final cycle point
 # one year at a time, all months for a given year run simultaniously
 
-{% set rnames = ["AUG"] %}
+{% set rnames = ["SEP"] %}
 {% set fyear = "2021" %}
 {% set lyear = "2021" %}
 # this sets the day of the week to run: 0=SUN, 1=MON, 2=TUE, ...
@@ -11,9 +11,10 @@
 {% set FCST_HOME = "$HOME/cesm2cam6/CESM2-Realtime-Forecast" %}
 {% set ensemble_start = 0 %}
 {% set ensemble_end   = 20 %}
-{% set day_start      = '28' %}
-{% set day_end        = '31' %}
+{% set day_start      = '18' %}
+{% set day_end        = '23' %}
 {% set sendtoftp      = true %}
+{% set sendtoglobus      = true %}
 {% set account = "CESM0020" %}
 {% set run_queue = "premium" %}
 
@@ -48,7 +49,7 @@
    [[month_mnum{{"{0:02d}".format(loop.index)}}]]
    script = """
       cylc register $CYLC_SUITE_NAME/{{month}} {{FCST_HOME}}/cylc/monthly
-      cylc run --no-detach --set=YEAR=$CYLC_TASK_CYCLE_POINT --set=MONTH={{"{0:02d}".format(loop.index)}} --set=model={{ model }} --set=ensemble_start={{ ensemble_start }} --set=ensemble_end={{ ensemble_end }} --set=day_start={{day_start}} --set=day_end={{day_end}} --set=sendtoftp={{ sendtoftp }} --set=account={{account}} --set=run_queue={{run_queue}} --set=dayofweek={{dayofweek}} $CYLC_SUITE_NAME/{{month}}
+      cylc run --no-detach --set=YEAR=$CYLC_TASK_CYCLE_POINT --set=MONTH={{"{0:02d}".format(loop.index)}} --set=model={{ model }} --set=ensemble_start={{ ensemble_start }} --set=ensemble_end={{ ensemble_end }} --set=day_start={{day_start}} --set=day_end={{day_end}} --set=sendtoftp={{ sendtoftp }} --set=sendtoglobus={{ sendtoglobus }} --set=account={{account}} --set=run_queue={{run_queue}} --set=dayofweek={{dayofweek}} $CYLC_SUITE_NAME/{{month}}
 """
   {% endif %}
 {% endfor %}
