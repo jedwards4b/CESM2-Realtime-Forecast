@@ -115,8 +115,8 @@ def build_base_case(date, baseroot, basemonth,res, compset, overwrite,
         if not os.path.isdir(caseroot):
             case.create(os.path.basename(caseroot), cesmroot, compset, res,
                         run_unsupported=True, answer="r",walltime="04:00:00",
-                        user_mods_dir=user_mods_dir, pecount=pecount, project="NCGD0042")
-            # make sure that changing the casename will not affect these variables
+                        user_mods_dir=user_mods_dir, pecount=pecount, output_root=os.getenv("SCRATCH"))
+            # make sure that changing the casename will not affect these variables        
             case.set_value("EXEROOT",case.get_value("EXEROOT", resolved=True))
             case.set_value("RUNDIR",case.get_value("RUNDIR",resolved=True)+".00")
 
