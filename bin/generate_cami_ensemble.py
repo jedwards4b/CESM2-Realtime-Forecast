@@ -78,7 +78,6 @@ def create_cam_ic_perturbed(original, ensemble_start, ensemble_end, date, baseru
     local_path = "/glade/campaign/cesm/development/cross-wg/S2S/CESM2/CAMI/RP"
     perturb_files = []
     for i in range(ensemble_start+1,ensemble_end+1, 2):
-        print "HERE rvals[{}] = {}".format(i//2,rvals[i//2])
         perturb_file = os.path.join("{}".format(month),
                                     "CESM2.cam.i.M{}.diff.{}.nc".format(month,rvals[i//2]))
         dirname = os.path.dirname(os.path.join(local_path,perturb_file))
