@@ -164,7 +164,9 @@ def _main_func(description):
         #Concatinate cice history into a single file
 
         fnameout = basecasename+"v2."+basemonth+"."+date+".{0:02d}".format(curmem)+".cice.hd.nc"
-        outdir = "/glade/scratch/ssfcst/cesm2cam6v2NS/ice"
+        scratch = os.getenv("SCRATCH")
+        scratch = scratch.replace("cesm2cam6", "cesm2cam6v2")
+        outdir = os.path.join(scratch, "ice")
 
         print("ICE PATH")
         print(outdir)
@@ -177,14 +179,14 @@ def _main_func(description):
         fnameout = fnameout.replace("cice.hd.nc","pop.h.nday1.nc")
 
         print("Copying ocn daily files into {}".format(fnameout))
-        outdir = "/glade/scratch/ssfcst/cesm2cam6v2NS/ocn"
+        outdir = os.path.join(scratch,"ocn")
 
         for _file in glob.iglob(os.path.join(ocnhistpath,"*pop.h.[no]*.nc")):
             newfname = os.path.basename(_file).replace("cesm2cam6NS.","cesm2cam6v2NS.")
             run_cmd("nccopy -4 -d 1 {}  {}".format(_file, os.path.join(outdir,newfname)), verbose=True, from_dir=ocnhistpath)
 
         #    send_data_to_campaignstore(dout_s_root+os.sep )
-        outdir = "/glade/scratch/ssfcst/cesm2cam6v2NS/6hourly"
+        outdir = os.path.join(scratch,"6hourly")
 
         for _file in glob.iglob(os.path.join(atmhistpath,"*cam.h3*.nc")):
             print("Copying {} file into {}".format(_file,outdir))
@@ -192,7 +194,7 @@ def _main_func(description):
 
             run_cmd("nccopy -4 -d 1 -VPS,PSL,UBOT,VBOT,Z200,Z500,U10,lat,lon,date,time_bnds,time,gw,ndcur,nscur,nsteph {}  {}".format(_file, os.path.join(outdir,newfname)), verbose=True, from_dir=atmhistpath)
 
-        outdir = "/glade/scratch/ssfcst/cesm2cam6v2NS/daily"
+        outdir = os.path.join(scratch,"daily")
 
         for _file in glob.iglob(os.path.join(atmhistpath,"*cam.h2*.nc")):
             print("Copying {} file into {}".format(_file, outdir))
@@ -202,7 +204,7 @@ def _main_func(description):
 #            print("Copying {} file into {}".format(_file, outdir))
 #            run_cmd("nccopy -4 -d 1 -VU10,TGCLDIWP,TGCLDLWP,lev,ilev,lat,lon,date,time_bnds,time,gw,ndcur,nscur,nsteph {} {}".format(_file, os.path.join(outdir,os.path.basename(_file))), verbose=True, from_dir=atmhistpath)
 
-        outdir = "/glade/scratch/ssfcst/cesm2cam6v2NS/lnd/"
+        outdir = os.path.join(scratch,"lnd")
 
         print("LND OUTDIR:")
         print(outdir)
