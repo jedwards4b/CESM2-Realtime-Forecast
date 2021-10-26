@@ -50,7 +50,7 @@ def parse_command_line(args, description):
 #pylint: disable=unused-argument
 def get_rvals(date, ensemble_start, ensemble_end):
     random.seed(int(date[0:4])+int(date[5:7])+int(date[8:10]))
-    rvals = random.sample(range(1001),k=ensemble_end//2)
+    rvals = random.sample(range(1001),k=ensemble_end//2+1)
     print("Rvals are {}".format(rvals))
     rvals_file = os.path.join(os.getenv("WORK"),"camic_"+date+".txt")
     with open(rvals_file,"w") as fd:

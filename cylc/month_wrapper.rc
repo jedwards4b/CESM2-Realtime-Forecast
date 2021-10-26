@@ -2,7 +2,7 @@
 # This will run the hind cast for each month from intial to final cycle point
 # one year at a time, all months for a given year run simultaniously
 
-{% set rnames = ["SEP"] %}
+{% set rnames = ["OCT"] %}
 {% set fyear = "2021" %}
 {% set lyear = "2021" %}
 # this sets the day of the week to run: 0=SUN, 1=MON, 2=TUE, ...
@@ -11,12 +11,12 @@
 {% set FCST_HOME = "$HOME/cesm2cam6/CESM2-Realtime-Forecast" %}
 {% set ensemble_start = 0 %}
 {% set ensemble_end   = 20 %}
-{% set day_start      = '18' %}
-{% set day_end        = '23' %}
+{% set day_start      = '17' %}
+{% set day_end        = '21' %}
 {% set sendtoftp      = true %}
 {% set sendtoglobus      = true %}
-{% set account = "CESM0020" %}
-{% set run_queue = "premium" %}
+{% set account = "NCGD0050" %}
+{% set run_queue = "regular" %}
 
 # don't change anything below here
 
