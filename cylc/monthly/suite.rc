@@ -42,7 +42,7 @@ cd ${FCST_HOME}/bin/
     [[[directives]]]
        -r = n
        -j = oe
-       -v = FCST_HOME=/glade/u/home/ssfcst/{{ model }}/CESM2-Realtime-Forcast
+       -v = FCST_HOME={{FCST_HOME}}
        -S = /bin/bash
        -l = select=1:ncpus=18:ompthreads=18
 
@@ -76,7 +76,7 @@ cd ${WORK}/{{ model }}.${CYLC_TASK_CYCLE_MONTH}.$(printf "%02d" ${CYLC_TASK_PARA
       script = """
   source /etc/profile.d/modules.sh
   module purge
-  module use $HOME/modulefiles
+  module use {{FCST_HOME}}/modulefiles
   module load intel
   module load python 
   module load netcdf
