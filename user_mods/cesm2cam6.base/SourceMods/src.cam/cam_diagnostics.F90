@@ -1339,6 +1339,8 @@ contains
     real(r8) :: ftem(pcols,pver) ! temporary workspace
     real(r8) :: ftem1(pcols,pver) ! another temporary workspace
     real(r8) :: ftem2(pcols,pver) ! another temporary workspace
+    real(r8) :: ftem4(pcols,pver) ! another temporary workspace
+    real(r8) :: ftem5(pcols,pver) ! another temporary workspace
     real(r8) :: z3(pcols,pver)   ! geo-potential height
     real(r8) :: p_surf(pcols)    ! data interpolated to a pressure surface
     real(r8) :: p_surf_q1(pcols)    ! data interpolated to a pressure surface

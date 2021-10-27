@@ -49,6 +49,7 @@ cd ${FCST_HOME}/bin/
   [[build_model]]
     script = """
 module load {{model}}
+export PROJECT={{account}}
 cd ${FCST_HOME}/bin/
 ./buildcase.py --ensemble-start {{ensemble_start}} --ensemble-end {{ensemble_end}}
 """
