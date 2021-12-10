@@ -204,7 +204,7 @@ def _main_func(description):
             print("Copying {} file into {}".format(_file,outdir))
             newfname = os.path.basename(_file).replace("cesm2cam6.","cesm2cam6v2.")
 
-            run_cmd("nccopy -4 -d 1 -VPS,PSL,UBOT,VBOT,Z200,Z500,U10,lat,lon,date,time_bnds,time,gw,ndcur,nscur,nsteph {}  {}".format(_file, os.path.join(outdir,newfname)), verbose=True, from_dir=atmhistpath)
+            run_cmd("nccopy -4 -d 1 -VU850,V850,TMQ,PRECT,uIVT,vIVT,IVT,PS,PSL,UBOT,VBOT,Z200,Z500,U10,lat,lon,date,time_bnds,time,gw,ndcur,nscur,nsteph {}  {}".format(_file, os.path.join(outdir,newfname)), verbose=True, from_dir=atmhistpath)
 
         outdir = "/glade/scratch/ssfcst/cesm2cam6v2/daily"
 

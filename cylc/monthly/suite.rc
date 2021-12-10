@@ -86,10 +86,10 @@ cd ${WORK}/{{ model }}.${CYLC_TASK_CYCLE_MONTH}.$(printf "%02d" ${CYLC_TASK_PARA
   module load {{model}}
   cd ${WORK}/{{ model }}.{{ MONTH }}.$(printf "%02d" ${CYLC_TASK_PARAM_member})
   CLA="--member ${CYLC_TASK_PARAM_member} "
-  if [ "{{sendtoftp}}" == "true" ] ; then
+  if [ "{{sendtoftp}}" == "True" ] ; then
     CLA="$CLA --sendtoftp "
   fi
-  if [ "{{sendtoglobus}}" == "true" ]; then
+  if [ "{{sendtoglobus}}" == "True" ]; then
     CLA="$CLA --sendtoglobus "
   fi  
   echo "CLA is $CLA"
