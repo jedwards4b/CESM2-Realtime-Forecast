@@ -7,7 +7,7 @@ if cesmroot is None:
     raise SystemExit("ERROR: CESM_ROOT must be defined in environment")
 
 # This is needed for globus_sdk
-#_LIBDIR=os.path.join(os.environ.get("HOME"),".local","lib","python3.6","site-packages")
+#_LIBDIR=os.path.join(os.environ.get("HOME"),".local","lib","python.6","site-packages")
 #sys.path.append(_LIBDIR)
 _LIBDIR = os.path.join(cesmroot,"cime","scripts","Tools")
 sys.path.append(_LIBDIR)
@@ -50,7 +50,7 @@ def parse_command_line(args, description):
 #pylint: disable=unused-argument
 def get_rvals(date, ensemble_start, ensemble_end):
     random.seed(int(date[0:4])+int(date[5:7])+int(date[8:10]))
-    rvals = random.sample(range(1001),k=ensemble_end//2)
+    rvals = random.sample(range(1001),k=max(1,ensemble_end//2))
     print("Rvals are {}".format(rvals))
     rvals_file = os.path.join(os.getenv("WORK"),"camic_"+date+".txt")
     with open(rvals_file,"w") as fd:
@@ -88,6 +88,7 @@ def create_cam_ic_perturbed(original, ensemble_start, ensemble_end, date, baseru
         perturb_files.append(perturb_file)
 
     for i in range(ensemble_start+1,ensemble_end+1, 2):
+        print("i is {} i//2 -1={}".format(i, i//2-1))
         perturb_file = os.path.join(local_path,perturb_files[i//2-1])
         outfile1 = os.path.join(baserundir[:-2]+"{:02d}".format(i), outroot+date+"-tmp.nc")
         outfile2 = os.path.join(baserundir[:-2]+"{:02d}".format(i+1), outroot+date+"-tmp.nc")
