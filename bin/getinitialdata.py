@@ -47,7 +47,7 @@ def parse_command_line(args, description):
 def get_ocn_src_path(src_root, date, count=0):
     oyr = int(date[:4]) - 1749
     odate = "{:04d}".format(oyr)+date[4:]
-    src_dir_path = os.path.join(src_root,"cesm","development","cross-wg","S2S","CESM2","OCEANIC")
+    src_dir_path = os.path.join(src_root,"cesm","development","cross-wg","S2S","CESM2","CLIMOCEANIC")
     src_path = os.path.join(src_dir_path, "{}-00000".format(odate))
     if os.path.isdir(src_path):
         return(src_path)
@@ -62,11 +62,11 @@ def get_ocn_src_path(src_root, date, count=0):
 def get_data_from_campaignstore(date):
 
     source_root_local = "/glade/campaign"
-    source_path = 'cesm/development/cross-wg/S2S/CESM2/OCEANIC/{date}-00000/'.format(date=date)
+    source_path = 'cesm/development/cross-wg/S2S/CESM2/CLIMOCEANIC/{date}-00000/'.format(date=date)
 
     source_path = get_ocn_src_path(source_root_local, date)
 
-    dest_path = os.path.join(os.getenv("SCRATCH"),"cesm2cam6","Ocean","rest","{}".format(date))
+    dest_path = os.path.join(os.getenv("SCRATCH"),"cesm2cam6climoOCNclimoATM","Ocean","rest","{}".format(date))
 
 
     if os.path.exists(os.path.join(dest_path,"rpointer.ocn.restart")):
@@ -99,8 +99,8 @@ lnd_source_path)))
         os.rename(os.path.join(dest_path,lndfile), os.path.join(dest_path,newfile))
 
 
-    cam_source_path = "/glade/campaign/cesm/development/cross-wg/S2S/CESM2/CAMI/CFSv2/"
-    cami = os.path.join(cam_source_path,"CESM2_NCEP_0.9x1.25_L32.cam2.i.{}-00000.nc".format(date))
+    cam_source_path = "/glade/campaign/cesm/development/cross-wg/S2S/CESM2/CAMI/CLIMOATM/"
+    cami = os.path.join(cam_source_path,"CESM2_NCEP_0.9x1.25_L32.cam2.i.{}-00000.clim.nc".format(date))
     camo = os.path.join(dest_path, "b.e21.f09_g17.cam.i.{}-00000.nc".format(date))
     if os.path.isfile(camo):
         os.remove(camo)
