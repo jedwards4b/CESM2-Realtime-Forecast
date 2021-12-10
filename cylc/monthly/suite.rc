@@ -24,7 +24,6 @@
     [[[R/W-{{dayofweek}}/P1W]]]
       graph = """
         st_archive<member>[-P1W] => get_data => build_model => run_family:finish-all
-        postprocess_family:finish-all => dispose
         run<member> => st_archive<member> => postprocess<member>
              """
 [runtime]
@@ -80,7 +79,7 @@ cd ${WORK}/{{ model }}.${CYLC_TASK_CYCLE_MONTH}.$(printf "%02d" ${CYLC_TASK_PARA
 """
     [[[job]]]
       batch system = pbs
-      batch submit command template = qsub -q economy -l walltime=01:00:00 -A {{ account }} '%(job)s'
+      batch submit command template = qsub -q regular -l walltime=01:00:00 -A {{ account }} '%(job)s'
     [[[directives]]]
        -r = n
        -j = oe
