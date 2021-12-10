@@ -22,7 +22,7 @@
 # o 2020 July, B. Kauffman, first version
 #=========================================================================================
 
-ROOTDIR="/glade/scratch/ssfcst/cesm2cam6v2"    # ? should this be an arg?
+ROOTDIR="/glade/scratch/ssfcst/cesm2cam6climoATMv2"    # ? should this be an arg?
 ROOTDIR="$(pwd)"
 
 #-------------------------------------------------------------------------------
