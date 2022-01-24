@@ -54,7 +54,7 @@ def send_data_to_campaignstore(timeseriesdir, source_file_list):
     globus_transfer_data = get_globus_transfer_data_struct(client, token)
     tc = get_transfer_client(client, globus_transfer_data)
     dest_endpoint = get_endpoint_id(tc,"NCAR Campaign Storage")
-    src_endpoint = get_endpoint_id(tc,"XSEDE Comet")
+    src_endpoint = get_endpoint_id(tc,"XSEDE Expanse")
     transfer_data = get_globus_transfer_object(tc, src_endpoint, dest_endpoint, 'Smyle data transfer')
 
     for _file in source_file_list:
