@@ -204,6 +204,7 @@ contains
     real(r8) :: sabg_col(bounds%begc:bounds%endc)                          ! absorbed ground solar for column (W/m^2)
     real(r8) :: sabg_lyr_col(bounds%begc:bounds%endc,-nlevsno+1:1)         ! absorbed ground solar in layer for column (W/m^2)
     real(r8) :: sabg_nir                                                   ! NIR that is absorbed (W/m^2)
+!    integer  :: jconvect(bounds%begc:bounds%endc)                          ! Lowest level where convection occurs
     integer  :: jconvectbot(bounds%begc:bounds%endc)                       ! Hightest level where bottom-originating convection occurs
     logical  :: bottomconvect(bounds%begc:bounds%endc)                     ! Convection originating in bottom layer of lake triggers special convection loop
     real(r8) :: fangkm                                                     ! (m^2/s) extra diffusivity based on Fang & Stefan 1996, citing Ellis, 1991
@@ -262,6 +263,8 @@ contains
          errsoi          =>   energyflux_inst%errsoi_col           , & ! Output: [real(r8) (:)   ]  soil/lake energy conservation error (W/m**2)
          jconvect        =>   lakestate_inst%jconvect_col            & ! Output: (real(r8) (:)   ]  lowest lake level where convection occurs (-)
          )
+!         errsoi          =>   energyflux_inst%errsoi_col             & ! Output: [real(r8) (:)   ]  soil/lake energy conservation error (W/m**2)
+!         )
 
     ! 1!) Initialization
     ! Determine step size
@@ -779,6 +782,7 @@ contains
                 iceav(c) = iceav(c) + lake_icefrac(c,i)*dz_lake(c,i)
                 nav(c) = nav(c) + dz_lake(c,i)
                 if (use_lch4) then
+!                   jconvect(c) = j+1
                    jconvect(c) = real(j+1, r8)
                 end if
              end if
@@ -951,7 +955,8 @@ contains
           do fc = 1, num_lakec
              c = filter_lakec(fc)
 
-             if (j > nint(jconvect(c)) .and. j < jconvectbot(c)) then  ! Assume resistance is zero for levels that convect
+!             if (j > jconvect(c) .and. j < jconvectbot(c)) then  ! Assume resistance is zero for levels that convect
+            if (j > nint(jconvect(c)) .and. j < jconvectbot(c)) then  ! Assume resistance is zero for levels that convect
                 lakeresist(c) = lakeresist(c) + dz(c,j)/kme(c,j) ! dz/eddy or molecular diffusivity
              end if
 

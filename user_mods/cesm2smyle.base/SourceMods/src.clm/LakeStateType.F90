@@ -38,7 +38,6 @@ module LakeStateType
      real(r8), pointer :: lakeresist_col    (:)   ! col [s/m] (Needed for calc. of grnd_ch4_cond)
      real(r8), pointer :: ram1_lake_patch   (:)   ! patch aerodynamical resistance (s/m)
      real(r8), pointer :: jconvect_col      (:)   ! Lowest level where convection occurs
-
    contains
 
      procedure, public  :: Init         

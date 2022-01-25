@@ -1,61 +1,68 @@
- ! Users should add all user specific namelist changes below in the form of 
-! namelist_var = new_namelist_value 
-
-!!      f1,  f2, f3, f4,  f5,  f6,  f7,  f8,  f9
-!!      h0,  h1, h2, h3,  h4,  h5,  h6,  h7,  h8
-nhtfrq = 0, -24, -6, -3, -24,   1, -24,-120,-240 
-mfilt  = 1,   5, 20, 40,   5, 240, 365,  73, 365 
+nhtfrq = 0, -24, -6, -3, -24,   1, -24,-120,-240
+mfilt  = 1,   5, 20, 40,   5, 240, 365,  73, 365
 ndens  = 2,   2,  2,  2,   2,   2,   1,   1,   1
 
-!! monthly (h0)
-fincl1 = 
-	'ADRAIN','ADSNOW','ANRAIN','ANSNOW','AQRAIN','AQSNOW','AREI','AREL','AWNC','AWNI','CCN3','CLDICE','CLDLIQ',
-	'CLOUD','CME','CO2','CO2_FFF','CO2_LND','CO2_OCN','CONCLD','DCQ','DTCOND','DTCORE','DTV','EVAPPREC','EVAPQZM',
-	'EVAPTZM','FICE','FREQI','FREQL','FREQR','FREQS','H2O','ICIMR','ICWMR','IWC','MASS','NUMICE','NUMLIQ','NUMRAI',
-	'NUMSNO','OMEGA','OMEGAT','PDELDRY','PTEQ','PTTEND','Q','QRAIN','QRL','QRS','QSNOW','QT','RAINQM','REFF_AERO',
-	'RELHUM','RELVAR','SNOWQM','STEND_CLUBB','T','TAQ','TOT_CLD_VISTAU','TTEND_TOT','TTGWORO','U','UTEND_CLUBB',
-	'UTGWORO','UU','V','VD01','VQ','VT','VTEND_CLUBB','VU','VV','WSUB','Z3','ZM_CLUBB','ZMDQ','ZMDT','ZMMTT','ZMMU',
-	'ACTREL','AEROD_v','AODABSdn','AODBCdn','AODdnDUST1','AODdnDUST2','AODdnDUST3','AODdnMODE1','AODdnMODE2','AODdnMODE3',
-	'AODDUST','AODDUST1','AODDUST2','AODDUST3','AODNIRstdn','AODPOMdn','AODSO4dn','AODSOAdn','AODSSdn','AODUVdn','AODUVstdn',
-	'AODVIS','AODVISdn','AODVISstdn','AREA','bc_a1_SRF','bc_a4_SRF','BURDENBCdn','BURDENDUSTdn','BURDENPOMdn','BURDENSEASALTdn',
-	'BURDENSO4dn','BURDENSOAdn','CAPE','CDNUMC','CLDHGH','CLDLOW','CLDMED','CLDTOT','dst_a1_SRF','dst_a2_SRF','dst_a3_SRF',
-	'FCTL','FLDS','FLDSC','FLNR','FLNS','FLNSC','FLNT','FLNTC','FLUT','FLUTC','FREQZM','FSDS','FSDSC','FSNR','FSNS','FSNSC',
-	'FSNT','FSNTC','FSNTOA','FSNTOAC','FSUTOA','ICEFRAC','LANDFRAC','LHFLX','LWCF','MSKtem','ncl_a1_SRF','ncl_a2_SRF','ncl_a3_SRF',
-	'num_a1_SRF','num_a2_SRF','num_a3_SRF','num_a4_SRF','OCNFRAC','PBLH','PHIS','pom_a1_SRF','pom_a4_SRF','PRECC','PRECL','PRECSC',
-	'PRECSL','PRECT','PS','PSL','QFLX','QREFHT','RHREFHT','SFCO2','SFCO2_FFF','SFCO2_LND','SFCO2_OCN','SHFLX','SNOWHICE','SNOWHLND',
-	'SO2_SRF','so4_a1_SRF','so4_a2_SRF','so4_a3_SRF','soa_a1_SRF','soa_a2_SRF','SOAG_SRF','SOLIN','SOLLD','SOLSD','SSAVIS','SWCF',
-	'TAUBLJX','TAUBLJY','TAUGWX','TAUGWY','TAUX','TAUY','TGCLDCWP','TGCLDIWP','TGCLDLWP','THzm','TMCO2','TMCO2_FFF','TMCO2_LND','TMCO2_OCN',
-	'TMQ','TREFHT','TREFHTMN','TREFHTMX','TROP_P','TROP_T','TROP_Z','TS','TSMN','TSMX','U10','Vzm','Wzm','WSPDSRFAV','WSPDSRFMX',
-	'CLDTOT_CAL','CLDTOT_ISCCP','CLDHGH_CAL','CLDLOW_CAL','CLDMED_CAL','MEANCLDALB_ISCCP','MEANTAU_ISCCP','MEANPTOP_ISCCP'
+fincl1 = 'ABSORB:A', 'ACTREL:A', 'AODABSdn:A', 'AODBCdn:A', 'AODdnDUST1:A', 'AODdnDUST2:A',
+   'AODdnDUST3:A', 'AODdnMODE1:A', 'AODdnMODE2:A', 'AODdnMODE3:A', 'AODDUST2:A', 'AODDUST:A', 'AODNIRstdn:A', 'AODPOMdn:A', 'AODSO4dn:A', 'AODSOAdn:A', 'AODSSdn:A',
+   'AODUVdn:A', 'AODUVstdn:A', 'AODVIS:A', 'AODVISdn:A', 'AODVISstdn:A', 'AQ_SO2:A', 'AREA:A', 'AREI:A', 'AREL:A', 'bc_a1:A', 'bc_a1DDF:A',
+   'bc_a1SFWET:A', 'bc_a4:A', 'bc_a4DDF:A', 'bc_a4SFWET:A', 'bc_c1:A', 'bc_c1DDF:A', 'bc_c1SFWET:A', 'bc_c4:A', 'bc_c4DDF:A',
+   'bc_c4SFWET:A', 'BROX:A', 'BROY:A', 'BURDENBCdn', 'BURDENDUSTdn:A', 'BURDENPOMdn:A', 'BURDENSEASALTdn:A', 'BURDENSO4dn:A',
+   'BURDENSOAdn:A', 'CDNUMC:A', 'CLDICE:A', 'CLDLIQ:A', 'CLDTOT:A', 'CLOUD:A', 'CLOX:A', 'CLOY:A', 'CME:A', 'CMFDQ:A', 'CMFMC:A',
+   'CMFMCDZM:A', 'CO2:A', 'CONCLD:A', 'DF_H2O2:A', 'DF_H2SO4:A',
+   'DF_SO2:A', 'dgnumwet1:A', 'dgnumwet2:A', 'dgnumwet3:A', 'DH2O2CHM:A', 'DMS:A', 'dry_deposition_NHx_as_N:A',
+   'dry_deposition_NOy_as_N:A', 'Dso4_a1CHM:A', 'Dso4_a2CHM:A', 'Dso4_a3CHM:A', 'dst_a1:A', 'dst_a1DDF:A', 'dst_a1SFWET:A', 'dst_a2:A', 'dst_a2DDF:A',
+   'dst_a2SFWET:A', 'dst_a3:A', 'dst_a3DDF:A', 'dst_a3SFWET:A', 'dst_c1:A', 'dst_c1DDF:A', 'dst_c1SFWET:A', 'dst_c2:A', 'dst_c2DDF:A', 'dst_c2SFWET:A',
+   'dst_c3:A', 'dst_c3DDF:A', 'dst_c3SFWET:A', 'DTCORE:A', 'EVAPPREC:A',
+   'EVAPQZM:A', 'EVAPTZM:A', 'EXTINCTdn:A', 'EXTINCTNIRdn:A', 'EXTINCTUVdn:A', 'EXTxASYMdn:A', 'FCTL:A',
+   'FLDS:A', 'FLDSC:A', 'FLNR:A', 'FLNS:A', 'FLNSC:A', 'FLNT:A', 'FLNTC:A', 'FLUT:A', 'FLUTC:A', 'FREQI:A', 'FREQL:A', 'FREQZM:A', 'FSDS:A',
+   'FSDSC:A', 'FSNR:A', 'FSNS:A', 'FSNSC:A', 'FSNT:A', 'FSNTC:A', 'FSNTOAC:A', 'FSUTOA:A',
+   'GS_SO2:A', 'H2O2:A', 'H2O:A', 'H2SO4:A', 'H2SO4M_C:A', 'H2SO4_sfnnuc1:A',
+   'HCL_GAS:A', 'HNO3_GAS:A', 'HNO3_NAT:A', 'HNO3_STS:A', 'HO2:A', 'ICEFRAC:A','jh2o2:A','KVH_CLUBB:A', 'LANDFRAC:A', 'LHFLX:A', 'MASS:A',
+   'ncl_a1:A', 'ncl_a1DDF:A', 'ncl_a1SFWET:A', 'ncl_a2:A', 'ncl_a2DDF:A', 'ncl_a2SFWET:A', 'ncl_a3:A', 'ncl_a3DDF:A', 'ncl_a3SFWET:A', 'ncl_c1:A',
+   'ncl_c1DDF:A', 'ncl_c1SFWET:A', 'ncl_c2:A', 'ncl_c2DDF:A', 'ncl_c2SFWET:A', 'ncl_c3:A', 'ncl_c3DDF:A', 'ncl_c3SFWET:A',
+   'NITROP_PD:A', 'NO3:A', 'NOX:A', 'NOY:A',
+   'num_a1:A', 'num_a1_CLXF:A', 'num_a1DDF:A', 'num_a2:A', 'num_a2_CLXF:A', 'num_a2DDF:A', 'num_a2_sfnnuc1:A', 'num_a3:A', 'num_a3DDF:A', 'num_a4:A',
+   'num_a4DDF:A', 'num_c1:A', 'num_c1DDF:A', 'num_c2:A', 'num_c2DDF:A', 'num_c3:A', 'num_c3DDF:A', 'num_c4:A', 'num_c4DDF:A', 'NUMLIQ:A', 'O3:A',
+   'OH:A', 'OMEGA:A', 'OMEGAT:A', 'PBLH:A', 'PDELDRY:A', 'PHIS:A', 'pom_a1:A', 'pom_a1DDF:A', 'pom_a1SFWET:A',
+   'pom_a4:A', 'pom_a4DDF:A', 'pom_a4SFWET:A', 'pom_c1:A', 'pom_c1DDF:A', 'pom_c1SFWET:A', 'pom_c4:A', 'pom_c4DDF:A', 'pom_c4SFWET:A',
+   'PRECC:A', 'PRECT:A', 'PS:A', 'PSL:A', 'PTEQ:A', 'PTTEND:A', 'Q:A', 'QFLX:A', 'QRAIN:A', 'QREFHT:A', 'QRL:A', 'QRLC:A', 'QRS:A',
+   'QRSC:A', 'QSNOW:A', 'RAD_ICE:A', 'RAD_LNAT:A', 'RAD_SULFC:A', 'REFF_AERO:A', 'RELHUM:A', 'RHREFHT:A',
+   'SAD_AERO:A', 'SAD_ICE:A', 'SAD_LNAT:A', 'SAD_SULFC:A', 'SAD_TROP:A', 'SFbc_a4:A',
+   'SFDMS:A', 'SFdst_a1:A', 'SFdst_a2:A', 'SFdst_a3:A',
+   'SFncl_a1:A', 'SFncl_a2:A', 'SFncl_a3:A', 'SFnum_a1:A', 'SFnum_a2:A',
+   'SFnum_a3:A', 'SFpom_a4:A', 'SFSO2:A', 'SFso4_a1:A', 'SFso4_a2:A', 'SHFLX:A', 'SO2:A',
+   'SO2_CHML:A', 'SO2_CHMP:A', 'SO2_CLXF:A', 'SO2_XFRC:A', 'so4_a1:A', 'so4_a1_CHMP:A', 'so4_a1_CLXF:A', 'so4_a1DDF:A', 'so4_a1_sfgaex1:A', 'so4_a1SFWET:A',
+   'so4_a2:A', 'so4_a2_CHMP:A', 'so4_a2_CLXF:A', 'so4_a2DDF:A', 'so4_a2_sfgaex1:A', 'so4_a2_sfnnuc1:A', 'so4_a2SFWET:A', 'so4_a3:A',
+   'so4_a3DDF:A', 'so4_a3_sfgaex1:A', 'so4_a3SFWET:A', 'so4_c1:A', 'so4_c1AQH2SO4:A', 'so4_c1AQSO4:A', 'so4_c1DDF:A', 'so4_c1SFWET:A', 'so4_c2:A', 'so4_c2AQH2SO4:A',
+   'so4_c2AQSO4:A', 'so4_c2DDF:A', 'so4_c2SFWET:A', 'so4_c3:A', 'so4_c3AQH2SO4:A', 'so4_c3AQSO4:A', 'so4_c3DDF:A', 'so4_c3SFWET:A',
+   'SOLIN:A', 'SOLLD:A', 'SOLSD:A', 'SSAVIS:A', 'SST:A',
+   'T:A', 'TAQ:A', 'TAUBLJX:A', 'TAUBLJY:A', 'TAUGWX:A', 'TAUGWY:A', 'TAUX:A', 'TAUY:A', 'TBRY:A', 'TCLY:A',
+   'TGCLDIWP:A', 'TGCLDLWP:A', 'TMDMS:A', 'TMQ:A', 'TMSO2:A',
+   'TMso4_a1:A', 'TMso4_a2:A', 'TMso4_a3:A', 'TOT_CLD_VISTAU:A', 'TOTH:A', 'TREFHT:A', 'TREFHTMN:M', 'TREFHTMX:X', 'TROP_P:A',
+   'TROP_T:A', 'TROP_Z:A', 'TS:A', 'TSMN:M', 'TSMX:X', 'TTEND_TOT:A', 'TTGWORO:A', 'U10:A', 'U:A', 'UTGWORO:A',
+   'UU:A', 'V:A', 'VD01:A', 'VV:A', 'WD_H2O2:A', 'WD_H2SO4:A', 'WD_SO2:A', 'wet_deposition_NHx_as_N:A', 'wet_deposition_NOy_as_N:A',
+   'Z3:A', 'ZMDQ:A', 'ZMDT:A', 'ZMMTT:A', 'ZMMU:A','VTHzm','UVzm','UWzm','Uzm','Vzm','THzm','Wzm','MSKtem'
 
-!! daily single level (h1)
-fincl2 =
-	'ACTNI','ACTNL','ACTREI','ACTREL','AODVIS','BURDENBCdn','BURDENDUSTdn','BURDENPOMdn','BURDENSEASALTdn','BURDENSO4','BURDENSO4dn','BURDENSOAdn',
-	'CAPE','CDNUMC','CLDTOT','FCTI','FCTL','FLDS','FLDSC','FLNR','FLNS','FLNSC','FLNT','FLNTC','FLUT','FLUTC','FSDS','FSDSC','FSNR','FSNS','FSNSC',
-	'FSNT','FSNTOAC','LHFLX','LWCF','MSKtem','PBLH','PHIS','PRECC','PRECL','PRECSC','PRECSL','PRECT','PRECTMX','PS','PSL','QREFHT','RHREFHT','SHFLX',
-	'SOLIN','SOLLD','SOLSD','SWCF','TAUBLJX','TAUBLJY','TAUGWX','TAUGWY','TAUX','TAUY','TGCLDIWP','TGCLDLWP','TMQ','TREFHT','TREFHTMN','TREFHTMX',
-	'TS','TSMN','TSMX','U10','WSPDSRFAV','WSPDSRFMX','OMEGA1000','OMEGA850','OMEGA700','OMEGA500','OMEGA200','OMEGA100','OMEGA050','OMEGA010',
-	'Q1000','Q850','Q700','Q500','Q200','Q100','Q050','Q010','T1000','T850','T700','T500','T200','T100','T050','T010',
-	'U1000','U850','U700','U500','U200','U100','U050','U010','V1000','V850','V700','V500','V200','V100','V050','V010',
-	'Z1000','Z850','Z700','Z500','Z200','Z100','Z050','Z010','MSKtem','VTHzm','UVzm','UWzm','Uzm','Vzm','THzm','Wzm',
-        'CLDHGH','CLDMED','CLDLOW'
+fexcl1         = 'BTAUN', 'BTAUS', 'BTAUE', 'BTAUW', 'BTAUNET', 'BUTEND1', 'BUTEND2', 'BUTEND3', 'BUTEND4', 'BUTEND5','BVTGWSPEC', 'MAXQ0', 'HDEPTH', 'NETDT', 'TAUN', 'TAUS', 'TAUE', 'TAUW', 'TAUGWX', 'TAUGWY','UTEND1', 'UTEND2', 'UTEND3', 'UTEND4', 'UTEND5', 'FRONTGF', 'FRONTGFA', 'EKGW', 'QNO', 'QRLNLTE','QRL_TOT','DUV', 'DVV'
 
-!! 6hr (h2) 
+
+
+fincl2 = 'ACTNL:A', 'ACTREL:A', 'BURDENBCdn:A', 'BURDENDUSTdn:A', 'BURDENPOMdn:A', 'BURDENSEASALTdn:A', 'BURDENSO4dn:A', 'BURDENSOAdn:A',
+   'CDNUMC:A', 'CLDICE:A', 'CLDLIQ:A', 'CLDTOT:A', 'CLOUD:A', 'CMFMC:A', 'CMFMCDZM:A', 'FCTL:A', 'FLDS:A', 'FLDSC:A', 'FLNR:A', 'FLNS:A', 'FLNSC:A',
+   'FLNT:A', 'FLNTC:A', 'FLUT:A', 'FLUTC:A', 'FSDS:A', 'FSDSC:A', 'FSNR:A', 'FSNS:A', 'FSNSC:A', 'FSNTOA:A', 'FSNTOAC:A', 'LHFLX:A', 'MASS:A', 'OMEGA:A',
+   'OMEGA500:A', 'PBLH:A', 'PDELDRY:A', 'PRECC:A', 'PRECT:A', 'PS:A', 'PSL:A', 'Q:A', 'QREFHT:A', 'QSNOW:A', 'RELHUM:A', 'RHREFHT:A', 'SHFLX:A',
+   'SOLIN:A', 'SOLLD:A', 'SOLSD:A', 'T:A', 'T500:A', 'T700:A', 'T850:A', 'TAUBLJX:A', 'TAUBLJY:A', 'TAUGWX:A', 'TAUGWY:A', 'TAUX:A', 'TAUY:A',
+   'TGCLDIWP:A', 'TGCLDLWP:A', 'TMQ:A', 'TREFHT:A', 'TREFHTMN:M', 'TREFHTMX:X', 'TS:A', 'TSMN:M', 'TSMX:X', 'U:A', 'U10:A', 'UTGWORO:A',
+   'V:A', 'Z3:A', 'Z500:A'
+
+
+
+!! 6hr (h2)
 fincl3 =
-	'Q950:I','Q900:I','Q850:I','Q700:I','Q500:I','Q200:I','T950:I','T900:I','T850:I','T700:I','T500:I','T200:I',
-	'U950:I','U900:I','U850:I','U700:I','U500:I','U200:I','V950:I','V900:I','V850:I','V700:I','V500:I','V200:I',
-	'FLUT:A','OMEGA500:A','PRECC:A','PRECSC:A','PRECSL:A','PRECT:A','PSL:I','U200:A',
-	'UBOT:I','VBOT:I','Z300:I','Z500:I','TMQ:I','uIVT:I','vIVT:I'
+    'PRECC:A','PRECL:A','PRECSC:A','PRECSL:A','PRECT:A','PSL:I',
+    'U200:A','U850:I','UBOT:I','V850:I','VBOT:I','Z300:I','Z500:I',
+    'OMEGA500:A', 'FLUT:A'
 
-!! 3hr (h3)
-fincl4 = 
-	'CLDLOW:A','PRECC:A','UBOT:A','VBOT:A','PRECT:A'
-
-!! daily full-column (h4)
-fincl5 = 'CLOUD'
-
-!! To reduce data volume, these can be EXCLUDED from h0:
-fexcl1 = 'CLD_CAL','FISCCP1_COSP','RFL_PARASOL','CFAD_SR532_CAL','MOL532_CAL','MEANTB_ISCCP','MEANTBCLR_ISCCP'
-
-history_dust                   = .true. 
-do_circulation_diags           = .true. 
+!! daily-FC-level (h6)
+fincl7 =
+    'VTHzm','UVzm','UWzm','Uzm','Vzm','THzm','Wzm','MSKtem'
