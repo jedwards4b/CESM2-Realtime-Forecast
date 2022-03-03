@@ -126,18 +126,18 @@ def build_base_case(date, baseroot, basemonth,res, compset, overwrite,
             case.set_value("RUN_REFCASE", "b.e21.f09_g17")
             case.set_value("OCN_TRACER_MODULES","iage")
             case.set_value("OCN_CHL_TYPE","diagnostic")
-            # pelayout for cesm2cam6climoATM case
-            case.set_value("NTASKS_ATM",324)
-            case.set_value("NTASKS_CPL",324)
-            case.set_value("NTASKS_LND",288)
-            case.set_value("NTASKS_ROF",288)
+            # small pelayout for cesm2cam6climoATM case
+            case.set_value("NTASKS_ATM",252)
+            case.set_value("NTASKS_CPL",252)
+            case.set_value("NTASKS_LND",216)
+            case.set_value("NTASKS_ROF",216)
             case.set_value("NTASKS_ICE", 36)
-            case.set_value("NTASKS_OCN",108)
+            case.set_value("NTASKS_OCN", 72)
             case.set_value("NTASKS_WAV", 36)
             case.set_value("NTASKS_GLC", 36)
-            case.set_value("ROOTPE_ICE",252)
-            case.set_value("ROOTPE_OCN",324)
-            case.set_value("ROOTPE_WAV",252)
+            case.set_value("ROOTPE_ICE",216)
+            case.set_value("ROOTPE_OCN",252)
+            case.set_value("ROOTPE_WAV",216)
 
 
             case.set_value("STOP_OPTION","ndays")
