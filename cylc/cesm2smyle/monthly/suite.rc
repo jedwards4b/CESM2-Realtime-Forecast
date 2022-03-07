@@ -24,8 +24,8 @@
 
 [scheduling]
   # Change the run start and end dates here
-    initial cycle point = "1990-11-01"
-    final cycle point = "1990-11-01"
+    initial cycle point = "2020-11-01"
+    final cycle point = "2020-11-01"
 
     # must start Feb 01, any year:
     # initial cycle point constraints = "0201T00"
@@ -99,7 +99,7 @@ if [ ! -d "postprocess" ]; then
    create_postprocess_cylc -caseroot=`pwd`
 fi
 cd postprocess
-pp_config --set TIMESERIES_OUTPUT_ROOTDIR=/glade/campaign/cesm/development/espwg/SMYLE-EXTEND/timeseries/b.e21.BSMYLE.f09_g17.${CYLC_TASK_CYCLE_DATE}.$(printf "%03d" ${CYLC_TASK_PARAM_mbr})
+pp_config --set TIMESERIES_OUTPUT_ROOTDIR=/glade/campaign/cesm/development/espwg/CESM2-DP/timeseries/b.e21.BSMYLE.f09_g17.${CYLC_TASK_CYCLE_DATE}.$(printf "%03d" ${CYLC_TASK_PARAM_mbr})
 today=`date '+%Y%m%d-%H%M%S'`
 mpirun ./timeseries > ./logs/timeseries.log.${today} 2>&1
 """

@@ -7,8 +7,8 @@ setenv DOUT_S_ROOT  /glade/scratch/$USER/SMYLE/archive/
 setenv CASEROOT /glade/p/cesm/espwg/CESM2-SMYLE-EXTEND/cases
 
 # ...
-set syr = 1995
-set eyr = 1995
+set syr = 1992
+set eyr = 1992
 
 @ ib = $syr
 @ ie = $eyr

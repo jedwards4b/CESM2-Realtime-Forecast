@@ -13,8 +13,8 @@ setenv TSERIES2  /glade/campaign/cesm/development/espwg/SMYLE-EXTEND/timeseries
 set syr = 2000
 set eyr = 1993
 # ...
-set syr = 2011
-set eyr = 2011
+set syr = 1980
+set eyr = 2018
 
 @ ib = $syr
 @ ie = $eyr
@@ -46,7 +46,7 @@ if (-d $TSERIES2/$CASE) then
     set t3 = `ls -lR $TSERIES2/$CASE/atm/proc | wc -l`
     set t4 = `ls -lR $TSERIES2/$CASE/lnd/proc | wc -l`
     set t5 = `ls -lR $TSERIES2/$CASE/ocn/proc | wc -l`
-    set t6 = `ls -lR $TSERIES2/$CASE/cpl/     | wc -l`
+    set t6 = `ls -lR $TSERIES2/$CASE/cpl/hist     | wc -l`
     set s2 = `du . -sh`
     #if ($t2 < 1814 ) then
        #echo  $CASE " ==============    " $t2  $s2
