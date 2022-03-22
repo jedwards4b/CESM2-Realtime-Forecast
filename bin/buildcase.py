@@ -131,8 +131,8 @@ def build_base_case(date, baseroot, basecasename, basemonth,res, ensemble_start,
                         user_mods_dir=user_mods_dir, pecount=pecount, project="NCGD0047", workflowid="timeseries")
             # make sure that changing the casename will not affect these variables
             user = os.getenv("USER")
-            cimeoutputroot = os.path.join("/home/smyle/work/cesm/scratch/SMYLE-CW3E")
-            exeroot = os.path.join("/home/smyle/work/cesm/scratch/SMYLE-CW3E/exerootdir/bld")
+            cimeoutputroot = os.path.join("/home/smyle/work/cesm/scratch/SMYLE-CW3E-L83")
+            exeroot = os.path.join("/home/smyle/work/cesm/scratch/SMYLE-CW3E-L83/exerootdir/bld")
             case.set_value("CIME_OUTPUT_ROOT",cimeoutputroot)
             #case.set_value("CIME_OUTPUT_ROOT","/glade/scratch/nanr/SMYLE")
             if exeroot and os.path.exists(exeroot):
@@ -141,14 +141,14 @@ def build_base_case(date, baseroot, basecasename, basemonth,res, ensemble_start,
                 case.set_value("EXEROOT",case.get_value("EXEROOT", resolved=True))
 
             case.set_value("RUNDIR",case.get_value("RUNDIR",resolved=True)+".001")
-            case.set_value("CAM_CONFIG_OPTS",case.get_value("CAM_CONFIG_OPTS")+" -cosp ")
+#            case.set_value("CAM_CONFIG_OPTS",case.get_value("CAM_CONFIG_OPTS")+" -cosp ")
 
             case.set_value("RUN_TYPE","hybrid")
             #case.set_value("JOB_QUEUE","economy",subgroup="case.run")
             #case.set_value("JOB_QUEUE","economy")
             case.set_value("GET_REFCASE",False)
             case.set_value("RUN_REFDIR",sdrestdir)
-            case.set_value("RUN_REFCASE", "b.e21.SMYLE_ERA5_IC.f09_g17.{}.01".format(date[:7]))
+            case.set_value("RUN_REFCASE", "b.e21.SMYLE_ERA5_L83_IC.f09_g17.{}.01".format(date[:7]))
             case.set_value("OCN_TRACER_MODULES","")
             case.set_value("OCN_TRACER_MODULES","iage")
             case.set_value("OCN_CHL_TYPE","diagnostic")
@@ -217,24 +217,24 @@ def clone_base_case(date, caseroot, ensemble_start, ensemble_end, sdrestdir, use
 def _main_func(description):
     #date, basecasename = parse_command_line(sys.argv, description)
     date, model, ensemble_start, ensemble_end = parse_command_line(sys.argv, description)
-    basecasename = "b.e21.BSMYLE-CW3E.f09_g17"
+    basecasename = "b.e21.BSMYLE-L83-CW3E.f09_g17"
 
     # TODO make these input vars
 
     basemonth = int(date[5:7])
     baseyear = int(date[0:4])
     #baseroot = os.path.join(os.getenv("SMYLE_ROOT"),"cases")
-    baseroot = "/home/smyle/work/cesm/CESM2-SMYLE-CW3E/cases"
+    baseroot = "/home/smyle/work/cesm/CESM2-SMYLEL83-CW3E/cases"
     res = "f09_g17"
     waccm = False
     if model == "cesm2smyle":
-       compset = "BSMYLE"
+       compset = "B1850cmip6"
 
     print ("baseyear is {} basemonth is {}".format(baseyear,basemonth))
 
     overwrite = True
 #    sdrestdir = os.path.join(os.getenv("SCRATCH"),"SMYLE","inputdata","cesm2_init","b.e21.SMYLE_IC.f09_g17."+date[0:7]+".01","{}".format(date))
-    sdrestdir = os.path.join("/home/smyle/work/cesm/inputdata/cesm2_init","b.e21.SMYLE_ERA5_IC.f09_g17."+date[0:7]+".01","{}".format(date))
+    sdrestdir = os.path.join("/home/smyle/work/cesm/inputdata/cesm2_init","b.e21.SMYLE_ERA5_L83_IC.f09_g17."+date[0:7]+".01","{}".format(date))
 
     user_mods_dir = os.path.join(s2sfcstroot,"user_mods","cesm2smyle")
 

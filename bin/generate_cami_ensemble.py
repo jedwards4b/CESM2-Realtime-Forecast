@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 import os, sys
-#cesmroot = os.getenv("CESM_ROOT")
-cesmroot = "/home/smyle/work/cesm/cesm2.1.4-SMYLE/"
+cesmroot = os.getenv("CESM_ROOT")
+#cesmroot = "/home/smyle/work/cesm/cesm2.1.4-SMYLE/"
 s2sfcstroot = os.path.join(os.path.dirname(os.path.join(os.path.abspath(__file__))), os.path.pardir)
 
 if cesmroot is None:

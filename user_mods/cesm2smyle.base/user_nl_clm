@@ -18,6 +18,40 @@
 ! Set glc_do_dynglacier  with GLC_TWO_WAY_COUPLING               env variable
 !----------------------------------------------------------------------------------
 
+!----------------------------------------------------------------------------------
+! crop harvest bug fix
+!----------------------------------------------------------------------------------
+
+dribble_crophrv_xsmrpool_2atm = .true. 
+
+!----------------------------------------------------------------------------------
+!----------------------------------------------------------------------------------
+
+use_init_interp = .true.
+
+!----------------------------------------------------------------------------------
+! Trendy SMYLE landuse and surface dataset
+!----------------------------------------------------------------------------------
+! flanduse_timeseries = '$DIN_LOC_ROOT/lnd/clm2/surfdata_map/release-clm5.0.31/landuse.timeseries_0.9x1.25_hist_78pfts_TRENDY_simyr1700-2019_c200803.nc'
+! fsurdat = '$DIN_LOC_ROOT/lnd/clm2/surfdata_map/release-clm5.0.24/surfdata_0.9x1.25_hist_78pfts_TRENDY_simyr1700_c190814.nc'
+
+!----------------------------------------------------------------------------------
+! SMYLE extend model align year
+!----------------------------------------------------------------------------------
+
+! model_year_align_ndep = 1850
+! stream_year_first_ndep = 1850
+! stream_year_last_ndep = 2100
+
+! model_year_align_popdens = 1850
+! stream_year_first_popdens = 1850
+! stream_year_last_popdens = 2100
+
+! model_year_align_urbantv = 1850
+! stream_year_first_urbantv = 1850
+! stream_year_last_urbantv = 2100
+
+
 ! h0 stream (monthly average, gridcell-level)
 ! Emon, Lmon, LIMon
 hist_fexcl1 = 'PCT_GLC_MEC', 'SOIL1C_vr', 'SOIL1N_vr', 'SOIL2C_vr', 'SOIL2N_vr', 'SOIL3C_vr', 'SOIL3N_vr', 'CWDC_vr', 'CWDN_vr', 'LITR1C_vr', 'LITR1N_vr', 'LITR2C_vr', 'LITR2N_vr', 'LITR3C_vr', 'LITR3N_vr','PCT_CFT','PCT_NAT_PFT','SMIN_NO3_vr','CONC_O2_UNSAT','CONC_O2_SAT','SMIN_NH4_vr','SMINN_vr'
@@ -48,4 +82,24 @@ hist_mfilt = 1,1,1,1,1
 hist_dov2xy = .true.,.false.,.false.,.true.,.false.
 hist_nhtfrq = 0,0,0,-8760,-8760
 hist_type1d_pertape = ' ',' ','LAND',' ','LAND'
+
+!----------------------------------------------------------------------------------
+! Settings from cmip6_carbon_isotopes
+!----------------------------------------------------------------------------------
+
+! Isla changed these to look like the B1850 CMIP6 piControl
+
+use_c13 = .false.
+use_c14 = .false.
+!use_c13_timeseries = .true.
+!use_c14_bombspike = .true.
+
+!----------------------------------------------------------------------------------
+! Settings from cmip6_glaciers_virtual_antarctica
+!----------------------------------------------------------------------------------
+
+! This differs from the default in that it turns on virtual columns over Antarctica
+! This is desired so that we have the output needed to drive a later offline CISM Antarctica simulation
+! However, this increases the cost of CLM by about 10%
+glacier_region_behavior = 'single_at_atm_topo', 'virtual', 'virtual', 'virtual'
 

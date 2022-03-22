@@ -1,6 +1,30 @@
+effgw_beres_dp               = 0.90D0
+gw_qbo_hdepth_scaling                = 0.25D0
+qbo_use_forcing              = .false.
+tau_0_ubc=.true.
+frontgfc               = 2.7D-15
+taubgnd                = 2.5D-3
+
+effgw_rdg_beta = 0.75D0
+effgw_rdg_beta_max = 0.75D0
+
+!---additional gravity wave settings to make it look like SC-WACCM
+gw_apply_tndmax                = .false.
+gw_limit_tau_without_eff               = .true.
+gw_lndscl_sgh          = .false.
+gw_oro_south_fac               = 2.d0
+
+
+do_circulation_diags=.true.
+history_dust=.true.
 nhtfrq = 0, -24, -6, -3, -24,   1, -24,-120,-240
 mfilt  = 1,   5, 20, 40,   5, 240, 365,  73, 365
 ndens  = 2,   2,  2,  2,   2,   2,   1,   1,   1
+
+
+fv_nsplit   =            16 
+fv_nspltrac =            8
+fv_nspltvrm =            8
 
 fincl1 = 'ABSORB:A', 'ACTREL:A', 'AODABSdn:A', 'AODBCdn:A', 'AODdnDUST1:A', 'AODdnDUST2:A',
    'AODdnDUST3:A', 'AODdnMODE1:A', 'AODdnMODE2:A', 'AODdnMODE3:A', 'AODDUST2:A', 'AODDUST:A', 'AODNIRstdn:A', 'AODPOMdn:A', 'AODSO4dn:A', 'AODSOAdn:A', 'AODSSdn:A',
@@ -43,7 +67,7 @@ fincl1 = 'ABSORB:A', 'ACTREL:A', 'AODABSdn:A', 'AODBCdn:A', 'AODdnDUST1:A', 'AOD
    'UU:A', 'V:A', 'VD01:A', 'VV:A', 'WD_H2O2:A', 'WD_H2SO4:A', 'WD_SO2:A', 'wet_deposition_NHx_as_N:A', 'wet_deposition_NOy_as_N:A',
    'Z3:A', 'ZMDQ:A', 'ZMDT:A', 'ZMMTT:A', 'ZMMU:A','VTHzm','UVzm','UWzm','Uzm','Vzm','THzm','Wzm','MSKtem'
 
-fexcl1         = 'BTAUN', 'BTAUS', 'BTAUE', 'BTAUW', 'BTAUNET', 'BUTEND1', 'BUTEND2', 'BUTEND3', 'BUTEND4', 'BUTEND5','BVTGWSPEC', 'MAXQ0', 'HDEPTH', 'NETDT', 'TAUN', 'TAUS', 'TAUE', 'TAUW', 'TAUGWX', 'TAUGWY','UTEND1', 'UTEND2', 'UTEND3', 'UTEND4', 'UTEND5', 'FRONTGF', 'FRONTGFA', 'EKGW', 'QNO', 'QRLNLTE','QRL_TOT','DUV', 'DVV'
+fexcl1         = 'BTAUN', 'BTAUS', 'BTAUE', 'BTAUW', 'BTAUNET', 'BUTEND1', 'BUTEND2', 'BUTEND3', 'BUTEND4', 'BUTEND5','BVTGWSPEC', 'MAXQ0', 'HDEPTH', 'NETDT', 'TAUN', 'TAUS', 'TAUE', 'TAUW', 'TAUGWX', 'TAUGWY','UTEND1', 'UTEND2', 'UTEND3', 'UTEND4', 'UTEND5', 'FRONTGF', 'FRONTGFA', 'EKGW', 'DUV', 'DVV'
 
 
 
