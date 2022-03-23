@@ -8,7 +8,7 @@
   UTC mode = True
   cycle point format = CCYY-MM-DD
   [[environment]]
-    FCST_HOME = "/glade/work/nanr/cesm_tags/CASE_tools/cesm2-smyle-extend/"
+    FCST_HOME = "/glade/work/nanr/cesm_tags/CASE_tools/cesm2-smyle-DP/"
     CESM_ROOT = "/glade/work/nanr/cesm_tags/cesm2.1.4-SMYLE/"
     SCRATCH   = "/glade/scratch/nanr/"
     USECASE   = "cesm2smyle-extend"
@@ -24,8 +24,8 @@
 
 [scheduling]
   # Change the run start and end dates here
-    initial cycle point = "2020-11-01"
-    final cycle point = "2020-11-01"
+    initial cycle point = "1967-11-01"
+    final cycle point = "1967-11-01"
 
     # must start Feb 01, any year:
     # initial cycle point constraints = "0201T00"
@@ -57,7 +57,7 @@ cd ${FCST_HOME}/bin/
     [[[directives]]]
        -r = n
        -j = oe
-       -v = FCST_HOME=/glade/work/nanr/cesm_tags/CASE_tools/cesm2-smyle-extend/
+       -v = FCST_HOME=/glade/work/nanr/cesm_tags/CASE_tools/cesm2-smyle-DP/
        -S = /bin/bash
        -l = select=1:ncpus=8:ompthreads=1
     [[[environment]]]
@@ -114,7 +114,7 @@ mpirun ./timeseries > ./logs/timeseries.log.${today} 2>&1
     [[[directives]]]
        -r = n
        -j = oe
-       -v = FCST_HOME=/glade/work/nanr/cesm_tags/CASE_tools/cesm2-smyle-extend/,SMYLE_ROOT=/glade/p/cesm/espwg/CESM2-SMYLE
+       -v = FCST_HOME=/glade/work/nanr/cesm_tags/CASE_tools/cesm2-smyle-DP/,SMYLE_ROOT=/glade/p/cesm/espwg/CESM2-SMYLE
        -S = /bin/bash
        -l = select=1:ncpus=36:mpiprocs=36:ompthreads=1
 
