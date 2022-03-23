@@ -183,7 +183,8 @@ def clone_base_case(date, caseroot, ensemble_start, ensemble_end, sdrestdir, use
         user = os.getenv("USER")
         #sdrestdir = os.path.join("/glade/scratch/nanr/SMYLE-EXTEND/archive","b.e21.BSMYLE.f09_g17."+date[0:7]+".{0:03d}".format(i),"rest","{0:04d}-11-01-00000".format(baseyear+2))
         #sdrestdir = os.path.join("/glade","scratch","{}".format(user),"SMYLE-EXTEND","archive","b.e21.BSMYLE.f09_g17."+date[0:7]+".{0:03d}".format(i),"rest","{0:04d}-11-01-00000".format(baseyear+2))
-        sdrestdir = os.path.join("/glade","scratch","{}".format(user),"SMYLE","archive","b.e21.BSMYLE.f09_g17."+date[0:7]+".{0:03d}".format(i),"rest","{0:04d}-11-01-00000".format(baseyear+2))
+        #sdrestdir = os.path.join("/glade","scratch","{}".format(user),"SMYLE","archive","b.e21.BSMYLE.f09_g17."+date[0:7]+".{0:03d}".format(i),"rest","{0:04d}-11-01-00000".format(baseyear+2))
+        sdrestdir = os.path.join("/glade","scratch","nanr","SMYLE","archive","b.e21.BSMYLE.f09_g17."+date[0:7]+".{0:03d}".format(i),"rest","{0:04d}-11-01-00000".format(baseyear+2))
         if ensemble_end > ensemble_start:
             caseroot = caseroot[:-nint] + member_string
         if overwrite and os.path.isdir(caseroot):
