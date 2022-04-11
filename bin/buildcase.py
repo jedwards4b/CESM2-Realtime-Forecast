@@ -217,14 +217,14 @@ def clone_base_case(date, caseroot, ensemble_start, ensemble_end, sdrestdir, use
 def _main_func(description):
     #date, basecasename = parse_command_line(sys.argv, description)
     date, model, ensemble_start, ensemble_end = parse_command_line(sys.argv, description)
-    basecasename = "b.e21.BSMYLE-L83-CW3E.f09_g17"
+    basecasename = "b.e21.BSMYLE-CW3E-L83.f09_g17"
 
     # TODO make these input vars
 
     basemonth = int(date[5:7])
     baseyear = int(date[0:4])
     #baseroot = os.path.join(os.getenv("SMYLE_ROOT"),"cases")
-    baseroot = "/home/smyle/work/cesm/CESM2-SMYLEL83-CW3E/cases"
+    baseroot = "/home/smyle/work/cesm/CESM2-SMYLE-CW3E-L83/cases"
     res = "f09_g17"
     waccm = False
     if model == "cesm2smyle":
