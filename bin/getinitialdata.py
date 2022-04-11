@@ -74,7 +74,7 @@ def get_data_from_campaignstore(date):
         return
     if(not os.path.exists(dest_path)):
         os.makedirs(dest_path)
-    lnd_source_path = 'cesm/development/cross-wg/S2S/land/rest/{}-00000/'.format(date)
+    lnd_source_path = 'cesm/development/cross-wg/S2S/CESM2/CLIMOLND/{}-00000/'.format(date) #/S2S/land/rest/{}-00000/'.format(date)
 
 
     if os.path.isdir(os.path.join(source_root_local,source_path)) and os.path.isdir(os.path.join(source_root_local,lnd_source_path)):
@@ -99,7 +99,7 @@ lnd_source_path)))
         os.rename(os.path.join(dest_path,lndfile), os.path.join(dest_path,newfile))
 
 
-    cam_source_path = "/glade/campaign/cesm/development/cross-wg/S2S/CESM2/CAMI/CFSv2/" #/CESM2/CLIMOLND/"
+    cam_source_path = "/glade/campaign/cesm/development/cross-wg/S2S/CESM2/CAMI/CFSv2/"
     cami = os.path.join(cam_source_path,"CESM2_NCEP_0.9x1.25_L32.cam2.i.{}-00000.nc".format(date))
     camo = os.path.join(dest_path, "b.e21.f09_g17.cam.i.{}-00000.nc".format(date))
     if os.path.isfile(camo):
