@@ -64,7 +64,7 @@ def _main_func(description):
     date = parse_command_line(sys.argv, description)
     scratch = os.getenv("SCRATCH")
     # TODO make these input vars
-    basecasename = "cesm2cam6"
+    basecasename = "cesm2cam6climoLND"
     basemonth = date[5:7]
     baseroot = os.getenv("WORK")
     sdrestdir = os.path.join(scratch,"S2S_70LIC_globus","SDnudgedOcn","rest","{}".format(date))
@@ -78,11 +78,11 @@ def _main_func(description):
             dout_s_root = case.get_value("DOUT_S_ROOT")
 
         # Clean up
-        if os.path.isdir(rundir):
+        if rundir and os.path.isdir(rundir):
             for _file in glob.iglob(os.path.join(rundir,"*"+date+"*")):
                 os.unlink(os.path.join(rundir,_file))
         # Clean up ocean init files
-        ocn_init_path = os.path.join(os.getenv("SCRATCH"),"cesm2cam6","Ocean","rest","{}".format(date))
+        ocn_init_path = os.path.join(os.getenv("SCRATCH"),"cesm2cam6climoLND","Ocean","rest","{}".format(date))
         if os.path.isdir(ocn_init_path):
             shutil.rmtree(ocn_init_path)
 

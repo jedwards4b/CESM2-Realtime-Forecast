@@ -66,7 +66,7 @@ def get_data_from_campaignstore(date):
 
     source_path = get_ocn_src_path(source_root_local, date)
 
-    dest_path = os.path.join(os.getenv("SCRATCH"),"cesm2cam6","Ocean","rest","{}".format(date))
+    dest_path = os.path.join(os.getenv("SCRATCH"),"cesm2cam6climoLND","Ocean","rest","{}".format(date))
 
 
 #    if os.path.exists(os.path.join(dest_path,"rpointer.ocn.restart")):
@@ -99,7 +99,7 @@ lnd_source_path)))
         os.rename(os.path.join(dest_path,lndfile), os.path.join(dest_path,newfile))
 
 
-    cam_source_path = "/glade/campaign/cesm/development/cross-wg/S2S/CESM2/CAMI/CFSv2/"
+    cam_source_path = "/glade/campaign/cesm/development/cross-wg/S2S/CESM2/CAMI/CFSv2/" # /CESM2/CLIMOLND/"
     cami = os.path.join(cam_source_path,"CESM2_NCEP_0.9x1.25_L32.cam2.i.{}-00000.nc".format(date))
     camo = os.path.join(dest_path, "b.e21.f09_g17.cam.i.{}-00000.nc".format(date))
     if os.path.isfile(camo):
