@@ -1,17 +1,17 @@
 #!Jinja2
 # This will run the hind cast for each month from intial to final cycle point
 # one year at a time, all months for a given year run simultaniously
-{% set rnames = ["JAN","FEB","MAR","APR","MAY","JUN","JUL","AUG","SEP","OCT","NOV","DEC"] %}
-{% set fyear = "2006" %}
-{% set lyear = "2006" %}
+{% set rnames = ["OCT"] %}
+{% set fyear = "2002" %}
+{% set lyear = "2002" %}
 # this sets the day of the week to run: 0=SUN, 1=MON, 2=TUE, ...
 {% set dayofweek = 1 %} 
 {% set model = "cesm2cam6climoOCNclimoATM" %}
 {% set FCST_HOME = "$HOME/cesm2cam6climoOCNclimoATM/CESM2-Realtime-Forecast" %}
 {% set ensemble_start = 0 %}
 {% set ensemble_end   = 10 %}
-{% set day_start      = '01' %}
-{% set day_end        = '31' %}
+{% set day_start      = '20' %}
+{% set day_end        = '24' %}
 {% set sendtoftp      = false %}
 {% set sendtoglobus      = false %}
 {% set account = "cesm0020" %}
