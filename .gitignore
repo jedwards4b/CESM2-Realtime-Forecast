@@ -1,0 +1,8 @@
+bin/#getinitialdata.py#
+bin/#mv2datashare.sh#
+bin/__pycache__/
+bin/core-cheyenne3-33754-13893-6
+bin/diff.out
+bin/pp.test.*
+bin/pp.test~
+cylc/#month_wrapper.nc#
