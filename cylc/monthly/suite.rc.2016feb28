@@ -1,0 +1,119 @@
+#!Jinja2
+# All settings are in month_wrapper.rc 
+# don't change anything below here
+
+[meta]
+  title = CESM CYLC workflow for ensemble from cesm2cam6climoOCNv2.MM.00 to cesm2cam6climoOCNv2.MM.10
+[cylc]
+  UTC mode = True
+  cycle point format = CCYY-MM-DD
+  [[parameters]]
+    # The number of ensemble members can be changed here
+    member = {{ ensemble_start }}..{{ ensemble_end }}
+
+  [[environment]]
+    CYLC_TASK_CYCLE_MONTH = {{MONTH}}
+
+[scheduling]
+#  initial cycle point = {{YEAR}}-{{MONTH}}-{{ day_start }}
+#  final cycle point = {{YEAR}}-{{MONTH}}-{{ day_end }}
+   initial cycle point = 2016-02-28
+   final cycle point = 2016-02-28
+  [[dependencies]]
+  # Weekly Cycling on monday, new date will submit when st_archive is complete for each member
+  # run needs to finish, not nessasarily successfully for next step to start
+  #  [[[R/W-{{dayofweek}}/P1W]]]
+  [[[R1]]]
+      graph = """
+        st_archive<member>[-P1W] => get_data => build_model => run_family:finish-all
+        run<member> => st_archive<member> => postprocess<member>
+             """
+[runtime]
+  [[get_data]]
+    script = """
+module load ncl nco {{ model }}
+cd ${FCST_HOME}/bin/
+./getinitialdata.py
+./generate_cami_ensemble.py  --ensemble-start {{ ensemble_start }} --ensemble-end {{ ensemble_end }}
+"""
+    [[[job]]]
+      batch system = pbs
+      batch submit command template = qsubcasper -q casper -l walltime=01:00:00 -A {{ account }} '%(job)s'
+      shell = /bin/bash
+    [[[directives]]]
+       -r = n
+       -j = oe
+       -v = FCST_HOME=/glade/u/home/ssfcst/{{ model }}/CESM2-Realtime-Forcast
+       -S = /bin/bash
+       -l = select=1:ncpus=18:ompthreads=18
+
+  [[build_model]]
+    script = """
+module load {{model}}
+cd ${FCST_HOME}/bin/
+./buildcase.py --ensemble-start {{ensemble_start}} --ensemble-end {{ensemble_end}}
+"""
+    [[[job]]]
+      batch system = pbs
+      batch submit command template = qsub -q share -l walltime=01:00:00 -A {{ account }} '%(job)s'
+      shell = /bin/bash
+    [[[directives]]]
+       -r = n
+       -j = oe
+       -V =
+       -S = /bin/bash
+       -l = select=1:ncpus=18:ompthreads=18
+
+  [[st_archive<member>]]
+    script = """
+    module load {{ model }}
+cd ${WORK}/{{ model }}.${CYLC_TASK_CYCLE_MONTH}.$(printf "%02d" ${CYLC_TASK_PARAM_member})
+./case.submit --job case.st_archive
+#./xmlchange CONTINUE_RUN=TRUE  don't want this for this workflow
+"""
+    [[postprocess<member>]]
+      inherit = postprocess_family
+    [[postprocess_family]]
+      script = """
+  module load ncl nco {{model}}
+  ${FCST_HOME}/bin/postprocess.py --sendtoftp {{sendtoftp}}
+
+"""
+    [[[job]]]
+      batch system = pbs
+      batch submit command template = qsub -q regular -l walltime=01:00:00 -A {{ account }} '%(job)s'
+    [[[directives]]]
+       -r = n
+       -j = oe
+       -V =
+       -S = /bin/bash
+       -l = select=1:ncpus=36:ompthreads=36
+
+    [[dispose]]
+    # Globus process, must run on host
+      script = """
+    module load {{ model }}
+${FCST_HOME}/bin/dispose_data.py
+"""
+    [[run<member>]]
+       inherit = run_family
+    [[run_family]]
+    script = """
+module load {{ model }}
+filename={{ model }}.${CYLC_TASK_CYCLE_MONTH}.$(printf "%02d" ${CYLC_TASK_PARAM_member})
+cd ${WORK}/${filename}
+ ./case.submit --job case.run
+"""
+    [[[job]]]
+      batch system = pbs
+      batch submit command template = qsub -q {{ run_queue }} -l walltime=02:00:00 -A {{ account }} '%(job)s'
+    [[[directives]]]
+       -r = n
+       -j = oe
+       -V =
+       -S = /bin/bash
+       # dont forget to change this line if you change pelayout
+       # How can we connect this to the pelayout?
+       -l = select=20:ncpus=36:mpiprocs=36:ompthreads=1
+    [[[events]]]
+        handler events = retry, failed
