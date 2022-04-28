@@ -68,7 +68,6 @@ def get_data_from_campaignstore(date):
 
     dest_path = os.path.join(os.getenv("SCRATCH"),"cesm2cam6climoLND","Ocean","rest","{}".format(date))
 
-
     if os.path.exists(os.path.join(dest_path,"rpointer.ocn.restart")):
         print("Data already exists in {}".format(dest_path))
         return
