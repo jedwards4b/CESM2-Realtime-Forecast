@@ -70,7 +70,7 @@ def _main_func(description):
     sdrestdir = os.path.join(scratch,"S2S_70LIC_globus","SDnudgedOcn","rest","{}".format(date))
     if os.path.isdir(sdrestdir):
         shutil.rmtree(sdrestdir)
-    for i in range(0,10):
+    for i in range(0,3):  #TODO Adjust hard coded number of ensemble members
         member = "{0:02d}".format(i)
         caseroot = os.path.join(baseroot,basecasename+"."+basemonth+"."+member)
         with Case(caseroot, read_only=True) as case:
