@@ -98,7 +98,7 @@ cd ${WORK}/{{ model }}.${CYLC_TASK_CYCLE_MONTH}.$(printf "%02d" ${CYLC_TASK_PARA
 """
     [[[job]]]
       batch system = pbs
-      batch submit command template = qsub -q casper@casper-pbs.hpc.ucar.edu -l walltime=01:00:00 -A {{ account }} '%(job)s'
+      batch submit command template = qsub -q casper@casper-pbs.hpc.ucar.edu -l walltime=02:00:00 -A {{ account }} '%(job)s'
     [[[directives]]]
        -j = oe
        -l = select=1:ncpus=1:ompthreads=1

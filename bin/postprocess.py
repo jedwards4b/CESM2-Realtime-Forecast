@@ -198,6 +198,14 @@ def _main_func(description):
             run_cmd("nccopy -4 -d 1 {}  {}".format(_file, os.path.join(outdir,newfname)), verbose=True, from_dir=ocnhistpath)
 
 
+        outdir = "/glade/scratch/ssfcst/cesm2cam6v2/3hourly"
+
+        for _file in glob.iglob(os.path.join(atmhistpath,"*cam.h4*.nc")):
+            print("Copying {} file into {}".format(_file,outdir))
+            newfname = os.path.basename(_file).replace("cesm2cam6.","cesm2cam6v2.")
+
+            run_cmd("nccopy -4 -d 1 -VTS,PS,PSL,QBOT,TMQ,UBOT,VBOT,lat,lon,date,time_bnds,time,gw,ndcur,nscur,nsteph {}  {}".format(_file, os.path.join(outdir,newfname)), verbose=True, from_dir=atmhistpath)
+
         outdir = "/glade/scratch/ssfcst/cesm2cam6v2/6hourly"
 
         for _file in glob.iglob(os.path.join(atmhistpath,"*cam.h3*.nc")):

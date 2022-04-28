@@ -1,21 +1,21 @@
 #!Jinja2
 # This will run the hind cast for each month from intial to final cycle point
 # one year at a time, all months for a given year run simultaniously
-{% set rnames = ["APR"] %}
-{% set fyear = "2022" %}
-{% set lyear = "2022" %}
+
+{% set rnames = ["AUG"] %}
+{% set fyear = "2021" %}
+{% set lyear = "2021" %}
 # this sets the day of the week to run: 0=SUN, 1=MON, 2=TUE, ...
 {% set dayofweek = 1 %} 
 {% set model = "cesm2cam6" %}
 {% set FCST_HOME = "$HOME/cesm2cam6/CESM2-Realtime-Forecast" %}
 {% set ensemble_start = 0 %}
 {% set ensemble_end   = 20 %}
-{% set day_start      = '24' %}
-{% set day_end        = '26' %}
+{% set day_start      = '14' %}
+{% set day_end        = '20' %}
 {% set sendtoftp      = true %}
-{% set sendtoglobus      = true %}
 {% set account = "CESM0020" %}
-{% set run_queue = "economy" %}
+{% set run_queue = "premium" %}
 
 # don't change anything below here
 
@@ -48,7 +48,7 @@
    [[month_mnum{{"{0:02d}".format(loop.index)}}]]
    script = """
       cylc register $CYLC_SUITE_NAME/{{month}} {{FCST_HOME}}/cylc/monthly
-      cylc run --no-detach --set=YEAR=$CYLC_TASK_CYCLE_POINT --set=MONTH={{"{0:02d}".format(loop.index)}} --set=model={{ model }} --set=ensemble_start={{ ensemble_start }} --set=ensemble_end={{ ensemble_end }} --set=day_start={{day_start}} --set=day_end={{day_end}} --set=sendtoftp={{ sendtoftp }} --set=sendtoglobus={{ sendtoglobus }} --set=account={{account}} --set=run_queue={{run_queue}} --set=dayofweek={{dayofweek}} --set=FCST_HOME={{FCST_HOME}} $CYLC_SUITE_NAME/{{month}}
+      cylc run --no-detach --set=YEAR=$CYLC_TASK_CYCLE_POINT --set=MONTH={{"{0:02d}".format(loop.index)}} --set=model={{ model }} --set=ensemble_start={{ ensemble_start }} --set=ensemble_end={{ ensemble_end }} --set=day_start={{day_start}} --set=day_end={{day_end}} --set=sendtoftp={{ sendtoftp }} --set=account={{account}} --set=run_queue={{run_queue}} --set=dayofweek={{dayofweek}} $CYLC_SUITE_NAME/{{month}}
 """
   {% endif %}
 {% endfor %}

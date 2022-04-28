@@ -67,9 +67,9 @@ def _main_func(description):
     basecasename = "cesm2cam6"
     basemonth = date[5:7]
     baseroot = os.getenv("WORK")
-    sdrestdir = os.path.join(scratch,"S2S_70LIC_globus","SDnudgedOcn","rest","{}".format(date))
-    if os.path.isdir(sdrestdir):
-        shutil.rmtree(sdrestdir)
+#    sdrestdir = os.path.join(scratch,"S2S_70LIC_globus","SDnudgedOcn","rest","{}".format(date))
+#    if os.path.isdir(sdrestdir):
+#        shutil.rmtree(sdrestdir)
     for i in range(0,10):
         member = "{0:02d}".format(i)
         caseroot = os.path.join(baseroot,basecasename+"."+basemonth+"."+member)
@@ -81,22 +81,10 @@ def _main_func(description):
         if os.path.isdir(rundir):
             for _file in glob.iglob(os.path.join(rundir,"*"+date+"*")):
                 os.unlink(os.path.join(rundir,_file))
-        # Clean up ocean init files
-        ocn_init_path = os.path.join(os.getenv("SCRATCH"),"cesm2cam6","Ocean","rest","{}".format(date))
-        if os.path.isdir(ocn_init_path):
-            shutil.rmtree(ocn_init_path)
-
-#        for _dir in ("cpl","esp", "glc", "wav", "rest"):
-#            if os.path.isdir(os.path.join(dout_s_root,_dir)):
-#                shutil.rmtree(os.path.join(dout_s_root,_dir))
-        atmhistpath = os.path.join(dout_s_root,"atm","hist")
-        icehistpath = os.path.join(dout_s_root,"ice","hist")
-#        if os.path.isdir(atmhistpath):
-#            for histfile in os.listdir(atmhistpath):
-#                if "h1" in histfile or "h4" in histfile:
-#                    os.unlink(os.path.join(atmhistpath,histfile))
-#            send_data_to_campaignstore(dout_s_root+os.sep )
-
+    # Clean up ocean init files
+    ocn_init_path = os.path.join(os.getenv("SCRATCH"),"cesm2cam6","Ocean","rest","{}".format(date))
+    if os.path.isdir(ocn_init_path):
+        shutil.rmtree(ocn_init_path)
 
 if __name__ == "__main__":
     _main_func(__doc__)

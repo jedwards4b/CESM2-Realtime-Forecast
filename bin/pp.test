@@ -1,0 +1,20 @@
+#!/bin/bash
+##PBS -r n
+#PBS -j oe
+##PBS -V
+##PBS -S /bin/bash
+#PBS -l select=1:ncpus=1:ompthreads=1
+#PBS -l walltime=02:00:00
+  source /etc/profile.d/modules.sh
+  module purge
+  module use $HOME/modulefiles
+  module load intel
+  module load python 
+  module load netcdf
+  module load ncl 
+  module load nco 
+  module load cesm2cam6 
+  for member in {3..20}; do
+    ${FCST_HOME}/bin/postprocess.py --sendtoftp --sendtoglobus --date 2021-08-30 --member $member;
+  done
+  echo done
