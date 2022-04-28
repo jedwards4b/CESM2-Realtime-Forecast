@@ -1,0 +1,13 @@
+bin/#pp_h1vertical.ncl#
+bin/#tmp#
+bin/__pycache__/
+bin/*_orig.py
+bin/pp.out
+bin/pp.test.*
+bin/pp.test~
+bin/s2sRTredo.out.*
+bin/s2sRsync.out.*
+bin/test_from_cheyenne.o870501
+bin/tst.sh~
+cylc/settings.rc~
+user_mods/cesm2cam6.base/#user_nl_cam#
