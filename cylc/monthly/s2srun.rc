@@ -30,7 +30,7 @@
 [runtime]
   [[get_data]]
     script = """
-module load ncl nco {{ model }}
+module load ncarenv ncl nco {{ model }}
 cd ${FCST_HOME}/bin/
 ./getinitialdata.py
 ./generate_cami_ensemble.py  --ensemble-start {{ ensemble_start }} --ensemble-end {{ ensemble_end }}

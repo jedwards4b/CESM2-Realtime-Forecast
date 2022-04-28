@@ -1,0 +1,11 @@
+#!/bin/bash -l
+#SBATCH --job-name=s2sRsync
+#SBATCH --account=P93300007
+#SBATCH --ntasks=1
+#SBATCH --time=24:00:00
+#SBATCH --partition=dav
+#SBATCH --output=s2sRsync.out.%j
+
+bash sg_rsync.sh
+
+echo "DONE"

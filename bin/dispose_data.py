@@ -81,16 +81,6 @@ def _main_func(description):
             for _file in glob.iglob(os.path.join(rundir,"*"+date+"*")):
                 os.unlink(os.path.join(rundir,_file))
 
-#        for _dir in ("cpl","esp", "glc", "wav", "rest"):
-#            if os.path.isdir(os.path.join(dout_s_root,_dir)):
-#                shutil.rmtree(os.path.join(dout_s_root,_dir))
-        atmhistpath = os.path.join(dout_s_root,"atm","hist")
-        icehistpath = os.path.join(dout_s_root,"ice","hist")
-#        if os.path.isdir(atmhistpath):
-#            for histfile in os.listdir(atmhistpath):
-#                if "h1" in histfile or "h4" in histfile:
-#                    os.unlink(os.path.join(atmhistpath,histfile))
-#            send_data_to_campaignstore(dout_s_root+os.sep )
         
         
 if __name__ == "__main__":

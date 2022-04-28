@@ -1,0 +1,12 @@
+{% set rnames = ["APR"] %}
+{% set fyear = "2021" %}
+{% set lyear = "2021" %}
+{% set model = "70Lwaccm6" %}
+{% set FCST_HOME = "$HOME/70Lwaccm6/CESM2-Realtime-Forecast" %}
+{% set ensemble_start = 0 %}
+{% set ensemble_end   = 20 %}
+{% set day_start      = '11' %}
+{% set day_end        = '15' %}
+{% set sendtoftp      = false %}
+{% set account = "P93300007" %}
+{% set run_queue = "regular" %}
