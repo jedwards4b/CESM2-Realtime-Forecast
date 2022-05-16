@@ -91,7 +91,7 @@ lnd_source_path)))
     refname = "b.e21.f09_g17"
 
     for lndfile in glob.iglob(dest_path+"I2000*"):
-        newfile = lndfile.replace("I2000Clm50BgcCrop.002runRealtime",refname)
+        newfile = lndfile.replace("I2000Clm50BgcCrop.002runRealtimeClimo_contd4",refname)
         newfile = lndfile.replace("I2000Clm50BgcCrop.002runContd",refname)
         newfile = lndfile.replace("I2000Clm50BgcCrop.002run",refname)
         print("Renaming {} to {}".format(lndfile,newfile))
