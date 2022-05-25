@@ -1,1 +1,2 @@
 ./xmlchange GLC_TWO_WAY_COUPLING=FALSE
+./xmlchange --append CAM_CONFIG_OPTS="-nlev=83"

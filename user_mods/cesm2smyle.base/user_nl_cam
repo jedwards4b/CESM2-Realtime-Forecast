@@ -1,3 +1,14 @@
+use_gw_rdg_beta = .true.
+use_gw_convect_dp = .true.
+use_gw_front = .true.
+effgw_cm = 1.D0
+gw_drag_file = '$DIN_LOC_ROOT/atm/waccm/gw/newmfspectra40_dc25.nc'
+gw_polar_taper = .true.
+gw_top_taper = .false.
+pgwv = 32
+
+
+!use_topo_file = .false.
 effgw_beres_dp               = 0.90D0
 gw_qbo_hdepth_scaling                = 0.25D0
 qbo_use_forcing              = .false.

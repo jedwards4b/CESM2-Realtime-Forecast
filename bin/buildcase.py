@@ -134,6 +134,9 @@ def build_base_case(date, baseroot, basecasename, basemonth,res, ensemble_start,
             cimeoutputroot = os.path.join("/home/smyle/work/cesm/scratch/SMYLE-CW3E-L83")
             exeroot = os.path.join("/home/smyle/work/cesm/scratch/SMYLE-CW3E-L83/exerootdir/bld")
             case.set_value("CIME_OUTPUT_ROOT",cimeoutputroot)
+            cam_config_opts = case.get_value("CAM_CONFIG_OPTS")
+            case.set_value("CAM_CONFIG_OPTS",f"{cam_config_opts} -nlev=83")
+            case.set_value("GLC_TWO_WAY_COUPLING",False)
             #case.set_value("CIME_OUTPUT_ROOT","/glade/scratch/nanr/SMYLE")
             if exeroot and os.path.exists(exeroot):
                 case.set_value("EXEROOT",exeroot)
@@ -150,22 +153,22 @@ def build_base_case(date, baseroot, basecasename, basemonth,res, ensemble_start,
             case.set_value("RUN_REFDIR",sdrestdir)
             case.set_value("RUN_REFCASE", "b.e21.SMYLE_ERA5_L83_IC.f09_g17.{}.01".format(date[:7]))
             case.set_value("OCN_TRACER_MODULES","")
-            case.set_value("OCN_TRACER_MODULES","iage")
+#            case.set_value("OCN_TRACER_MODULES","iage")
             case.set_value("OCN_CHL_TYPE","diagnostic")
             case.set_value("PIO_NETCDF_FORMAT","64bit_data")
             case.set_value("NTHRDS", 1)
             # pelayout for cesm2cam6 case
-#            case.set_value("NTASKS_ATM",1152)
-#            case.set_value("NTASKS_CPL",1152)
-#            case.set_value("NTASKS_LND",1044)
-#            case.set_value("NTASKS_ROF",1044)
-#            case.set_value("NTASKS_ICE", 108)
-#            case.set_value("NTASKS_OCN",  54)
-#            case.set_value("NTASKS_WAV",  18)
-#            case.set_value("ROOTPE_ICE",1044)
-#            case.set_value("ROOTPE_OCN",1152)
-#            case.set_value("ROOTPE_WAV",1206)
-
+            case.set_value("NTASKS_ATM",1680)
+            case.set_value("NTASKS_CPL",1680)
+            case.set_value("NTASKS_LND",1392)
+            case.set_value("NTASKS_ROF",1392)
+            case.set_value("NTASKS_ICE", 288)
+            case.set_value("NTASKS_OCN",  48)
+            case.set_value("NTASKS_WAV",  24)
+            case.set_value("NTASKS_GLC",  24)
+            case.set_value("ROOTPE_WAV",  24)
+            case.set_value("ROOTPE_ICE",1392)
+            case.set_value("ROOTPE_OCN",1680)
 
             case.set_value("STOP_OPTION","nmonths")
             case.set_value("STOP_N", 12)
@@ -175,7 +178,7 @@ def build_base_case(date, baseroot, basecasename, basemonth,res, ensemble_start,
             case.set_value("CCSM_BGC","CO2A")
             case.set_value("EXTERNAL_WORKFLOW",True)
             case.set_value("CLM_NAMELIST_OPTS", "use_init_interp=.true.")
-
+                
         nint = 3 
         n2nt = 11 
         rundir = case.get_value("RUNDIR")
@@ -228,7 +231,8 @@ def _main_func(description):
     res = "f09_g17"
     waccm = False
     if model == "cesm2smyle":
-       compset = "B1850cmip6"
+#       compset = "B1850cmip6"
+       compset = "BHISTcmip6"
 
     print ("baseyear is {} basemonth is {}".format(baseyear,basemonth))
 

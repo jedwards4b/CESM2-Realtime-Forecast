@@ -62,7 +62,7 @@ def get_rvals(date, ensemble_start,ensemble_end, model):
     return rvals
 
 #def create_cam_ic_perturbed(original, ensemble, date, baserundir, model, outroot="b.e21.f09_g17.cam.i.", factor=0.15):
-def create_cam_ic_perturbed(original, ensemble_start,ensemble_end, date, baserundir, model, outroot="b.e21.SMYLE_ERA5_IC.pert.f09_g17.cam.i.", factor=0.15):
+def create_cam_ic_perturbed(original, ensemble_start,ensemble_end, date, baserundir, model, outroot="b.e21.SMYLE_ERA5_L83_IC.pert.f09_g17.cam.i.", factor=0.15):
     rvals = get_rvals(date, ensemble_start,ensemble_end, model)
 
     outfile = os.path.join(baserundir,outroot+date+"-00000.nc")
@@ -102,7 +102,7 @@ def create_cam_ic_perturbed(original, ensemble_start,ensemble_end, date, baserun
             os.makedirs(dirname)
         perturb_files.append(perturb_file)
 
-    pertroot = os.path.join("/home/smyle/work/cesm/inputdata/cesm2_init","b.e21.SMYLE_ERA5_IC.f09_g17."+date[0:7]+".01","pert.01")
+    pertroot = os.path.join("/home/smyle/work/cesm/inputdata/cesm2_init","b.e21.SMYLE_ERA5_L83_IC.f09_g17."+date[0:7]+".01","pert.01")
 
     for i in range(ensemble_start,ensemble_end, 2):
         pfile = os.path.join(local_path, perturb_files.pop(0))
@@ -162,10 +162,10 @@ def create_perturbed_init_file(original, perturb_file, outfile, weight):
 def _main_func(description):
     date, model,ensemble_start,ensemble_end = parse_command_line(sys.argv, description)
 
-    sdrestdir = os.path.join("/home/smyle/work/cesm/inputdata/cesm2_init","b.e21.SMYLE_ERA5_IC.f09_g17."+date[0:7]+".01","{}".format(date))
-    baserundir = os.path.join("/home/smyle/work","cesm","scratch","SMYLE-CW3E","b.e21.BSMYLE-CW3E.f09_g17."+date[0:7]+".001","run.{:03d}".format(ensemble_start))
-    caminame = os.path.join(sdrestdir,"b.e21.SMYLE_ERA5_IC.f09_g17.{}.01.cam.i.{date}-00000.nc".format(date[:7],date=date))
-    outroot = "b.e21.SMYLE_ERA5_IC.pert.f09_g17.cam.i."
+    sdrestdir = os.path.join("/home/smyle/work/cesm/inputdata/cesm2_init","b.e21.SMYLE_ERA5_L83_IC.f09_g17."+date[0:7]+".01","{}".format(date))
+    baserundir = os.path.join("/home/smyle/work","cesm","scratch","SMYLE-CW3E-L83","b.e21.BSMYLE-CW3E-L83.f09_g17."+date[0:7]+".001","run.{:03d}".format(ensemble_start))
+    caminame = os.path.join(sdrestdir,"b.e21.SMYLE_ERA5_L83_IC.f09_g17.{}.01.cam.i.{date}-00000.nc".format(date[:7],date=date))
+    outroot = "b.e21.SMYLE_ERA5_L83_IC.pert.f09_g17.cam.i."
 
     create_cam_ic_perturbed(caminame,ensemble_start,ensemble_end, date,baserundir, model, outroot=outroot)
 
