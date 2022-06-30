@@ -51,7 +51,7 @@ def get_ocn_src_path(src_root, date, count=0):
     src_path = os.path.join(src_dir_path, "{}-00000".format(odate))
     if os.path.isdir(src_path):
         return(src_path)
-    if count > 40:
+    if count > 30:
         print("No suitable ocean restart file found")
         return None
     ndate = datetime.strptime(date, '%Y-%m-%d') - timedelta(days=1)
