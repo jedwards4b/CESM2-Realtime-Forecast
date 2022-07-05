@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 import os, sys
-#cesmroot = os.getenv("CESM_ROOT")
-cesmroot = "/glade/work/nanr/cesm_tags/cesm2.1.4-SMYLE/"
+cesmroot = os.getenv("CESM_ROOT")
+#cesmroot = "/home/smyle/work/cesm/cesm2.1.4-SMYLE/"
 s2sfcstroot = os.path.join(os.path.dirname(os.path.join(os.path.abspath(__file__))), os.path.pardir)
 
 if cesmroot is None:
@@ -32,7 +32,7 @@ def parse_command_line(args, description):
 
     parser.add_argument("--ensemble-start",default=1,
                         help="Specify the first ensemble member")
-    parser.add_argument("--ensemble-end",default=20,
+    parser.add_argument("--ensemble-end",default=10,
                         help="Specify the last ensemble member")
 
     args = CIME.utils.parse_args_and_handle_standard_logging_options(args, parser)
@@ -52,21 +52,17 @@ def parse_command_line(args, description):
     return date.strftime("%Y-%m-%d"), args.model,int(args.ensemble_start),int(args.ensemble_end)
 
 def get_rvals(date, ensemble_start,ensemble_end, model):
-    random.seed(int(date[0:4])+int(date[5:7])+int(date[8:10]))
-    rvals = random.sample(range(1001),k=ensemble_end//2)
+    random.seed(int(date[0:4])+int(date[5:7])+int(date[8:10])+5)
+    rvals = random.sample(range(501),k=ensemble_end//2)
     print("Rvals are {}".format(rvals))
-    #rvals_file = os.path.join("/glade/scratch/nanr/SMYLE-ERA5/","cases","camic_era5_"+date+".{}-{}.txt".format(ensemble_start,ensemble_end))
-    #rvals_file = os.path.join("/glade/p/cesm/espwg/CESM2-SMYLE-ERA5/","cases","camic_era5_"+date+".{}-{}.txt".format(ensemble_start,ensemble_end))
-    rvals_file = os.path.join("/glade/campaign/cesm/development/espwg/SMYLE-ERA5/inputdata/","camic","camic_era5_"+date+".{}-{}.txt".format(ensemble_start,ensemble_end))
-    #rvals_file = os.path.join("/glade/p/cesm/espwg/CESM2-SMYLE-ERA5/","cases","camic_era5_"+date+"."+ensemble_start+"-"+ensemble_end+".txt")
-    if not os.path.isfile(rvals_file):
-        with open(rvals_file,"w") as fd:
-            fd.write("{}".format(rvals))
+    rvals_file = os.path.join("/home/smyle/work/cesm/CESM2-SMYLE-CW3E/","cases","camic_"+date+".{}-{}.txt".format(ensemble_start,ensemble_end))
+    with open(rvals_file,"w") as fd:
+        fd.write("{}".format(rvals))
 
     return rvals
 
 #def create_cam_ic_perturbed(original, ensemble, date, baserundir, model, outroot="b.e21.f09_g17.cam.i.", factor=0.15):
-def create_cam_ic_perturbed(original, ensemble_start,ensemble_end, date, baserundir, model, outroot="b.e21.SMYLE_ERA5_IC.pert.f09_g17.cam.i.", factor=0.15):
+def create_cam_ic_perturbed(original, ensemble_start,ensemble_end, date, baserundir, model, outroot="b.e21.SMYLE_ERA5_L83_IC.pert.f09_g17.cam.i.", factor=0.15):
     rvals = get_rvals(date, ensemble_start,ensemble_end, model)
 
     outfile = os.path.join(baserundir,outroot+date+"-00000.nc")
@@ -89,12 +85,11 @@ def create_cam_ic_perturbed(original, ensemble_start,ensemble_end, date, baserun
 
     if model == "cesm2smyle":
         #local_path = "/glade/campaign/cesm/collections/cesm2-smyle"
-        local_path = "/glade/campaign/cesm/development/cross-wg/S2S/CESM2/CAMI/RP"
+        local_path = "/home/smyle/work/cesm/inputdata/atm/cam/RP"
     else:
         local_path = "/glade/campaign/cesm/development/cross-wg/S2S/CESM2/CAMI/RP"
     perturb_files = []
     for i in range(ensemble_start,ensemble_end, 2):
-        print "HERE rvals[{}] = {}".format((i-1)//2,rvals[(i-1)//2])
         if model == "cesm2smyle":
             perturb_file = os.path.join("{}".format(month),
                                         "CESM2.cam.i.M{}.diff.{}.nc".format(month,rvals[(i-1)//2]))
@@ -107,7 +102,7 @@ def create_cam_ic_perturbed(original, ensemble_start,ensemble_end, date, baserun
             os.makedirs(dirname)
         perturb_files.append(perturb_file)
 
-    pertroot = os.path.join("/glade/scratch/nanr/SMYLE-ERA5/inputdata/cesm2_init","b.e21.SMYLE_ERA5_IC.f09_g17."+date[0:7]+".01","pert.01")
+    pertroot = os.path.join("/home/smyle/work/cesm/inputdata/cesm2_init","b.e21.SMYLE_ERA5_L83_IC.f09_g17."+date[0:7]+".01","pert.01")
 
     for i in range(ensemble_start,ensemble_end, 2):
         pfile = os.path.join(local_path, perturb_files.pop(0))
@@ -136,20 +131,13 @@ def create_cam_ic_perturbed(original, ensemble_start,ensemble_end, date, baserun
               os.mkdir(outdir)
               print("outdir = {} ".format(outdir))
         if i != 1:
-           print("outfile2 ===================== {} {}".format(outdir2,outfile2))
            if os.path.isfile(os.path.join(outdir1,origfile)):
               os.unlink(os.path.join(outdir1,origfile))
-              print("I made it here = {} ".format(outdir1))
            os.symlink(outfile1, os.path.join(outdir1,origfile))
-           print("I made it here = {} ".format(outdir1))
+           print("I made it here = {} ".format(outdir))
         if os.path.isfile(os.path.join(outdir2,origfile)):
-              os.unlink(os.path.join(outdir2,origfile))
-              print("I made it unlink = {} ".format(outdir1))
-        if not os.path.isfile(os.path.join(outdir2,origfile)):
-           print("creating new pert file= {} ".format(outfile2))
-           os.symlink(outfile2, os.path.join(outdir2,origfile))
-        else:
-           print("pert file already exists= {} ".format(outfile2))
+            os.unlink(os.path.join(outdir2,origfile))
+        os.symlink(outfile2, os.path.join(outdir2,origfile))
 
 
 def create_perturbed_init_file(original, perturb_file, outfile, weight):
@@ -174,11 +162,10 @@ def create_perturbed_init_file(original, perturb_file, outfile, weight):
 def _main_func(description):
     date, model,ensemble_start,ensemble_end = parse_command_line(sys.argv, description)
 
-    sdrestdir = os.path.join("/glade/scratch/nanr/","SMYLE-ERA5","inputdata","cesm2_init","b.e21.SMYLE_ERA5_IC.f09_g17."+date[0:7]+".01","{}".format(date))
-    user = os.getenv("USER")
-    baserundir = os.path.join("/glade/scratch/{}/".format(user),"SMYLE-ERA5","b.e21.BSMYLE_ERA5.f09_g17."+date[0:7]+".001","run.{:03d}".format(ensemble_start))
-    caminame = os.path.join(sdrestdir,"b.e21.SMYLE_ERA5_IC.f09_g17.{}.01.cam.i.{date}-00000.nc".format(date[:7],date=date))
-    outroot = "b.e21.SMYLE_ERA5_IC.pert.f09_g17.cam.i."
+    sdrestdir = os.path.join("/home/smyle/work/cesm/inputdata/cesm2_init","b.e21.SMYLE_ERA5_L83_IC.f09_g17."+date[0:7]+".01","{}".format(date))
+    baserundir = os.path.join("/home/smyle/work","cesm","scratch","SMYLE-CW3E-L83","b.e21.BSMYLE-CW3E-L83.f09_g17."+date[0:7]+".001","run.{:03d}".format(ensemble_start))
+    caminame = os.path.join(sdrestdir,"b.e21.SMYLE_ERA5_L83_IC.f09_g17.{}.01.cam.i.{date}-00000.nc".format(date[:7],date=date))
+    outroot = "b.e21.SMYLE_ERA5_L83_IC.pert.f09_g17.cam.i."
 
     create_cam_ic_perturbed(caminame,ensemble_start,ensemble_end, date,baserundir, model, outroot=outroot)
 

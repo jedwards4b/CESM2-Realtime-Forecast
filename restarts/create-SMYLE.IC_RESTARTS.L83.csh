@@ -1,41 +1,53 @@
 #! /bin/csh -fxv 
 
-setenv CESM2_TOOLS_ROOT /glade/work/nanr/cesm_tags/CASE_tools/cesm2-scripps/
-setenv CESMROOT /glade/work/nanr/cesm_tags/cesm2.1.4-SMYLE
+setenv CESM2_TOOLS_ROOT /glade/work/nanr/cesm_tags/CASE_tools/cesm2-comet-smyle-L83/
 
 if ($HOST != casper10) then
 echo "ERROR:  Must be run on Casper"
 #exit
 endif
 
-set syr = 1980
-set eyr = 1989
-set syr = 1990
-set eyr = 1999
-set syr = 2004
-set eyr = 2009
-set syr = 2010
-set eyr = 2018
-set syr = 1972
+#set syr = 1980
+#set eyr = 1989
+#set syr = 1990
+#set eyr = 1999
+#set syr = 2004
+#set eyr = 2009
+#set syr = 2010
+#set eyr = 2018
+#set syr = 1972
 #set eyr = 1971
-set syr = 2020
-set eyr = 2020
+#set syr = 1990
+#set eyr = 1999
+#set syr = 2000
+#set eyr = 2010
+#set syr = 2011
+#set eyr = 2018
+#set syr = 2000
+#set eyr = 2014
+#set syr = 1981
+#set eyr = 1990
+#set syr = 1991
+#set eyr = 2000
+set syr = 2001
+set eyr = 2010
 
 @ ib = $syr
 @ ie = $eyr
 
 foreach year ( `seq $ib $ie` )
 #foreach mon ( 02 05 08 11 )
-foreach mon ( 01 10 11 12 )
+#foreach mon ( 01 10 11 12 )
+foreach mon ( 11 )
 #foreach mon ( 01 )
 #foreach mon ( 02 09 )
 
-set case = b.e21.SMYLE_ERA5_IC.f09_g17.${year}-${mon}.01
+set case = b.e21.SMYLE_ERA5_L83_IC.f09_g17.${year}-${mon}.01
 
 
 #set icdir = /glade/p/cesm/cseg/inputdata/ccsm4_init/{$case} 
-set Picdir = /glade/scratch/nanr/SMYLE-ERA5/inputdata/cesm2_init/{$case}/
-set icdir  = /glade/scratch/nanr/SMYLE-ERA5/inputdata/cesm2_init/{$case}/${year}-${mon}-01
+set Picdir = /glade/scratch/nanr/SMYLE-ERA5-L83/inputdata/cesm2_init/{$case}/
+set icdir  = /glade/scratch/nanr/SMYLE-ERA5-L83/inputdata/cesm2_init/{$case}/${year}-${mon}-01
 if (! -d ${Picdir}) then
  mkdir ${Picdir}
 endif
@@ -48,7 +60,7 @@ set doThis99 = 1
 if ($doThis99 == 1) then
 
 # atm, lnd initial conditions
-set atmcase =  ERA5_0.9x1.25_L32
+set atmcase =  ERA5_0.9x1.25_L83
 set lndcase =  smyle_Transient
 
 # names
@@ -61,7 +73,7 @@ set roffname = ${lndcase}.mosart.r.${year}-${mon}-01-00000.nc
 set atmdir = /glade/scratch/islas/analyses_output/
 
 #set lnddir = /glade/p/cesm/espwg/CESM2-SMYLE/initial_conditions/clm/${year}-${mon}-01-00000/
-set lnddir = /glade/campaign/cesm/development/espwg/SMYLE/CLM5_init/rest/${year}-${mon}-01-00000/
+set lnddir = /glade/campaign/cesm/development/espwg/SMYLE/initial_conditions/CLM5_SMYLE-Trendy/rest/${year}-${mon}-01-00000/
 
 # rename atm, land IC files
 set atmfout = ${case}.cam.i.${year}-${mon}-01-00000.nc
@@ -95,7 +107,7 @@ set ocean_base_year = 306
 @ offset = $first_rest_year - $ocean_base_year 
 @ ocnyr   = $year - $offset
 #set ocndir = /glade/p/cesm/espwg/CESM2-SMYLE/initial_conditions/pop_cice/0${ocnyr}-${mon}-01-00000/
-set ocndir = /glade/campaign/cesm/development/espwg/SMYLE/SMYLE-FOSI/rest/0${ocnyr}-${mon}-01-00000/
+set ocndir = /glade/campaign/cesm/development/espwg/SMYLE/initial_conditions/SMYLE-FOSI/rest/0${ocnyr}-${mon}-01-00000/
 set icefout = ${case}.cice.r.${year}-${mon}-01-00000.nc
 set lndfout = ${case}.clm2.r.${year}-${mon}-01-00000.nc
 set roffout = ${case}.mosart.r.${year}-${mon}-01-00000.nc
@@ -134,7 +146,8 @@ echo "$case.cice.r.$year-${mon}-01-00000.nc"  > ${icdir}/rpointer.ice
 echo "./$case.pop.ro.$year-${mon}-01-00000"   > ${icdir}/rpointer.ocn.ovf
 echo "$case.cam.r.$year-${mon}-01-00000.nc"   > ${icdir}/rpointer.atm
 echo "$case.cpl.r.$year-${mon}-01-00000.nc"   > ${icdir}/rpointer.drv
-echo "$case.clm2.r.$year-${mon}-01-00000.nc"  > ${icdir}/rpointer.clm
+echo "$case.clm2.r.$year-${mon}-01-00000.nc"  > ${icdir}/rpointer.lnd
+#echo "$case.clm2.r.$year-${mon}-01-00000.nc"  > ${icdir}/rpointer.clm
 echo "$case.mosart.r.$year-${mon}-01-00000.nc"   > ${icdir}/rpointer.rof
 echo "$case.pop.rh.ecosys.nyear1.$year-${mon}-01-00000.nc"   > ${icdir}/rpointer.ocn.tavg.5
 echo "$case.pop.rh.$year-${mon}-01-00000.nc"   > ${icdir}/rpointer.ocn.tavg
@@ -153,7 +166,7 @@ endif	# doThis99
 # ==================================
 setenv CYLC_TASK_CYCLE_POINT ${year}-${mon}-01
 cd ${CESM2_TOOLS_ROOT}/restarts/
-./generate_cami_ensemble_offline.py
+./generate_cami_ensemble_offline.L83.py
 
 end
 end

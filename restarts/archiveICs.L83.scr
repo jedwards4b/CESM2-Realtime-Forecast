@@ -2,19 +2,21 @@
 ### set env variables
 module load ncl nco
 
-setenv CESM2_TOOLS_ROOT /glade/work/$USER/cesm_tags/CASE_tools/cesm2-comet-smyle/
-setenv ARCHDIR1  /glade/scratch/$USER/SMYLE-ERA5/inputdata/cesm2_init/
+setenv CESM2_TOOLS_ROOT /glade/work/$USER/cesm_tags/CASE_tools/cesm2-comet-smyle-L83/
+setenv ARCHDIR1  /glade/scratch/$USER/SMYLE-ERA5-L83/inputdata/cesm2_init/
 setenv CAMPAIGN  /glade/campaign/cesm/development/espwg/SMYLE-ERA5/inputdata/cesm2_init/
 
-set syr = 1970
-set syr = 2019
-set eyr = 2019
+set syr = 1979
+set eyr = 2020
+set syr = 1950
+set eyr = 1978
 
 @ ib = $syr
 @ ie = $eyr
 
 foreach year ( `seq $ib $ie` )
-foreach mon ( 09 10 11 12 01 02 )
+#foreach mon ( 09 10 11 12 01 02 )
+foreach mon ( 11 )
 #foreach mon ( 10 )
 #foreach mon ( 11 12 01 )
 #foreach mon ( 02 09 )
@@ -22,7 +24,7 @@ foreach mon ( 09 10 11 12 01 02 )
 
 # case name counter
 
-set CASE = b.e21.SMYLE_ERA5_IC.f09_g17.${year}-${mon}.01
+set CASE = b.e21.SMYLE_ERA5_L83_IC.f09_g17.${year}-${mon}.01
 
 if (! -e $CAMPAIGN/$CASE.tar) then
    cd $ARCHDIR1
