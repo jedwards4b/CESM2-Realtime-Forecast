@@ -113,20 +113,20 @@ glacier_region_behavior = 'single_at_atm_topo', 'virtual', 'virtual', 'virtual'
  ndep_taxmode = 'cycle'
  ndep_varlist = 'NDEP_month'
  ndepmapalgo = 'bilinear'
- stream_fldfilename_ndep = '/glade/p/cesmdata/cseg/inputdata/lnd/clm2/ndepdata/fndep_clm_f09_g17.CMIP6-SSP3-7.0-WACCM_1849-2101_monthly_c191007.nc'
+ stream_fldfilename_ndep = '/home/smyle/work/cesm/inputdata/lnd/clm2/ndepdata/fndep_clm_f09_g17.CMIP6-SSP3-7.0-WACCM_1849-2101_monthly_c191007.nc'
  stream_year_first_ndep = 1850
  stream_year_last_ndep = 2100
 /
 &popd_streams
  model_year_align_popdens = 1850
  popdensmapalgo = 'bilinear'
- stream_fldfilename_popdens = '/glade/p/cesmdata/cseg/inputdata/lnd/clm2/firedata/clmforc.Li_2018_SSP3_CMIP6_hdm_0.5x0.5_AVHRR_simyr1850-2100_c181205.nc'
+ stream_fldfilename_popdens = '/home/smyle/work/cesm/inputdata/lnd/clm2/firedata/clmforc.Li_2018_SSP3_CMIP6_hdm_0.5x0.5_AVHRR_simyr1850-2100_c181205.nc'
  stream_year_first_popdens = 1850
  stream_year_last_popdens = 2100
 /
 &urbantv_streams
  model_year_align_urbantv = 1850
- stream_fldfilename_urbantv = '/glade/p/cesmdata/cseg/inputdata/lnd/clm2/urbandata/CLM50_tbuildmax_Oleson_2016_0.9x1.25_simyr1849-2106_c160923.nc'
+ stream_fldfilename_urbantv = '/home/smyle/work/cesm/inputdata/lnd/clm2/urbandata/CLM50_tbuildmax_Oleson_2016_0.9x1.25_simyr1849-2106_c160923.nc'
  stream_year_first_urbantv = 1850
  stream_year_last_urbantv = 2100
  urbantvmapalgo = 'nn'
