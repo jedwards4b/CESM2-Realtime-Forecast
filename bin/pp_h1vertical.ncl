@@ -35,8 +35,8 @@ lev_p@positive  = "down"
           outDir = getenv("ARCHIVEROOT")+"/70Lwaccm6/" + varStrings(i) + "/" + yyyy + "/" + mm + "/"	
           fout = outDir + varStrings(i) + "_70Lwaccm6_" + outdate + "00z_d01_d46_m" + member + ".nc"
         else
-          outDir = getenv("ARCHIVEROOT")+"/cesm2cam6v2/" + varStrings(i) + "/" + yyyy + "/" + mm + "/"
-  	  fout = outDir + varStrings(i) + "_cesm2cam6v2_" + outdate + "00z_d01_d46_m" + member + ".nc"
+          outDir = getenv("ARCHIVEROOT")+"/cesm2cam6climoOCNclimoLNDv2/" + varStrings(i) + "/" + yyyy + "/" + mm + "/"
+  	  fout = outDir + varStrings(i) + "_cesm2cam6climoOCNclimoLNDv2_" + outdate + "00z_d01_d46_m" + member + ".nc"
         end if
 	v = f[:]->$varStrings(i)$
 	PS = f[:]->PS

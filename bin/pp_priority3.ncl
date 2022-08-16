@@ -44,8 +44,8 @@ do i = 0,ListCount(var)-1
   	  outDir = getenv("ARCHIVEROOT") + "/70Lwaccm6/p3/" + varStrings(i) + "/" + yyyy + "/" + mm + "/"
   	  fout = outDir + varStrings(i) + "_70Lwaccm6_" + outdate + "_00z_d01_d46_m" + member + ".nc"
         else
-  	  outDir = getenv("ARCHIVEROOT") + "/cesm2cam6v2/p3/" + varStrings(i) + "/" + yyyy + "/" + mm + "/"
-  	  fout = outDir + varStrings(i) + "_cesm2cam6v2_" + outdate + "_00z_d01_d46_m" + member + ".nc"
+  	  outDir = getenv("ARCHIVEROOT") + "/cesm2cam6climoOCNclimoLNDv2/p3/" + varStrings(i) + "/" + yyyy + "/" + mm + "/"
+  	  fout = outDir + varStrings(i) + "_cesm2cam6climoOCNclimoLNDv2_" + outdate + "_00z_d01_d46_m" + member + ".nc"
         end if	  
 	if (.not. fileexists(outDir)) then
           system("mkdir -p "+outDir)

@@ -107,7 +107,7 @@ def per_run_case_updates(case, date, sdrestdir, user_mods_dir, rundir):
 
 def build_base_case(date, baseroot, basemonth,res, compset, overwrite,
                     sdrestdir, user_mods_dir, pecount=None):
-    caseroot = os.path.join(baseroot,"cesm2cam6.{:02d}".format(basemonth)+".00")
+    caseroot = os.path.join(baseroot,"cesm2cam6climoOCNclimoLND.{:02d}".format(basemonth)+".00")
     if overwrite and os.path.isdir(caseroot):
         shutil.rmtree(caseroot)
 
@@ -126,7 +126,7 @@ def build_base_case(date, baseroot, basemonth,res, compset, overwrite,
             case.set_value("RUN_REFCASE", "b.e21.f09_g17")
             case.set_value("OCN_TRACER_MODULES","iage")
             case.set_value("OCN_CHL_TYPE","diagnostic")
-            # pelayout for cesm2cam6 case
+            # pelayout for cesm2cam6climoOCNclimoLND case
 #            case.set_value("NTASKS_ATM",1152)
 #            case.set_value("NTASKS_CPL",1152)
 #            case.set_value("NTASKS_LND",1044)
@@ -194,9 +194,9 @@ def _main_func(description):
 
     overwrite = True
 
-    sdrestdir = os.path.join(os.getenv("SCRATCH"),"cesm2cam6","Ocean","rest","{}".format(date))
+    sdrestdir = os.path.join(os.getenv("SCRATCH"),"cesm2cam6climoOCNclimoLND","Ocean","rest","{}".format(date))
 
-    user_mods_dir = os.path.join(s2sfcstroot,"user_mods","cesm2cam6")
+    user_mods_dir = os.path.join(s2sfcstroot,"user_mods","cesm2cam6climoOCNclimoLND")
 
     # END TODO
     print("basemonth = {}".format(basemonth))

@@ -62,11 +62,11 @@ def get_ocn_src_path(src_root, date, count=0):
 def get_data_from_campaignstore(date):
 
     source_root_local = "/glade/campaign"
-    source_path = 'cesm/development/cross-wg/S2S/CESM2/OCEANIC/{date}-00000/'.format(date=date)
+    source_path = 'cesm/development/cross-wg/S2S/CESM2/CLIMOCEANIC/{date}-00000/'.format(date=date)
 
     source_path = get_ocn_src_path(source_root_local, date)
 
-    dest_path = os.path.join(os.getenv("SCRATCH"),"cesm2cam6","Ocean","rest","{}".format(date))
+    dest_path = os.path.join(os.getenv("SCRATCH"),"cesm2cam6climoOCNclimoLND","Ocean","rest","{}".format(date))
 
 
 #    if os.path.exists(os.path.join(dest_path,"rpointer.ocn.restart")):
@@ -74,7 +74,7 @@ def get_data_from_campaignstore(date):
 #        return
 #    if(not os.path.exists(dest_path)):
     os.makedirs(dest_path)
-    lnd_source_path = 'cesm/development/cross-wg/S2S/land/rest/{}-00000/'.format(date)
+    lnd_source_path = 'cesm/development/cross-wg/S2S/CESM2/CLIMOLND/{}-00000/'.format(date)
 
 
     if os.path.isdir(os.path.join(source_root_local,source_path)) and os.path.isdir(os.path.join(source_root_local,lnd_source_path)):
@@ -92,9 +92,9 @@ lnd_source_path)))
     refname = "b.e21.f09_g17"
 
     for lndfile in glob.iglob(dest_path+"I2000*"):
-        newfile = lndfile.replace("I2000Clm50BgcCrop.002runRealtime",refname)
-        newfile = lndfile.replace("I2000Clm50BgcCrop.002runContd",refname)
-        newfile = lndfile.replace("I2000Clm50BgcCrop.002run",refname)
+        newfile = lndfile.replace("I2000Clm50BgcCrop.002runRealtimeClimo_contd4",refname)
+        # newfile = lndfile.replace("I2000Clm50BgcCrop.002runContd",refname)
+        # newfile = lndfile.replace("I2000Clm50BgcCrop.002run",refname)
         print("Renaming {} to {}".format(lndfile,newfile))
         os.rename(os.path.join(dest_path,lndfile), os.path.join(dest_path,newfile))
 
