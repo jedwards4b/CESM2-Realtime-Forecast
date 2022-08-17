@@ -53,4 +53,4 @@
 !    $CASEROOT/CaseDocs/pop_in
 !----------------------------------------------------------------------------------
 
-pcfc_file="$DIN_LOC_ROOT/ocn/pop/res_indpt/forcing/cfc_atm_SMYLE_OMIP_1765-2015_SSP370_2021-2100_c210602.nc"
+pcfc_file = '$DIN_LOC_ROOT/ocn/pop/res_indpt/forcing/cfc_atm_SMYLE_OMIP_1765-2015_SSP370_2021-2100_c210602.nc'
