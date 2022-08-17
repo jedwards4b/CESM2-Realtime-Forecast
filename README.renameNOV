@@ -1,0 +1,2 @@
+/glade/campaign/cesm/development/espwg/SMYLE-CW3E-L83/timeseries
+find . -name *.nc -print -exec ls {} ; > allfiles

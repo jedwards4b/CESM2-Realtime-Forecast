@@ -240,4 +240,25 @@ hist_fexcl6 += 'BTRANMN', 'CPHASE', 'EFLX_GRND_LAKE', 'FAREA_BURNED', 'FCEV', 'F
 !! h5
 hist_fincl6 += 'EFLX_LH_TOT', 'FGR', 'FIRA', 'FIRE', 'FLDS', 'FSM', 'SABG', 'TKE1', 'TREFMNAV', 'TREFMXAV'
 
+!----------------------------------------------------------------------------------
+!! From L32 settings
+!----------------------------------------------------------------------------------
+
+&ndepdyn_nml
+ model_year_align_ndep = 1850
+ ndep_taxmode = 'cycle'
+ ndep_varlist = 'NDEP_month'
+ ndepmapalgo = 'bilinear'
+ stream_fldfilename_ndep = '/cw3e/mead/projects/csg100/cesm/inputdata/lnd/clm2/ndepdata/fndep_clm_f09_g17.CMIP6-SSP3-7.0-WACCM_1849-2101_monthly_c191007.nc'
+ stream_year_first_ndep = 1850
+ stream_year_last_ndep = 2100
+/
+&popd_streams
+ model_year_align_popdens = 1850
+ popdensmapalgo = 'bilinear'
+ stream_fldfilename_popdens = '/cw3e/mead/projects/csg100/cesm/inputdata/lnd/clm2/firedata/clmforc.Li_2018_SSP3_CMIP6_hdm_0.5x0.5_AVHRR_simyr1850-2100_c181205.nc'
+ stream_year_first_popdens = 1850
+ stream_year_last_popdens = 2100
+/
+
 

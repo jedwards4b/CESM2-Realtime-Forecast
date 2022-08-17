@@ -11,26 +11,18 @@ endif
 #set eyr = 1989
 #set syr = 1990
 #set eyr = 1999
-#set syr = 2004
+#set syr = 2000
 #set eyr = 2009
 #set syr = 2010
-#set eyr = 2018
-#set syr = 1972
-#set eyr = 1971
-#set syr = 1990
-#set eyr = 1999
-#set syr = 2000
-#set eyr = 2010
-#set syr = 2011
-#set eyr = 2018
-#set syr = 2000
-#set eyr = 2014
-#set syr = 1981
-#set eyr = 1990
-#set syr = 1991
-#set eyr = 2000
-set syr = 2001
-set eyr = 2010
+#set syr = 2010
+#set eyr = 1970
+#set eyr = 1978
+#set syr = 2019
+#set eyr = 2020
+#set syr = 2020
+#set eyr = 2020
+set syr = 1970
+set eyr = 1978
 
 @ ib = $syr
 @ ie = $eyr
@@ -38,7 +30,8 @@ set eyr = 2010
 foreach year ( `seq $ib $ie` )
 #foreach mon ( 02 05 08 11 )
 #foreach mon ( 01 10 11 12 )
-foreach mon ( 11 )
+#foreach mon ( 11 )
+foreach mon ( 02 )
 #foreach mon ( 01 )
 #foreach mon ( 02 09 )
 
@@ -61,19 +54,25 @@ if ($doThis99 == 1) then
 
 # atm, lnd initial conditions
 set atmcase =  ERA5_0.9x1.25_L83
-set lndcase =  smyle_Transient
-
-# names
-set atmfname = ${atmcase}.cam2.i.${year}-${mon}-01-00000.nc
-set lndfname = ${lndcase}.clm2.r.${year}-${mon}-01-00000.nc
-set roffname = ${lndcase}.mosart.r.${year}-${mon}-01-00000.nc
 
 # directories
 #set atmdir = /glade/p/cesm/espwg/CESM2-SMYLE/initial_conditions/cam/
 set atmdir = /glade/scratch/islas/analyses_output/
 
+if ($year >= 2020) then
+  set lnddir = /glade/campaign/cesm/development/espwg/SMYLE/initial_conditions/CLM5_SMYLE-JRA55-Extension/rest/${year}-${mon}-01-00000/
+  set lndcase =  smyle_Transient_201801
+else
+  set lnddir = /glade/campaign/cesm/development/espwg/SMYLE/initial_conditions/CLM5_SMYLE-Trendy/rest/${year}-${mon}-01-00000/
+  set lndcase =  smyle_Transient
+endif
+
 #set lnddir = /glade/p/cesm/espwg/CESM2-SMYLE/initial_conditions/clm/${year}-${mon}-01-00000/
-set lnddir = /glade/campaign/cesm/development/espwg/SMYLE/initial_conditions/CLM5_SMYLE-Trendy/rest/${year}-${mon}-01-00000/
+
+# names
+set atmfname = ${atmcase}.cam2.i.${year}-${mon}-01-00000.nc
+set lndfname = ${lndcase}.clm2.r.${year}-${mon}-01-00000.nc
+set roffname = ${lndcase}.mosart.r.${year}-${mon}-01-00000.nc
 
 # rename atm, land IC files
 set atmfout = ${case}.cam.i.${year}-${mon}-01-00000.nc
@@ -96,7 +95,7 @@ endif
 
 # ocn/ice
 # years used for ICs:   0306 (1958) - 0366 (2018)
-set ocncase = g.e22.GOMIPECOIAF_JRA-1p4-2018.TL319_g17.SMYLE.005
+#g.e22.GOMIPECOIAF_JRA-1p4-2018.TL319_g17.SMYLE.005
 set first_rest_year = 1958
 set ocean_base_year = 306
 
@@ -106,8 +105,14 @@ set ocean_base_year = 306
 # atmyr 1958 = ocnyr 306
 @ offset = $first_rest_year - $ocean_base_year 
 @ ocnyr   = $year - $offset
-#set ocndir = /glade/p/cesm/espwg/CESM2-SMYLE/initial_conditions/pop_cice/0${ocnyr}-${mon}-01-00000/
-set ocndir = /glade/campaign/cesm/development/espwg/SMYLE/initial_conditions/SMYLE-FOSI/rest/0${ocnyr}-${mon}-01-00000/
+if ($ocnyr >= 367 && $mon == 11) then
+  set ocncase = g.e22.GOMIPECOIAF_JRA-1p4-2018.TL319_g17.SMYLE.005.2019_2020
+  set ocndir = /glade/campaign/cesm/development/espwg/SMYLE/initial_conditions/SMYLE-FOSI_ext1/rest/0${ocnyr}-${mon}-01-00000/
+else
+  set ocncase = g.e22.GOMIPECOIAF_JRA-1p4-2018.TL319_g17.SMYLE.005
+  set ocndir = /glade/campaign/cesm/development/espwg/SMYLE/initial_conditions/SMYLE-FOSI/rest/0${ocnyr}-${mon}-01-00000/
+endif
+
 set icefout = ${case}.cice.r.${year}-${mon}-01-00000.nc
 set lndfout = ${case}.clm2.r.${year}-${mon}-01-00000.nc
 set roffout = ${case}.mosart.r.${year}-${mon}-01-00000.nc
@@ -122,6 +127,8 @@ set poprfout  = ${case}.pop.r.${year}-${mon}-01-00000.nc
 set poprofout = ${case}.pop.ro.${year}-${mon}-01-00000 
 set poprhfout = ${case}.pop.rh.ecosys.nyear1.${year}-${mon}-01-00000.nc
 set popwwfout = ${case}.ww3.r.${year}-${mon}-01-00000
+
+echo $ocndir/$poprfname
 
 echo $icefname
 echo $poprfname

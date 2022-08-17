@@ -1,0 +1,1178 @@
+commit 527c9569ab68794039f795a465ccaae659eaeb8b
+Author: Nan Rosenbloom <nanr@ucar.edu>
+Date:   Tue Jul 5 14:42:05 2022 -0600
+
+    updating user_nl files for SSP370
+
+diff --git a/bin/generate_cami_ensemble.py b/bin/generate_cami_ensemble.py
+index e30c815..30ca50d 100755
+--- a/bin/generate_cami_ensemble.py
++++ b/bin/generate_cami_ensemble.py
+@@ -53,7 +53,7 @@ def parse_command_line(args, description):
+ 
+ def get_rvals(date, ensemble_start,ensemble_end, model):
+     random.seed(int(date[0:4])+int(date[5:7])+int(date[8:10])+5)
+-    rvals = random.sample(range(1001),k=ensemble_end//2)
++    rvals = random.sample(range(501),k=ensemble_end//2)
+     print("Rvals are {}".format(rvals))
+     rvals_file = os.path.join("/home/smyle/work/cesm/CESM2-SMYLE-CW3E/","cases","camic_"+date+".{}-{}.txt".format(ensemble_start,ensemble_end))
+     with open(rvals_file,"w") as fd:
+diff --git a/restarts/archiveICs.csh b/restarts/archiveICs.csh
+index 55a69ef..af9dabf 100755
+--- a/restarts/archiveICs.csh
++++ b/restarts/archiveICs.csh
+@@ -2,19 +2,21 @@
+ ### set env variables
+ module load ncl nco
+ 
+-setenv CESM2_TOOLS_ROOT /glade/work/$USER/cesm_tags/CASE_tools/cesm2-comet-smyle/
+-setenv ARCHDIR1  /glade/scratch/$USER/SMYLE-ERA5/inputdata/cesm2_init/
++setenv CESM2_TOOLS_ROOT /glade/work/$USER/cesm_tags/CASE_tools/cesm2-comet-smyle-L83/
++setenv ARCHDIR1  /glade/scratch/$USER/SMYLE-ERA5-L83/inputdata/cesm2_init/
+ setenv CAMPAIGN  /glade/campaign/cesm/development/espwg/SMYLE-ERA5/inputdata/cesm2_init/
+ 
+-set syr = 1970
+-set syr = 2019
+-set eyr = 2019
++set syr = 1979
++set eyr = 2020
++set syr = 1950
++set eyr = 1978
+ 
+ @ ib = $syr
+ @ ie = $eyr
+ 
+ foreach year ( `seq $ib $ie` )
+-foreach mon ( 09 10 11 12 01 02 )
++#foreach mon ( 09 10 11 12 01 02 )
++foreach mon ( 11 )
+ #foreach mon ( 10 )
+ #foreach mon ( 11 12 01 )
+ #foreach mon ( 02 09 )
+@@ -22,7 +24,7 @@ foreach mon ( 09 10 11 12 01 02 )
+ 
+ # case name counter
+ 
+-set CASE = b.e21.SMYLE_ERA5_IC.f09_g17.${year}-${mon}.01
++set CASE = b.e21.SMYLE_ERA5_L83_IC.f09_g17.${year}-${mon}.01
+ 
+ if (! -e $CAMPAIGN/$CASE.tar) then
+    cd $ARCHDIR1
+diff --git a/restarts/changeCami.scr b/restarts/changeCami.scr
+new file mode 100755
+index 0000000..57824b0
+--- /dev/null
++++ b/restarts/changeCami.scr
+@@ -0,0 +1,33 @@
++#!/bin/csh 
++### set env variables
++module load ncl nco
++
++setenv CESM2_TOOLS_ROOT /glade/work/nanr/cesm_tags/CASE_tools/cesm2-smyle/
++setenv ARCHDIR   /glade/scratch/nanr/SMYLE-ERA5-L83/inputdata/cesm2_init/
++
++
++
++# ...
++#foreach year ( 1979 1980 )
++foreach year ( 1950 1951 1952 1953 1954 1955 1956 1957 1958 1959 1960 1961 1962 1963 1964 1965 1966 1967 1968 1969 )
++#foreach year ( 1970 1971 1972 1973 1974 1975 1976 1977 1978 )
++#foreach year ( 1981 1982 1983 1984 1985 1986 1987 1988 1989 1990 )
++#foreach year ( 1991 1992 1993 1994 1995 1996 1997 1998 1999 2000 )
++#foreach year ( 2001 2002 2003 2004 2005 2006 2007 2008 2009 2010 )
++#foreach year ( 2011 2012 2013 2014 2015 2016 2017 2018 2019 2020 )
++foreach mbr ( 01 02 03 04 05 06 07 08 09 10 11 12 13 14 15 16 17 18 19 20 )
++
++   set CASE = b.e21.SMYLE_ERA5_L83_IC.f09_g17.${year}-11.01
++   cd $ARCHDIR/$CASE/pert.${mbr}
++
++echo `pwd`
++
++ncatted -O -a long_name,Q,o,c,"Specific humidity" b.e21.SMYLE_ERA5_L83_IC.pert.f09_g17.cam.i.${year}-11-01-00000.nc
++ncatted -O -a units,Q,o,c,"kg/kg" b.e21.SMYLE_ERA5_L83_IC.pert.f09_g17.cam.i.${year}-11-01-00000.nc
++ncatted -O -a source_field_name,Q,o,c,"SPFH_P0_L105_GGA1" b.e21.SMYLE_ERA5_L83_IC.pert.f09_g17.cam.i.${year}-11-01-00000.nc
++ncatted -O -a vert_interp_flag,Q,o,c,"linear_opt1" b.e21.SMYLE_ERA5_L83_IC.pert.f09_g17.cam.i.${year}-11-01-00000.nc
++
++end             # mbr loop
++end             # year loop
++
++exit
+diff --git a/restarts/create-SMYLE.IC_RESTARTS.1958-2018.ERA5.csh b/restarts/create-SMYLE.IC_RESTARTS.1958-2018.ERA5.csh
+deleted file mode 100755
+index 03e9074..0000000
+--- a/restarts/create-SMYLE.IC_RESTARTS.1958-2018.ERA5.csh
++++ /dev/null
+@@ -1,166 +0,0 @@
+-#! /bin/csh -fxv 
+-
+-setenv CESM2_TOOLS_ROOT /glade/work/nanr/cesm_tags/CASE_tools/cesm2-scripps/
+-setenv CESMROOT /glade/work/nanr/cesm_tags/cesm2.1.4-SMYLE
+-
+-if ($HOST != casper10) then
+-echo "ERROR:  Must be run on Casper"
+-#exit
+-endif
+-
+-set syr = 1980
+-set eyr = 1989
+-set syr = 1990
+-set eyr = 1999
+-set syr = 2004
+-set eyr = 2009
+-set syr = 2010
+-set eyr = 2018
+-set syr = 1972
+-#set eyr = 1971
+-set syr = 2020
+-set eyr = 2020
+-
+-@ ib = $syr
+-@ ie = $eyr
+-
+-foreach year ( `seq $ib $ie` )
+-#foreach mon ( 02 05 08 11 )
+-foreach mon ( 01 10 11 12 )
+-#foreach mon ( 01 )
+-#foreach mon ( 02 09 )
+-
+-set case = b.e21.SMYLE_ERA5_IC.f09_g17.${year}-${mon}.01
+-
+-
+-#set icdir = /glade/p/cesm/cseg/inputdata/ccsm4_init/{$case} 
+-set Picdir = /glade/scratch/nanr/SMYLE-ERA5/inputdata/cesm2_init/{$case}/
+-set icdir  = /glade/scratch/nanr/SMYLE-ERA5/inputdata/cesm2_init/{$case}/${year}-${mon}-01
+-if (! -d ${Picdir}) then
+- mkdir ${Picdir}
+-endif
+-if (! -d ${icdir}) then
+- mkdir ${icdir}
+-endif
+-
+-
+-set doThis99 = 1
+-if ($doThis99 == 1) then
+-
+-# atm, lnd initial conditions
+-set atmcase =  ERA5_0.9x1.25_L32
+-set lndcase =  smyle_Transient
+-
+-# names
+-set atmfname = ${atmcase}.cam2.i.${year}-${mon}-01-00000.nc
+-set lndfname = ${lndcase}.clm2.r.${year}-${mon}-01-00000.nc
+-set roffname = ${lndcase}.mosart.r.${year}-${mon}-01-00000.nc
+-
+-# directories
+-#set atmdir = /glade/p/cesm/espwg/CESM2-SMYLE/initial_conditions/cam/
+-set atmdir = /glade/scratch/islas/analyses_output/
+-
+-#set lnddir = /glade/p/cesm/espwg/CESM2-SMYLE/initial_conditions/clm/${year}-${mon}-01-00000/
+-set lnddir = /glade/campaign/cesm/development/espwg/SMYLE/CLM5_init/rest/${year}-${mon}-01-00000/
+-
+-# rename atm, land IC files
+-set atmfout = ${case}.cam.i.${year}-${mon}-01-00000.nc
+-set lndfout = ${case}.clm2.r.${year}-${mon}-01-00000.nc
+-set roffout = ${case}.mosart.r.${year}-${mon}-01-00000.nc
+-
+-echo $atmfout
+-
+-set doThis = 1
+-
+-if ($doThis == 1) then
+-cp $atmdir/${atmfname} $icdir/$atmfout
+-cp $lnddir/${lndfname} $icdir/$lndfout
+-cp $lnddir/${roffname} $icdir/$roffout
+-ncatted -a OriginalFile,global,a,c,$atmfname $icdir/$atmfout
+-ncatted -a OriginalFile,global,a,c,$lndfname $icdir/$lndfout
+-ncatted -a OriginalFile,global,a,c,$roffname $icdir/$roffout
+-
+-endif
+-
+-# ocn/ice
+-# years used for ICs:   0306 (1958) - 0366 (2018)
+-set ocncase = g.e22.GOMIPECOIAF_JRA-1p4-2018.TL319_g17.SMYLE.005
+-set first_rest_year = 1958
+-set ocean_base_year = 306
+-
+-
+-# Comment:  year translation:  if ($year == 2018 ) set ocnyr = 0366
+-# years used for ICs:   0306 (1958) - 0366 (2018)
+-# atmyr 1958 = ocnyr 306
+-@ offset = $first_rest_year - $ocean_base_year 
+-@ ocnyr   = $year - $offset
+-#set ocndir = /glade/p/cesm/espwg/CESM2-SMYLE/initial_conditions/pop_cice/0${ocnyr}-${mon}-01-00000/
+-set ocndir = /glade/campaign/cesm/development/espwg/SMYLE/SMYLE-FOSI/rest/0${ocnyr}-${mon}-01-00000/
+-set icefout = ${case}.cice.r.${year}-${mon}-01-00000.nc
+-set lndfout = ${case}.clm2.r.${year}-${mon}-01-00000.nc
+-set roffout = ${case}.mosart.r.${year}-${mon}-01-00000.nc
+-
+-set icefname   = ${ocncase}.cice.r.0${ocnyr}-${mon}-01-00000.nc 
+-set poprfname  = ${ocncase}.pop.r.0${ocnyr}-${mon}-01-00000.nc  
+-set poprofname = ${ocncase}.pop.ro.0${ocnyr}-${mon}-01-00000    
+-set poprhfname = ${ocncase}.pop.rh.ecosys.nyear1.0${ocnyr}-${mon}-01-00000.nc 
+-set popwwfname = ${ocncase}.ww3.r.0${ocnyr}-${mon}-01-00000    
+-
+-set poprfout  = ${case}.pop.r.${year}-${mon}-01-00000.nc
+-set poprofout = ${case}.pop.ro.${year}-${mon}-01-00000 
+-set poprhfout = ${case}.pop.rh.ecosys.nyear1.${year}-${mon}-01-00000.nc
+-set popwwfout = ${case}.ww3.r.${year}-${mon}-01-00000
+-
+-echo $icefname
+-echo $poprfname
+-
+-set doThis2 = 1
+-if ($doThis2 == 1) then
+-
+-cp $ocndir/${icefname}    $icdir/${icefout}
+-cp $ocndir/${poprfname}   $icdir/${poprfout}
+-cp $ocndir/${poprofname}  $icdir/${poprofout}
+-#cp $ocndir/${poprhfname}  $icdir/${poprhfout}
+-cp $ocndir/${popwwfname}  $icdir/${popwwfout}
+-
+-ncatted -a OriginalFile,global,a,c,$icefname    $icdir/$icefout
+-ncatted -a OriginalFile,global,a,c,$poprfname   $icdir/$poprfout
+-#ncatted -a OriginalFile,global,a,c,$poprofname  $icdir/$poprofout
+-#ncatted -a OriginalFile,global,a,c,$poprhfname  $icdir/$poprhfout
+-
+-# create rpointer files
+-
+-echo "$case.cice.r.$year-${mon}-01-00000.nc"  > ${icdir}/rpointer.ice
+-echo "./$case.pop.ro.$year-${mon}-01-00000"   > ${icdir}/rpointer.ocn.ovf
+-echo "$case.cam.r.$year-${mon}-01-00000.nc"   > ${icdir}/rpointer.atm
+-echo "$case.cpl.r.$year-${mon}-01-00000.nc"   > ${icdir}/rpointer.drv
+-echo "$case.clm2.r.$year-${mon}-01-00000.nc"  > ${icdir}/rpointer.clm
+-echo "$case.mosart.r.$year-${mon}-01-00000.nc"   > ${icdir}/rpointer.rof
+-echo "$case.pop.rh.ecosys.nyear1.$year-${mon}-01-00000.nc"   > ${icdir}/rpointer.ocn.tavg.5
+-echo "$case.pop.rh.$year-${mon}-01-00000.nc"   > ${icdir}/rpointer.ocn.tavg
+-
+-echo "./$case.pop.r.$year-${mon}-01-00000.nc"    >> ${icdir}/rpointer.ocn.restart
+-echo "RESTART_FMT=nc"                          >> ${icdir}/rpointer.ocn.restart
+-
+-endif	# doThis2
+-
+-#!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+-
+-endif	# doThis99
+-
+-# ==================================
+-# generate perturbed cam.i.restarts
+-# ==================================
+-setenv CYLC_TASK_CYCLE_POINT ${year}-${mon}-01
+-cd ${CESM2_TOOLS_ROOT}/restarts/
+-./generate_cami_ensemble_offline.py
+-
+-end
+-end
+-
+-exit
+- 
+- 
+-
+-
+-
+diff --git a/restarts/create-SMYLE.IC_RESTARTS.2020.csh b/restarts/create-SMYLE.IC_RESTARTS.2020.csh
+deleted file mode 100755
+index 3bbe667..0000000
+--- a/restarts/create-SMYLE.IC_RESTARTS.2020.csh
++++ /dev/null
+@@ -1,170 +0,0 @@
+-#! /bin/csh -fxv 
+-
+-setenv CESM2_TOOLS_ROOT /glade/work/nanr/cesm_tags/CASE_tools/cesm2-comet-smyle/
+-setenv CESMROOT /glade/work/nanr/cesm_tags/cesm2.1.4-SMYLE
+-
+-if ($HOST != casper10) then
+-echo "ERROR:  Must be run on Casper"
+-#exit
+-endif
+-
+-set syr = 1980
+-set eyr = 1989
+-set syr = 1990
+-set eyr = 1999
+-set syr = 2004
+-set eyr = 2009
+-set syr = 2010
+-set eyr = 2018
+-set syr = 1972
+-#set eyr = 1971
+-set syr = 2020
+-set eyr = 2020
+-
+-@ ib = $syr
+-@ ie = $eyr
+-
+-foreach year ( `seq $ib $ie` )
+-#foreach mon ( 02 05 08 11 )
+-#foreach mon ( 01 02 09 10 11 12 )
+-#foreach mon ( 01 10 11 12 )
+-#foreach mon ( 01 )
+-foreach mon ( 02 09 )
+-
+-set case = b.e21.SMYLE_ERA5_IC.f09_g17.${year}-${mon}.01
+-
+-
+-#set icdir = /glade/p/cesm/cseg/inputdata/ccsm4_init/{$case} 
+-set Picdir = /glade/scratch/nanr/SMYLE-ERA5/inputdata/cesm2_init/{$case}/
+-set icdir  = /glade/scratch/nanr/SMYLE-ERA5/inputdata/cesm2_init/{$case}/${year}-${mon}-01
+-if (! -d ${Picdir}) then
+- mkdir ${Picdir}
+-endif
+-if (! -d ${icdir}) then
+- mkdir ${icdir}
+-endif
+-
+-
+-set doThis99 = 1
+-if ($doThis99 == 1) then
+-
+-# atm, lnd initial conditions
+-set atmcase =  ERA5_0.9x1.25_L32
+-#set lndcase =  smyle_Transient
+-set lndcase =  smyle_Transient_201801
+-
+-# names
+-set atmfname = ${atmcase}.cam2.i.${year}-${mon}-01-00000.nc
+-set lndfname = ${lndcase}.clm2.r.${year}-${mon}-01-00000.nc
+-set roffname = ${lndcase}.mosart.r.${year}-${mon}-01-00000.nc
+-
+-
+-# directories
+-#set atmdir = /glade/p/cesm/espwg/CESM2-SMYLE/initial_conditions/cam/
+-set atmdir = /glade/scratch/islas/analyses_output/
+-
+-#set lnddir = /glade/p/cesm/espwg/CESM2-SMYLE/initial_conditions/clm/${year}-${mon}-01-00000/
+-#set lnddir = /glade/campaign/cesm/development/espwg/SMYLE/CLM5_init/rest/${year}-${mon}-01-00000/
+-set lnddir = /glade/campaign/cesm/development/espwg/SMYLE/initial_conditions/CLM5_SMYLE-JRA55-Extension/rest/${year}-${mon}-01-00000/
+-
+-# rename atm, land IC files
+-set atmfout = ${case}.cam.i.${year}-${mon}-01-00000.nc
+-set lndfout = ${case}.clm2.r.${year}-${mon}-01-00000.nc
+-set roffout = ${case}.mosart.r.${year}-${mon}-01-00000.nc
+-
+-echo $atmfout
+-
+-set doThis = 1
+-
+-if ($doThis == 1) then
+-cp $atmdir/${atmfname} $icdir/$atmfout
+-cp $lnddir/${lndfname} $icdir/$lndfout
+-cp $lnddir/${roffname} $icdir/$roffout
+-ncatted -a OriginalFile,global,a,c,$atmfname $icdir/$atmfout
+-ncatted -a OriginalFile,global,a,c,$lndfname $icdir/$lndfout
+-ncatted -a OriginalFile,global,a,c,$roffname $icdir/$roffout
+-
+-endif
+-
+-# ocn/ice
+-# years used for ICs:   0306 (1958) - 0366 (2018)
+-set ocncase = g.e22.GOMIPECOIAF_JRA-1p4-2018.TL319_g17.SMYLE.005.2019_2020
+-set first_rest_year = 1958
+-set ocean_base_year = 306
+-
+-
+-# Comment:  year translation:  if ($year == 2018 ) set ocnyr = 0366
+-# years used for ICs:   0306 (1958) - 0366 (2018)
+-# atmyr 1958 = ocnyr 306
+-@ offset = $first_rest_year - $ocean_base_year 
+-@ ocnyr   = $year - $offset
+-#set ocndir = /glade/p/cesm/espwg/CESM2-SMYLE/initial_conditions/pop_cice/0${ocnyr}-${mon}-01-00000/
+-set ocndir = /glade/campaign/cesm/development/espwg/SMYLE/initial_conditions/SMYLE-FOSI_ext1/rest/0${ocnyr}-${mon}-01-00000/
+-set icefout = ${case}.cice.r.${year}-${mon}-01-00000.nc
+-set lndfout = ${case}.clm2.r.${year}-${mon}-01-00000.nc
+-set roffout = ${case}.mosart.r.${year}-${mon}-01-00000.nc
+-
+-set icefname   = ${ocncase}.cice.r.0${ocnyr}-${mon}-01-00000.nc 
+-set poprfname  = ${ocncase}.pop.r.0${ocnyr}-${mon}-01-00000.nc  
+-set poprofname = ${ocncase}.pop.ro.0${ocnyr}-${mon}-01-00000    
+-set poprhfname = ${ocncase}.pop.rh.ecosys.nyear1.0${ocnyr}-${mon}-01-00000.nc 
+-set popwwfname = ${ocncase}.ww3.r.0${ocnyr}-${mon}-01-00000    
+-
+-set poprfout  = ${case}.pop.r.${year}-${mon}-01-00000.nc
+-set poprofout = ${case}.pop.ro.${year}-${mon}-01-00000 
+-set poprhfout = ${case}.pop.rh.ecosys.nyear1.${year}-${mon}-01-00000.nc
+-set popwwfout = ${case}.ww3.r.${year}-${mon}-01-00000
+-
+-echo $icefname
+-echo $poprfname
+-
+-set doThis2 = 1
+-if ($doThis2 == 1) then
+-
+-cp $ocndir/${icefname}    $icdir/${icefout}
+-cp $ocndir/${poprfname}   $icdir/${poprfout}
+-cp $ocndir/${poprofname}  $icdir/${poprofout}
+-#cp $ocndir/${poprhfname}  $icdir/${poprhfout}
+-cp $ocndir/${popwwfname}  $icdir/${popwwfout}
+-
+-ncatted -a OriginalFile,global,a,c,$icefname    $icdir/$icefout
+-ncatted -a OriginalFile,global,a,c,$poprfname   $icdir/$poprfout
+-#ncatted -a OriginalFile,global,a,c,$poprofname  $icdir/$poprofout
+-#ncatted -a OriginalFile,global,a,c,$poprhfname  $icdir/$poprhfout
+-
+-# create rpointer files
+-
+-echo "$case.cice.r.$year-${mon}-01-00000.nc"  > ${icdir}/rpointer.ice
+-echo "./$case.pop.ro.$year-${mon}-01-00000"   > ${icdir}/rpointer.ocn.ovf
+-echo "$case.cam.r.$year-${mon}-01-00000.nc"   > ${icdir}/rpointer.atm
+-echo "$case.cpl.r.$year-${mon}-01-00000.nc"   > ${icdir}/rpointer.drv
+-echo "$case.clm2.r.$year-${mon}-01-00000.nc"  > ${icdir}/rpointer.clm
+-echo "$case.mosart.r.$year-${mon}-01-00000.nc"   > ${icdir}/rpointer.rof
+-echo "$case.pop.rh.ecosys.nyear1.$year-${mon}-01-00000.nc"   > ${icdir}/rpointer.ocn.tavg.5
+-echo "$case.pop.rh.$year-${mon}-01-00000.nc"   > ${icdir}/rpointer.ocn.tavg
+-
+-echo "./$case.pop.r.$year-${mon}-01-00000.nc"    >> ${icdir}/rpointer.ocn.restart
+-echo "RESTART_FMT=nc"                          >> ${icdir}/rpointer.ocn.restart
+-
+-endif	# doThis2
+-
+-#!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+-
+-endif	# doThis99
+-
+-# ==================================
+-# generate perturbed cam.i.restarts
+-# ==================================
+-setenv CYLC_TASK_CYCLE_POINT ${year}-${mon}-01
+-cd ${CESM2_TOOLS_ROOT}/restarts/
+-./generate_cami_ensemble_offline.py
+-
+-end
+-end
+-
+-exit
+- 
+- 
+-
+-
+-
+diff --git a/restarts/create-SMYLE.IC_RESTARTS.2021.ERA5.csh b/restarts/create-SMYLE.IC_RESTARTS.2021.ERA5.csh
+deleted file mode 100755
+index 08dfae6..0000000
+--- a/restarts/create-SMYLE.IC_RESTARTS.2021.ERA5.csh
++++ /dev/null
+@@ -1,166 +0,0 @@
+-#! /bin/csh -fxv 
+-
+-setenv CESM2_TOOLS_ROOT /glade/work/nanr/cesm_tags/CASE_tools/cesm2-scripps/
+-setenv CESMROOT /glade/work/nanr/cesm_tags/cesm2.1.4-SMYLE
+-
+-if ($HOST != casper10) then
+-echo "ERROR:  Must be run on Casper"
+-#exit
+-endif
+-
+-set syr = 1980
+-set eyr = 1989
+-set syr = 1990
+-set eyr = 1999
+-set syr = 2004
+-set eyr = 2009
+-set syr = 2010
+-set eyr = 2018
+-set syr = 1972
+-#set eyr = 1971
+-set syr = 2021
+-set eyr = 2021
+-
+-@ ib = $syr
+-@ ie = $eyr
+-
+-foreach year ( `seq $ib $ie` )
+-#foreach mon ( 02 05 08 11 )
+-foreach mon ( 01 02 09 10 11 12 )
+-#foreach mon ( 01 )
+-#foreach mon ( 02 09 )
+-
+-set case = b.e21.SMYLE_ERA5_IC.f09_g17.${year}-${mon}.01
+-
+-
+-#set icdir = /glade/p/cesm/cseg/inputdata/ccsm4_init/{$case} 
+-set Picdir = /glade/scratch/nanr/SMYLE-ERA5/inputdata/cesm2_init/{$case}/
+-set icdir  = /glade/scratch/nanr/SMYLE-ERA5/inputdata/cesm2_init/{$case}/${year}-${mon}-01
+-if (! -d ${Picdir}) then
+- mkdir ${Picdir}
+-endif
+-if (! -d ${icdir}) then
+- mkdir ${icdir}
+-endif
+-
+-
+-set doThis99 = 1
+-if ($doThis99 == 1) then
+-
+-# atm, lnd initial conditions
+-set atmcase =  ERA5_0.9x1.25_L32
+-set lndcase =  smyle_Transient
+-
+-# names
+-set atmfname = ${atmcase}.cam2.i.${year}-${mon}-01-00000.nc
+-set lndfname = ${lndcase}.clm2.r.${year}-${mon}-01-00000.nc
+-set roffname = ${lndcase}.mosart.r.${year}-${mon}-01-00000.nc
+-
+-# directories
+-#set atmdir = /glade/p/cesm/espwg/CESM2-SMYLE/initial_conditions/cam/
+-set atmdir = /glade/scratch/islas/analyses_output/
+-
+-#set lnddir = /glade/p/cesm/espwg/CESM2-SMYLE/initial_conditions/clm/${year}-${mon}-01-00000/
+-set lnddir = /glade/campaign/cesm/development/espwg/SMYLE/CLM5_init/rest/${year}-${mon}-01-00000/
+-
+-# rename atm, land IC files
+-set atmfout = ${case}.cam.i.${year}-${mon}-01-00000.nc
+-set lndfout = ${case}.clm2.r.${year}-${mon}-01-00000.nc
+-set roffout = ${case}.mosart.r.${year}-${mon}-01-00000.nc
+-
+-echo $atmfout
+-
+-set doThis = 1
+-
+-if ($doThis == 1) then
+-cp $atmdir/${atmfname} $icdir/$atmfout
+-cp $lnddir/${lndfname} $icdir/$lndfout
+-cp $lnddir/${roffname} $icdir/$roffout
+-ncatted -a OriginalFile,global,a,c,$atmfname $icdir/$atmfout
+-ncatted -a OriginalFile,global,a,c,$lndfname $icdir/$lndfout
+-ncatted -a OriginalFile,global,a,c,$roffname $icdir/$roffout
+-
+-endif
+-
+-# ocn/ice
+-# years used for ICs:   0306 (1958) - 0366 (2018)
+-set ocncase = g.e22.GOMIPECOIAF_JRA-1p4-2018.TL319_g17.SMYLE.005.2021
+-set first_rest_year = 1958
+-set ocean_base_year = 306
+-
+-
+-# Comment:  year translation:  if ($year == 2018 ) set ocnyr = 0366
+-# years used for ICs:   0306 (1958) - 0366 (2018)
+-# atmyr 1958 = ocnyr 306
+-@ offset = $first_rest_year - $ocean_base_year 
+-@ ocnyr   = $year - $offset
+-#set ocndir = /glade/p/cesm/espwg/CESM2-SMYLE/initial_conditions/pop_cice/0${ocnyr}-${mon}-01-00000/
+-set ocndir = /glade/campaign/cesm/development/espwg/SMYLE/initial_conditions/SMYLE-FOSI_ext2/rest/0${ocnyr}-${mon}-01-00000/
+-set icefout = ${case}.cice.r.${year}-${mon}-01-00000.nc
+-set lndfout = ${case}.clm2.r.${year}-${mon}-01-00000.nc
+-set roffout = ${case}.mosart.r.${year}-${mon}-01-00000.nc
+-
+-set icefname   = ${ocncase}.cice.r.0${ocnyr}-${mon}-01-00000.nc 
+-set poprfname  = ${ocncase}.pop.r.0${ocnyr}-${mon}-01-00000.nc  
+-set poprofname = ${ocncase}.pop.ro.0${ocnyr}-${mon}-01-00000    
+-set poprhfname = ${ocncase}.pop.rh.ecosys.nyear1.0${ocnyr}-${mon}-01-00000.nc 
+-set popwwfname = ${ocncase}.ww3.r.0${ocnyr}-${mon}-01-00000    
+-
+-set poprfout  = ${case}.pop.r.${year}-${mon}-01-00000.nc
+-set poprofout = ${case}.pop.ro.${year}-${mon}-01-00000 
+-set poprhfout = ${case}.pop.rh.ecosys.nyear1.${year}-${mon}-01-00000.nc
+-set popwwfout = ${case}.ww3.r.${year}-${mon}-01-00000
+-
+-echo $icefname
+-echo $poprfname
+-
+-set doThis2 = 1
+-if ($doThis2 == 1) then
+-
+-cp $ocndir/${icefname}    $icdir/${icefout}
+-cp $ocndir/${poprfname}   $icdir/${poprfout}
+-cp $ocndir/${poprofname}  $icdir/${poprofout}
+-#cp $ocndir/${poprhfname}  $icdir/${poprhfout}
+-cp $ocndir/${popwwfname}  $icdir/${popwwfout}
+-
+-ncatted -a OriginalFile,global,a,c,$icefname    $icdir/$icefout
+-ncatted -a OriginalFile,global,a,c,$poprfname   $icdir/$poprfout
+-#ncatted -a OriginalFile,global,a,c,$poprofname  $icdir/$poprofout
+-#ncatted -a OriginalFile,global,a,c,$poprhfname  $icdir/$poprhfout
+-
+-# create rpointer files
+-
+-echo "$case.cice.r.$year-${mon}-01-00000.nc"  > ${icdir}/rpointer.ice
+-echo "./$case.pop.ro.$year-${mon}-01-00000"   > ${icdir}/rpointer.ocn.ovf
+-echo "$case.cam.r.$year-${mon}-01-00000.nc"   > ${icdir}/rpointer.atm
+-echo "$case.cpl.r.$year-${mon}-01-00000.nc"   > ${icdir}/rpointer.drv
+-echo "$case.clm2.r.$year-${mon}-01-00000.nc"  > ${icdir}/rpointer.clm
+-echo "$case.mosart.r.$year-${mon}-01-00000.nc"   > ${icdir}/rpointer.rof
+-echo "$case.pop.rh.ecosys.nyear1.$year-${mon}-01-00000.nc"   > ${icdir}/rpointer.ocn.tavg.5
+-echo "$case.pop.rh.$year-${mon}-01-00000.nc"   > ${icdir}/rpointer.ocn.tavg
+-
+-echo "./$case.pop.r.$year-${mon}-01-00000.nc"    >> ${icdir}/rpointer.ocn.restart
+-echo "RESTART_FMT=nc"                          >> ${icdir}/rpointer.ocn.restart
+-
+-endif	# doThis2
+-
+-#!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+-
+-endif	# doThis99
+-
+-# ==================================
+-# generate perturbed cam.i.restarts
+-# ==================================
+-setenv CYLC_TASK_CYCLE_POINT ${year}-${mon}-01
+-cd ${CESM2_TOOLS_ROOT}/restarts/
+-./generate_cami_ensemble_offline.py
+-
+-end
+-end
+-
+-exit
+- 
+- 
+-
+-
+-
+diff --git a/restarts/create-SMYLE.IC_RESTARTS.2019.csh b/restarts/create-SMYLE.IC_RESTARTS.L83.csh
+similarity index 82%
+rename from restarts/create-SMYLE.IC_RESTARTS.2019.csh
+rename to restarts/create-SMYLE.IC_RESTARTS.L83.csh
+index b36fe1a..a8bfb49 100755
+--- a/restarts/create-SMYLE.IC_RESTARTS.2019.csh
++++ b/restarts/create-SMYLE.IC_RESTARTS.L83.csh
+@@ -1,41 +1,59 @@
+ #! /bin/csh -fxv 
+ 
+-setenv CESM2_TOOLS_ROOT /glade/work/nanr/cesm_tags/CASE_tools/cesm2-comet-smyle/
+-setenv CESMROOT /glade/work/nanr/cesm_tags/cesm2.1.4-SMYLE
++setenv CESM2_TOOLS_ROOT /glade/work/nanr/cesm_tags/CASE_tools/cesm2-comet-smyle-L83/
+ 
+ if ($HOST != casper10) then
+ echo "ERROR:  Must be run on Casper"
+ #exit
+ endif
+ 
+-set syr = 1980
+-set eyr = 1989
+-set syr = 1990
+-set eyr = 1999
+-set syr = 2004
+-set eyr = 2009
+-set syr = 2010
+-set eyr = 2018
+-set syr = 1972
++#set syr = 1980
++#set eyr = 1989
++#set syr = 1990
++#set eyr = 1999
++#set syr = 2004
++#set eyr = 2009
++#set syr = 2010
++#set eyr = 2018
++#set syr = 1972
+ #set eyr = 1971
+-set syr = 2019
+-set eyr = 2019
++#set syr = 1990
++#set eyr = 1999
++#set syr = 2000
++#set eyr = 2010
++#set syr = 2011
++#set eyr = 2018
++#set syr = 2000
++#set eyr = 2014
++#set syr = 1981
++#set eyr = 1990
++#set syr = 1991
++#set eyr = 2000
++#set syr = 2001
++#set eyr = 2010
++#set syr = 2011
++#set eyr = 2020
++#set syr = 1970
++#set eyr = 1978
++set syr = 1950
++set eyr = 1969
+ 
+ @ ib = $syr
+ @ ie = $eyr
+ 
+ foreach year ( `seq $ib $ie` )
+ #foreach mon ( 02 05 08 11 )
+-foreach mon ( 01 02 09 10 11 12 )
++#foreach mon ( 01 10 11 12 )
++foreach mon ( 11 )
+ #foreach mon ( 01 )
+ #foreach mon ( 02 09 )
+ 
+-set case = b.e21.SMYLE_ERA5_IC.f09_g17.${year}-${mon}.01
++set case = b.e21.SMYLE_ERA5_L83_IC.f09_g17.${year}-${mon}.01
+ 
+ 
+ #set icdir = /glade/p/cesm/cseg/inputdata/ccsm4_init/{$case} 
+-set Picdir = /glade/scratch/nanr/SMYLE-ERA5/inputdata/cesm2_init/{$case}/
+-set icdir  = /glade/scratch/nanr/SMYLE-ERA5/inputdata/cesm2_init/{$case}/${year}-${mon}-01
++set Picdir = /glade/scratch/nanr/SMYLE-ERA5-L83/inputdata/cesm2_init/{$case}/
++set icdir  = /glade/scratch/nanr/SMYLE-ERA5-L83/inputdata/cesm2_init/{$case}/${year}-${mon}-01
+ if (! -d ${Picdir}) then
+  mkdir ${Picdir}
+ endif
+@@ -48,7 +66,7 @@ set doThis99 = 1
+ if ($doThis99 == 1) then
+ 
+ # atm, lnd initial conditions
+-set atmcase =  ERA5_0.9x1.25_L32
++set atmcase =  ERA5_0.9x1.25_L83
+ set lndcase =  smyle_Transient
+ 
+ # names
+@@ -59,6 +77,7 @@ set roffname = ${lndcase}.mosart.r.${year}-${mon}-01-00000.nc
+ # directories
+ #set atmdir = /glade/p/cesm/espwg/CESM2-SMYLE/initial_conditions/cam/
+ set atmdir = /glade/scratch/islas/analyses_output/
++
+ #set lnddir = /glade/p/cesm/espwg/CESM2-SMYLE/initial_conditions/clm/${year}-${mon}-01-00000/
+ set lnddir = /glade/campaign/cesm/development/espwg/SMYLE/initial_conditions/CLM5_SMYLE-Trendy/rest/${year}-${mon}-01-00000/
+ 
+@@ -83,7 +102,7 @@ endif
+ 
+ # ocn/ice
+ # years used for ICs:   0306 (1958) - 0366 (2018)
+-set ocncase = g.e22.GOMIPECOIAF_JRA-1p4-2018.TL319_g17.SMYLE.005.2019_2020
++set ocncase = g.e22.GOMIPECOIAF_JRA-1p4-2018.TL319_g17.SMYLE.005
+ set first_rest_year = 1958
+ set ocean_base_year = 306
+ 
+@@ -94,7 +113,7 @@ set ocean_base_year = 306
+ @ offset = $first_rest_year - $ocean_base_year 
+ @ ocnyr   = $year - $offset
+ #set ocndir = /glade/p/cesm/espwg/CESM2-SMYLE/initial_conditions/pop_cice/0${ocnyr}-${mon}-01-00000/
+-set ocndir = /glade/campaign/cesm/development/espwg/SMYLE/initial_conditions/SMYLE-FOSI_ext1/rest/0${ocnyr}-${mon}-01-00000/
++set ocndir = /glade/campaign/cesm/development/espwg/SMYLE/initial_conditions/SMYLE-FOSI/rest/0${ocnyr}-${mon}-01-00000/
+ set icefout = ${case}.cice.r.${year}-${mon}-01-00000.nc
+ set lndfout = ${case}.clm2.r.${year}-${mon}-01-00000.nc
+ set roffout = ${case}.mosart.r.${year}-${mon}-01-00000.nc
+@@ -133,7 +152,8 @@ echo "$case.cice.r.$year-${mon}-01-00000.nc"  > ${icdir}/rpointer.ice
+ echo "./$case.pop.ro.$year-${mon}-01-00000"   > ${icdir}/rpointer.ocn.ovf
+ echo "$case.cam.r.$year-${mon}-01-00000.nc"   > ${icdir}/rpointer.atm
+ echo "$case.cpl.r.$year-${mon}-01-00000.nc"   > ${icdir}/rpointer.drv
+-echo "$case.clm2.r.$year-${mon}-01-00000.nc"  > ${icdir}/rpointer.clm
++echo "$case.clm2.r.$year-${mon}-01-00000.nc"  > ${icdir}/rpointer.lnd
++#echo "$case.clm2.r.$year-${mon}-01-00000.nc"  > ${icdir}/rpointer.clm
+ echo "$case.mosart.r.$year-${mon}-01-00000.nc"   > ${icdir}/rpointer.rof
+ echo "$case.pop.rh.ecosys.nyear1.$year-${mon}-01-00000.nc"   > ${icdir}/rpointer.ocn.tavg.5
+ echo "$case.pop.rh.$year-${mon}-01-00000.nc"   > ${icdir}/rpointer.ocn.tavg
+@@ -152,7 +172,7 @@ endif	# doThis99
+ # ==================================
+ setenv CYLC_TASK_CYCLE_POINT ${year}-${mon}-01
+ cd ${CESM2_TOOLS_ROOT}/restarts/
+-./generate_cami_ensemble_offline.py
++./generate_cami_ensemble_offline.L83.py
+ 
+ end
+ end
+diff --git a/restarts/generate_cami_ensemble_offline.L83.py b/restarts/generate_cami_ensemble_offline.L83.py
+new file mode 100755
+index 0000000..32af194
+--- /dev/null
++++ b/restarts/generate_cami_ensemble_offline.L83.py
+@@ -0,0 +1,193 @@
++#!/usr/bin/env python
++import os, sys
++#cesmroot = os.getenv("CESM_ROOT")
++cesmroot = "/glade/work/nanr/cesm_tags/cesm2.1.4-SMYLE/"
++s2sfcstroot = os.path.join(os.path.dirname(os.path.join(os.path.abspath(__file__))), os.path.pardir)
++
++if cesmroot is None:
++    raise SystemExit("ERROR: CESM_ROOT must be defined in environment")
++
++# This is needed for globus_sdk
++#_LIBDIR=os.path.join(os.environ.get("HOME"),".local","lib","python3.6","site-packages")
++#sys.path.append(_LIBDIR)
++_LIBDIR = os.path.join(cesmroot,"cime","scripts","Tools")
++sys.path.append(_LIBDIR)
++_LIBDIR = os.path.join(cesmroot,"cime","scripts","lib")
++sys.path.append(_LIBDIR)
++
++import datetime, random, threading, time, shutil
++from standard_script_setup import *
++from CIME.utils            import run_cmd, safe_copy, expect
++from argparse              import RawTextHelpFormatter
++#from globus_utils          import *
++
++def parse_command_line(args, description):
++    parser = argparse.ArgumentParser(description=description,
++                                     formatter_class=RawTextHelpFormatter)
++    CIME.utils.setup_standard_logging_options(parser)
++    parser.add_argument("--date",
++                        help="Specify a start Date")
++
++    parser.add_argument("--model",help="Specify a case (cesm2cam6, cesm2smyle)", default="cesm2smyle")
++
++    parser.add_argument("--ensemble-start",default=1,
++                        help="Specify the first ensemble member")
++    parser.add_argument("--ensemble-end",default=20,
++                        help="Specify the last ensemble member")
++
++    args = CIME.utils.parse_args_and_handle_standard_logging_options(args, parser)
++    cdate = os.environ.get("CYLC_TASK_CYCLE_POINT")
++
++    if args.date:
++        try:
++            date = datetime.datetime.strptime(args.date, '%Y-%m-%d')
++        except ValueError:
++            raise ValueError("Incorrect data format, should be YYYY-MM-DD or YYYY-MM")
++    elif cdate:
++        date = datetime.datetime.strptime(cdate, '%Y-%m-%d')
++    else:
++        date = datetime.date.today()
++        date = date.replace(day=date.day-1)
++
++    return date.strftime("%Y-%m-%d"), args.model,int(args.ensemble_start),int(args.ensemble_end)
++
++def get_rvals(date, ensemble_start,ensemble_end, model):
++    random.seed(int(date[0:4])+int(date[5:7])+int(date[8:10]))
++    rvals = random.sample(range(501),k=ensemble_end//2)
++    print("Rvals are {}".format(rvals))
++    #rvals_file = os.path.join("/glade/scratch/nanr/SMYLE-ERA5/","cases","camic_era5_"+date+".{}-{}.txt".format(ensemble_start,ensemble_end))
++    #rvals_file = os.path.join("/glade/p/cesm/espwg/CESM2-SMYLE-ERA5/","cases","camic_era5_"+date+".{}-{}.txt".format(ensemble_start,ensemble_end))
++    rvals_file = os.path.join("/glade/campaign/cesm/development/espwg/SMYLE-ERA5/inputdata/","camic","camic_era5_L83_"+date+".{}-{}.txt".format(ensemble_start,ensemble_end))
++    #rvals_file = os.path.join("/glade/p/cesm/espwg/CESM2-SMYLE-ERA5/","cases","camic_era5_"+date+"."+ensemble_start+"-"+ensemble_end+".txt")
++    if not os.path.isfile(rvals_file):
++        with open(rvals_file,"w") as fd:
++            fd.write("{}".format(rvals))
++
++    return rvals
++
++#def create_cam_ic_perturbed(original, ensemble, date, baserundir, model, outroot="b.e21.f09_g17.cam.i.", factor=0.15):
++def create_cam_ic_perturbed(original, ensemble_start,ensemble_end, date, baserundir, model, outroot="b.e21.SMYLE_ERA5_L83_IC.pert.f09_g17.cam.i.", factor=0.15):
++    rvals = get_rvals(date, ensemble_start,ensemble_end, model)
++
++    outfile = os.path.join(baserundir,outroot+date+"-00000.nc")
++    # first link the original ic file to the 0th ensemble member
++    if os.path.exists(outfile):
++        os.unlink(outfile)
++    expect(os.path.isfile(original),"ERROR file {} not found".format(original))
++    #print("Linking {} to {}".format(original, outfile))
++    rundir = os.path.dirname(outfile)
++    print("Linking {} to {}".format(original, os.path.join(rundir,os.path.basename(original))))
++    if os.path.isdir(rundir):
++        shutil.rmtree(rundir)
++    os.makedirs(rundir)
++    #os.symlink(original, outfile)
++    os.symlink(original, os.path.join(rundir,os.path.basename(original)))
++
++    # for each pair of ensemble members create an ic file with same perturbation opposite sign
++    month = date[5:7]
++    year  = date[0:3]
++
++    if model == "cesm2smyle":
++        #local_path = "/glade/campaign/cesm/collections/cesm2-smyle"
++        #local_path = "/glade/campaign/cesm/development/cross-wg/S2S/CESM2/CAMI/RP"
++        local_path = "/glade/scratch/islas/SMYLE_ERA5_L83pert/REORDERED/"
++    else:
++        #local_path = "/glade/campaign/cesm/development/cross-wg/S2S/CESM2/CAMI/RP"
++        local_path = "/glade/scratch/islas/SMYLE_ERA5_L83pert/REORDERED/"
++    perturb_files = []
++    for i in range(ensemble_start,ensemble_end, 2):
++        print "HERE rvals[{}] = {}".format((i-1)//2,rvals[(i-1)//2])
++        if model == "cesm2smyle":
++            perturb_file = os.path.join("{}".format(month),
++                                        "L83cam.i.from70Lwaccm6.cam.i.M{}.diff.{}.nc".format(month,rvals[(i-1)//2]))
++        else:
++            perturb_file = os.path.join("{}".format(month),
++                                        "L83cam.i.from70Lwaccm6.cam.i.M{}.diff.{}.nc".format(month,rvals[(i-1)//2]))
++        dirname = os.path.dirname(os.path.join(local_path,perturb_file))
++        if not os.path.isdir(dirname):
++            print("Creating directory {}".format(dirname))
++            os.makedirs(dirname)
++        perturb_files.append(perturb_file)
++
++    pertroot = os.path.join("/glade/scratch/nanr/SMYLE-ERA5-L83/inputdata/cesm2_init","b.e21.SMYLE_ERA5_L83_IC.f09_g17."+date[0:7]+".01","pert.01")
++
++    for i in range(ensemble_start,ensemble_end, 2):
++        pfile = os.path.join(local_path, perturb_files.pop(0))
++        outfile1 = os.path.join(pertroot[:-2]+"{:02d}".format(i), outroot+date+"-tmp.nc")
++        outfile2 = os.path.join(pertroot[:-2]+"{:02d}".format(i+1), outroot+date+"-tmp.nc")
++        print("Creating perturbed init file {}".format(outfile1))
++        print("Creating perturbed init file {}".format(outfile2))
++        print("Using perturb_file {}".format(pfile))
++        t = threading.Thread(target=create_perturbed_init_file,args=(original, pfile, outfile1, factor))
++        t.start()
++        t = threading.Thread(target=create_perturbed_init_file,args=(original, pfile, outfile2, -1*factor))
++        t.start()
++    while(threading.active_count() > 1):
++        time.sleep(1)
++
++    for i in range(ensemble_start, ensemble_end, 2):
++        outfile1 = os.path.join(pertroot[:-2]+"{:02d}".format(i), outroot+date+"-00000.nc")
++        outfile2 = os.path.join(pertroot[:-2]+"{:02d}".format(i+1), outroot+date+"-00000.nc")
++        outdir1 = baserundir[:-3]+"{:03d}".format(i)
++        outdir2 = baserundir[:-3]+"{:03d}".format(i+1)
++        origfile = os.path.basename(original)
++        print("{} {} ".format(outfile1, os.path.join(outdir1,origfile)))
++        print("{} {} ".format(outfile2, os.path.join(outdir2,origfile)))
++        for outdir in (outdir1,outdir2):
++           if not os.path.isdir(outdir):
++              os.mkdir(outdir)
++              print("outdir = {} ".format(outdir))
++        if i != 1:
++           print("outfile2 ===================== {} {}".format(outdir2,outfile2))
++           if os.path.isfile(os.path.join(outdir1,origfile)):
++              os.unlink(os.path.join(outdir1,origfile))
++              print("I made it here = {} ".format(outdir1))
++           os.symlink(outfile1, os.path.join(outdir1,origfile))
++           print("I made it here = {} ".format(outdir1))
++        if os.path.isfile(os.path.join(outdir2,origfile)):
++              os.unlink(os.path.join(outdir2,origfile))
++              print("I made it unlink = {} ".format(outdir1))
++        if not os.path.isfile(os.path.join(outdir2,origfile)):
++           print("creating new pert file= {} ".format(outfile2))
++           os.symlink(outfile2, os.path.join(outdir2,origfile))
++        else:
++           print("pert file already exists= {} ".format(outfile2))
++
++
++def create_perturbed_init_file(original, perturb_file, outfile, weight):
++    ncflint = "ncflint"
++    ncks    = "ncks"
++    if not os.path.isdir(os.path.dirname(outfile)):
++        os.makedirs(os.path.dirname(outfile))
++    pertfile = outfile.replace("-tmp.nc","-00000.nc")
++    if os.path.isfile(pertfile):
++        print("Found existing file {}".format(pertfile))
++        return # file exists nothing more to do
++    safe_copy(original, outfile)
++    if "BWHIST" in original:
++        cmd = ncflint + " -A -v US,VS,T,Q,PS -w {},1.0 {} {} {}".format(weight, perturb_file, original, outfile)
++    else:
++        cmd1 = ncflint+" -O -C -v US,VS,T,Q,PS -w {},1.0 {} {} {}".format(weight, perturb_file, original, outfile)
++        #cmd = ncflint+" -O -C -v lat,lon,slat,slon,lev,ilev,hyai,hybi,hyam,hybm,US,VS,T,Q,PS -w {} {} {} {}".format(weight, perturb_file, original, outfile)
++        #cmd = ncflint+" -O -C -v lat,lon,slat,slon,lev,ilev,hyai,hybi,hyam,hybm,US,VS,T,Q,PS -w {},1.0 {} {} {}".format(weight, perturb_file, original, outfile)
++        cmd2 = ncks+" -A -v lat,lon,slat,slon,lev,ilev,hyai,hybi,hyam,hybm {} {}".format(original, outfile)
++    run_cmd(cmd1, verbose=True)
++    run_cmd(cmd2, verbose=True)
++    if os.path.isfile(outfile):
++        os.rename(outfile, outfile.replace("-tmp.nc","-00000.nc"))
++    else:
++        print("Rename of {} failed".format(outfile))
++
++def _main_func(description):
++    date, model,ensemble_start,ensemble_end = parse_command_line(sys.argv, description)
++
++    sdrestdir = os.path.join("/glade/scratch/nanr/","SMYLE-ERA5-L83","inputdata","cesm2_init","b.e21.SMYLE_ERA5_L83_IC.f09_g17."+date[0:7]+".01","{}".format(date))
++    user = os.getenv("USER")
++    baserundir = os.path.join("/glade/scratch/{}/".format(user),"SMYLE-ERA5-L83","b.e21.BSMYLE_ERA5_L83.f09_g17."+date[0:7]+".001","run.{:03d}".format(ensemble_start))
++    caminame = os.path.join(sdrestdir,"b.e21.SMYLE_ERA5_L83_IC.f09_g17.{}.01.cam.i.{date}-00000.nc".format(date[:7],date=date))
++    outroot = "b.e21.SMYLE_ERA5_L83_IC.pert.f09_g17.cam.i."
++
++    create_cam_ic_perturbed(caminame,ensemble_start,ensemble_end, date,baserundir, model, outroot=outroot)
++
++if __name__ == "__main__":
++    _main_func(__doc__)
+diff --git a/user_mods/cesm2smyle.base/user_nl_cam b/user_mods/cesm2smyle.base/user_nl_cam
+index d5b5d6a..6d81aa4 100644
+--- a/user_mods/cesm2smyle.base/user_nl_cam
++++ b/user_mods/cesm2smyle.base/user_nl_cam
+@@ -1,3 +1,14 @@
++use_gw_rdg_beta = .true.
++use_gw_convect_dp = .true.
++use_gw_front = .true.
++effgw_cm = 1.D0
++gw_drag_file = '$DIN_LOC_ROOT/atm/waccm/gw/newmfspectra40_dc25.nc'
++gw_polar_taper = .true.
++gw_top_taper = .false.
++pgwv = 32
++
++
++!use_topo_file = .false.
+ effgw_beres_dp               = 0.90D0
+ gw_qbo_hdepth_scaling                = 0.25D0
+ qbo_use_forcing              = .false.
+@@ -26,67 +37,108 @@ fv_nsplit   =            16
+ fv_nspltrac =            8
+ fv_nspltvrm =            8
+ 
+-fincl1 = 'ABSORB:A', 'ACTREL:A', 'AODABSdn:A', 'AODBCdn:A', 'AODdnDUST1:A', 'AODdnDUST2:A',
+-   'AODdnDUST3:A', 'AODdnMODE1:A', 'AODdnMODE2:A', 'AODdnMODE3:A', 'AODDUST2:A', 'AODDUST:A', 'AODNIRstdn:A', 'AODPOMdn:A', 'AODSO4dn:A', 'AODSOAdn:A', 'AODSSdn:A',
+-   'AODUVdn:A', 'AODUVstdn:A', 'AODVIS:A', 'AODVISdn:A', 'AODVISstdn:A', 'AQ_SO2:A', 'AREA:A', 'AREI:A', 'AREL:A', 'bc_a1:A', 'bc_a1DDF:A',
+-   'bc_a1SFWET:A', 'bc_a4:A', 'bc_a4DDF:A', 'bc_a4SFWET:A', 'bc_c1:A', 'bc_c1DDF:A', 'bc_c1SFWET:A', 'bc_c4:A', 'bc_c4DDF:A',
+-   'bc_c4SFWET:A', 'BROX:A', 'BROY:A', 'BURDENBCdn', 'BURDENDUSTdn:A', 'BURDENPOMdn:A', 'BURDENSEASALTdn:A', 'BURDENSO4dn:A',
+-   'BURDENSOAdn:A', 'CDNUMC:A', 'CLDICE:A', 'CLDLIQ:A', 'CLDTOT:A', 'CLOUD:A', 'CLOX:A', 'CLOY:A', 'CME:A', 'CMFDQ:A', 'CMFMC:A',
+-   'CMFMCDZM:A', 'CO2:A', 'CONCLD:A', 'DF_H2O2:A', 'DF_H2SO4:A',
+-   'DF_SO2:A', 'dgnumwet1:A', 'dgnumwet2:A', 'dgnumwet3:A', 'DH2O2CHM:A', 'DMS:A', 'dry_deposition_NHx_as_N:A',
+-   'dry_deposition_NOy_as_N:A', 'Dso4_a1CHM:A', 'Dso4_a2CHM:A', 'Dso4_a3CHM:A', 'dst_a1:A', 'dst_a1DDF:A', 'dst_a1SFWET:A', 'dst_a2:A', 'dst_a2DDF:A',
+-   'dst_a2SFWET:A', 'dst_a3:A', 'dst_a3DDF:A', 'dst_a3SFWET:A', 'dst_c1:A', 'dst_c1DDF:A', 'dst_c1SFWET:A', 'dst_c2:A', 'dst_c2DDF:A', 'dst_c2SFWET:A',
+-   'dst_c3:A', 'dst_c3DDF:A', 'dst_c3SFWET:A', 'DTCORE:A', 'EVAPPREC:A',
+-   'EVAPQZM:A', 'EVAPTZM:A', 'EXTINCTdn:A', 'EXTINCTNIRdn:A', 'EXTINCTUVdn:A', 'EXTxASYMdn:A', 'FCTL:A',
+-   'FLDS:A', 'FLDSC:A', 'FLNR:A', 'FLNS:A', 'FLNSC:A', 'FLNT:A', 'FLNTC:A', 'FLUT:A', 'FLUTC:A', 'FREQI:A', 'FREQL:A', 'FREQZM:A', 'FSDS:A',
+-   'FSDSC:A', 'FSNR:A', 'FSNS:A', 'FSNSC:A', 'FSNT:A', 'FSNTC:A', 'FSNTOAC:A', 'FSUTOA:A',
+-   'GS_SO2:A', 'H2O2:A', 'H2O:A', 'H2SO4:A', 'H2SO4M_C:A', 'H2SO4_sfnnuc1:A',
+-   'HCL_GAS:A', 'HNO3_GAS:A', 'HNO3_NAT:A', 'HNO3_STS:A', 'HO2:A', 'ICEFRAC:A','jh2o2:A','KVH_CLUBB:A', 'LANDFRAC:A', 'LHFLX:A', 'MASS:A',
+-   'ncl_a1:A', 'ncl_a1DDF:A', 'ncl_a1SFWET:A', 'ncl_a2:A', 'ncl_a2DDF:A', 'ncl_a2SFWET:A', 'ncl_a3:A', 'ncl_a3DDF:A', 'ncl_a3SFWET:A', 'ncl_c1:A',
+-   'ncl_c1DDF:A', 'ncl_c1SFWET:A', 'ncl_c2:A', 'ncl_c2DDF:A', 'ncl_c2SFWET:A', 'ncl_c3:A', 'ncl_c3DDF:A', 'ncl_c3SFWET:A',
+-   'NITROP_PD:A', 'NO3:A', 'NOX:A', 'NOY:A',
+-   'num_a1:A', 'num_a1_CLXF:A', 'num_a1DDF:A', 'num_a2:A', 'num_a2_CLXF:A', 'num_a2DDF:A', 'num_a2_sfnnuc1:A', 'num_a3:A', 'num_a3DDF:A', 'num_a4:A',
+-   'num_a4DDF:A', 'num_c1:A', 'num_c1DDF:A', 'num_c2:A', 'num_c2DDF:A', 'num_c3:A', 'num_c3DDF:A', 'num_c4:A', 'num_c4DDF:A', 'NUMLIQ:A', 'O3:A',
+-   'OH:A', 'OMEGA:A', 'OMEGAT:A', 'PBLH:A', 'PDELDRY:A', 'PHIS:A', 'pom_a1:A', 'pom_a1DDF:A', 'pom_a1SFWET:A',
+-   'pom_a4:A', 'pom_a4DDF:A', 'pom_a4SFWET:A', 'pom_c1:A', 'pom_c1DDF:A', 'pom_c1SFWET:A', 'pom_c4:A', 'pom_c4DDF:A', 'pom_c4SFWET:A',
+-   'PRECC:A', 'PRECT:A', 'PS:A', 'PSL:A', 'PTEQ:A', 'PTTEND:A', 'Q:A', 'QFLX:A', 'QRAIN:A', 'QREFHT:A', 'QRL:A', 'QRLC:A', 'QRS:A',
+-   'QRSC:A', 'QSNOW:A', 'RAD_ICE:A', 'RAD_LNAT:A', 'RAD_SULFC:A', 'REFF_AERO:A', 'RELHUM:A', 'RHREFHT:A',
+-   'SAD_AERO:A', 'SAD_ICE:A', 'SAD_LNAT:A', 'SAD_SULFC:A', 'SAD_TROP:A', 'SFbc_a4:A',
+-   'SFDMS:A', 'SFdst_a1:A', 'SFdst_a2:A', 'SFdst_a3:A',
+-   'SFncl_a1:A', 'SFncl_a2:A', 'SFncl_a3:A', 'SFnum_a1:A', 'SFnum_a2:A',
+-   'SFnum_a3:A', 'SFpom_a4:A', 'SFSO2:A', 'SFso4_a1:A', 'SFso4_a2:A', 'SHFLX:A', 'SO2:A',
+-   'SO2_CHML:A', 'SO2_CHMP:A', 'SO2_CLXF:A', 'SO2_XFRC:A', 'so4_a1:A', 'so4_a1_CHMP:A', 'so4_a1_CLXF:A', 'so4_a1DDF:A', 'so4_a1_sfgaex1:A', 'so4_a1SFWET:A',
+-   'so4_a2:A', 'so4_a2_CHMP:A', 'so4_a2_CLXF:A', 'so4_a2DDF:A', 'so4_a2_sfgaex1:A', 'so4_a2_sfnnuc1:A', 'so4_a2SFWET:A', 'so4_a3:A',
+-   'so4_a3DDF:A', 'so4_a3_sfgaex1:A', 'so4_a3SFWET:A', 'so4_c1:A', 'so4_c1AQH2SO4:A', 'so4_c1AQSO4:A', 'so4_c1DDF:A', 'so4_c1SFWET:A', 'so4_c2:A', 'so4_c2AQH2SO4:A',
+-   'so4_c2AQSO4:A', 'so4_c2DDF:A', 'so4_c2SFWET:A', 'so4_c3:A', 'so4_c3AQH2SO4:A', 'so4_c3AQSO4:A', 'so4_c3DDF:A', 'so4_c3SFWET:A',
+-   'SOLIN:A', 'SOLLD:A', 'SOLSD:A', 'SSAVIS:A', 'SST:A',
+-   'T:A', 'TAQ:A', 'TAUBLJX:A', 'TAUBLJY:A', 'TAUGWX:A', 'TAUGWY:A', 'TAUX:A', 'TAUY:A', 'TBRY:A', 'TCLY:A',
+-   'TGCLDIWP:A', 'TGCLDLWP:A', 'TMDMS:A', 'TMQ:A', 'TMSO2:A',
+-   'TMso4_a1:A', 'TMso4_a2:A', 'TMso4_a3:A', 'TOT_CLD_VISTAU:A', 'TOTH:A', 'TREFHT:A', 'TREFHTMN:M', 'TREFHTMX:X', 'TROP_P:A',
+-   'TROP_T:A', 'TROP_Z:A', 'TS:A', 'TSMN:M', 'TSMX:X', 'TTEND_TOT:A', 'TTGWORO:A', 'U10:A', 'U:A', 'UTGWORO:A',
+-   'UU:A', 'V:A', 'VD01:A', 'VV:A', 'WD_H2O2:A', 'WD_H2SO4:A', 'WD_SO2:A', 'wet_deposition_NHx_as_N:A', 'wet_deposition_NOy_as_N:A',
+-   'Z3:A', 'ZMDQ:A', 'ZMDT:A', 'ZMMTT:A', 'ZMMU:A','VTHzm','UVzm','UWzm','Uzm','Vzm','THzm','Wzm','MSKtem'
++!! monthly (h0)
++fincl1 = 
++       'ADRAIN','ADSNOW','ANRAIN','ANSNOW','AQRAIN','AQSNOW','AREI','AREL','AWNC','AWNI','CCN3','CLDICE','CLDLIQ',
++       'CLOUD','CME','CO2','CO2_FFF','CO2_LND','CO2_OCN','CONCLD','DCQ','DTCOND','DTCORE','DTV','EVAPPREC','EVAPQZM',
++       'EVAPTZM','FICE','FREQI','FREQL','FREQR','FREQS','H2O','ICIMR','ICWMR','IWC','MASS','NUMICE','NUMLIQ','NUMRAI',
++       'NUMSNO','OMEGA','OMEGAT','PDELDRY','PTEQ','PTTEND','Q','QRAIN','QRL','QRS','QSNOW','QT','RAINQM','REFF_AERO',
++       'RELHUM','RELVAR','SNOWQM','STEND_CLUBB','T','TAQ','TOT_CLD_VISTAU','TTEND_TOT','TTGWORO','U','UTEND_CLUBB',
++       'UTGWORO','UU','V','VD01','VQ','VT','VTEND_CLUBB','VU','VV','WSUB','Z3','ZM_CLUBB','ZMDQ','ZMDT','ZMMTT','ZMMU',
++       'ACTREL','AEROD_v','AODABSdn','AODBCdn','AODdnDUST1','AODdnDUST2','AODdnDUST3','AODdnMODE1','AODdnMODE2','AODdnMODE3',
++       'AODDUST','AODDUST1','AODDUST2','AODDUST3','AODNIRstdn','AODPOMdn','AODSO4dn','AODSOAdn','AODSSdn','AODUVdn','AODUVstdn',
++       'AODVIS','AODVISdn','AODVISstdn','AREA','bc_a1_SRF','bc_a4_SRF','BURDENBCdn','BURDENDUSTdn','BURDENPOMdn','BURDENSEASALTdn',
++       'BURDENSO4dn','BURDENSOAdn','CAPE','CDNUMC','CLDHGH','CLDLOW','CLDMED','CLDTOT','dst_a1_SRF','dst_a2_SRF','dst_a3_SRF',
++       'FCTL','FLDS','FLDSC','FLNR','FLNS','FLNSC','FLNT','FLNTC','FLUT','FLUTC','FREQZM','FSDS','FSDSC','FSNR','FSNS','FSNSC',
++       'FSNT','FSNTC','FSNTOA','FSNTOAC','FSUTOA','ICEFRAC','LANDFRAC','LHFLX','LWCF','MSKtem','ncl_a1_SRF','ncl_a2_SRF','ncl_a3_SRF',
++       'num_a1_SRF','num_a2_SRF','num_a3_SRF','num_a4_SRF','OCNFRAC','PBLH','PHIS','pom_a1_SRF','pom_a4_SRF','PRECC','PRECL','PRECSC',
++       'PRECSL','PRECT','PS','PSL','QFLX','QREFHT','RHREFHT','SFCO2','SFCO2_FFF','SFCO2_LND','SFCO2_OCN','SHFLX','SNOWHICE','SNOWHLND',
++       'SO2_SRF','so4_a1_SRF','so4_a2_SRF','so4_a3_SRF','soa_a1_SRF','soa_a2_SRF','SOAG_SRF','SOLIN','SOLLD','SOLSD','SSAVIS','SWCF',
++       'TAUBLJX','TAUBLJY','TAUGWX','TAUGWY','TAUX','TAUY','TGCLDCWP','TGCLDIWP','TGCLDLWP','THzm','TMCO2','TMCO2_FFF','TMCO2_LND','TMCO2_OCN',
++       'TMQ','TREFHT','TREFHTMN','TREFHTMX','TROP_P','TROP_T','TROP_Z','TS','TSMN','TSMX','U10','Vzm','Wzm','WSPDSRFAV','WSPDSRFMX',
++       
++
++!! daily single level (h1)
++fincl2 =
++       'ACTNI','ACTNL','ACTREI','ACTREL','AODVIS','BURDENBCdn','BURDENDUSTdn','BURDENPOMdn','BURDENSEASALTdn','BURDENSO4','BURDENSO4dn','BURDENSOAdn',
++       'CAPE','CDNUMC','CLDTOT','FCTI','FCTL','FLDS','FLDSC','FLNR','FLNS','FLNSC','FLNT','FLNTC','FLUT','FLUTC','FSDS','FSDSC','FSNR','FSNS','FSNSC',
++       'FSNT','FSNTOAC','LHFLX','LWCF','MSKtem','PBLH','PHIS','PRECC','PRECL','PRECSC','PRECSL','PRECT','PRECTMX','PS','PSL','QREFHT','RHREFHT','SHFLX',
++       'SOLIN','SOLLD','SOLSD','SWCF','TAUBLJX','TAUBLJY','TAUGWX','TAUGWY','TAUX','TAUY','TGCLDIWP','TGCLDLWP','TMQ','TREFHT','TREFHTMN','TREFHTMX',
++       'TS','TSMN','TSMX','U10','WSPDSRFAV','WSPDSRFMX','OMEGA1000','OMEGA850','OMEGA700','OMEGA500','OMEGA200','OMEGA100','OMEGA050','OMEGA010',
++       'Q1000','Q850','Q700','Q500','Q200','Q100','Q050','Q010','T1000','T850','T700','T500','T200','T100','T050','T010',
++       'U1000','U850','U700','U500','U200','U100','U050','U010','V1000','V850','V700','V500','V200','V100','V050','V010',
++       'Z1000','Z850','Z700','Z500','Z200','Z100','Z050','Z010','MSKtem','VTHzm','UVzm','UWzm','Uzm','Vzm','THzm','Wzm',
++        'CLDHGH','CLDMED','CLDLOW'
++
++!! 6hr (h2) 
++fincl3 =
++       'Q950:I','Q900:I','Q850:I','Q700:I','Q500:I','Q200:I','T950:I','T900:I','T850:I','T700:I','T500:I','T200:I',
++       'U950:I','U900:I','U850:I','U700:I','U500:I','U200:I','V950:I','V900:I','V850:I','V700:I','V500:I','V200:I',
++       'FLUT:A','OMEGA500:A','PRECC:A','PRECSC:A','PRECSL:A','PRECT:A','PSL:I','U200:A',
++       'UBOT:I','VBOT:I','Z300:I','Z500:I','TMQ:I','uIVT:I','vIVT:I'
++ 
++!! 3hr (h3)
++fincl4 = 
++       'CLDLOW:A','PRECC:A','UBOT:A','VBOT:A','PRECT:A'
+ 
+-fexcl1         = 'BTAUN', 'BTAUS', 'BTAUE', 'BTAUW', 'BTAUNET', 'BUTEND1', 'BUTEND2', 'BUTEND3', 'BUTEND4', 'BUTEND5','BVTGWSPEC', 'MAXQ0', 'HDEPTH', 'NETDT', 'TAUN', 'TAUS', 'TAUE', 'TAUW', 'TAUGWX', 'TAUGWY','UTEND1', 'UTEND2', 'UTEND3', 'UTEND4', 'UTEND5', 'FRONTGF', 'FRONTGFA', 'EKGW', 'DUV', 'DVV'
+ 
++fexcl1         = 'BTAUN', 'BTAUS', 'BTAUE', 'BTAUW', 'BTAUNET', 'BUTEND1', 'BUTEND2', 'BUTEND3', 'BUTEND4', 'BUTEND5','BVTGWSPEC', 'MAXQ0', 'HDEPTH', 'NETDT', 'TAUN', 'TAUS', 'TAUE', 'TAUW', 'TAUGWX', 'TAUGWY','UTEND1', 'UTEND2', 'UTEND3', 'UTEND4', 'UTEND5', 'FRONTGF', 'FRONTGFA', 'EKGW', 'DUV', 'DVV'
+ 
+ 
+-fincl2 = 'ACTNL:A', 'ACTREL:A', 'BURDENBCdn:A', 'BURDENDUSTdn:A', 'BURDENPOMdn:A', 'BURDENSEASALTdn:A', 'BURDENSO4dn:A', 'BURDENSOAdn:A',
+-   'CDNUMC:A', 'CLDICE:A', 'CLDLIQ:A', 'CLDTOT:A', 'CLOUD:A', 'CMFMC:A', 'CMFMCDZM:A', 'FCTL:A', 'FLDS:A', 'FLDSC:A', 'FLNR:A', 'FLNS:A', 'FLNSC:A',
+-   'FLNT:A', 'FLNTC:A', 'FLUT:A', 'FLUTC:A', 'FSDS:A', 'FSDSC:A', 'FSNR:A', 'FSNS:A', 'FSNSC:A', 'FSNTOA:A', 'FSNTOAC:A', 'LHFLX:A', 'MASS:A', 'OMEGA:A',
+-   'OMEGA500:A', 'PBLH:A', 'PDELDRY:A', 'PRECC:A', 'PRECT:A', 'PS:A', 'PSL:A', 'Q:A', 'QREFHT:A', 'QSNOW:A', 'RELHUM:A', 'RHREFHT:A', 'SHFLX:A',
+-   'SOLIN:A', 'SOLLD:A', 'SOLSD:A', 'T:A', 'T500:A', 'T700:A', 'T850:A', 'TAUBLJX:A', 'TAUBLJY:A', 'TAUGWX:A', 'TAUGWY:A', 'TAUX:A', 'TAUY:A',
+-   'TGCLDIWP:A', 'TGCLDLWP:A', 'TMQ:A', 'TREFHT:A', 'TREFHTMN:M', 'TREFHTMX:X', 'TS:A', 'TSMN:M', 'TSMX:X', 'U:A', 'U10:A', 'UTGWORO:A',
+-   'V:A', 'Z3:A', 'Z500:A'
++&prescribed_ozone_nl
++ prescribed_ozone_datapath              = '/glade/p/cesmdata/cseg/inputdata/atm/cam/ozone_strataero'
++ prescribed_ozone_file          = 'ozone_strataero_WACCM_L70_zm5day_18500101-21010201_CMIP6histEnsAvg_SSP370_c190403.nc'
++ prescribed_ozone_name          = 'O3'
++ prescribed_ozone_type          = 'SERIAL'
++/
++&prescribed_strataero_nl
++ prescribed_strataero_datapath          = '/glade/p/cesmdata/cseg/inputdata/atm/cam/ozone_strataero'
++ prescribed_strataero_file              = 'ozone_strataero_WACCM_L70_zm5day_18500101-21010201_CMIP6histEnsAvg_SSP370_c190403.nc'
++ prescribed_strataero_type              = 'SERIAL'
++ prescribed_strataero_use_chemtrop              =  .true.                                                                       
++/
++ &aircraft_emit_nl
++ aircraft_datapath              = '/glade/p/cesmdata/cseg/inputdata/atm/cam/ggas'
++ aircraft_specifier             = 'ac_CO2 -> emissions-cmip6_CO2_anthro_ac_ScenarioMIP_IAMC-AIM-ssp370_195001-205012_fv_0.9x1.25_c20201210.txt'
++ aircraft_type          = 'SERIAL'
++/
+ 
++ ext_frc_specifier  = 'H2O    -> /glade/p/cesmdata/cseg/inputdata/atm/cam/chem/emis/elev/H2OemissionCH4oxidationx2_3D_L70_1849-2101_CMIP6ensAvg_SSP3-7.0_c190403.nc',
++         'num_a1 -> /glade/p/cesmdata/cseg/inputdata/atm/cam/chem/emis/emissions_ssp370/emissions-cmip6-ScenarioMIP_IAMC-AIM-ssp370-1-1_num_so4_a1_anthro-ene_vertical_mol_175001-210101_0.9x1.25_c20190222.nc',
++         'num_a1 -> /glade/p/cesmdata/cseg/inputdata/atm/cam/chem/emis/CMIP6_emissions_1750_2015/emissions-cmip6_num_a1_so4_contvolcano_vertical_850-5000_0.9x1.25_c20170724.nc',
++         'num_a2 -> /glade/p/cesmdata/cseg/inputdata/atm/cam/chem/emis/CMIP6_emissions_1750_2015/emissions-cmip6_num_a2_so4_contvolcano_vertical_850-5000_0.9x1.25_c20170724.nc',
++         'SO2    -> /glade/p/cesmdata/cseg/inputdata/atm/cam/chem/emis/CMIP6_emissions_1750_2015/emissions-cmip6_SO2_contvolcano_vertical_850-5000_0.9x1.25_c20170724.nc',
++         'so4_a1 -> /glade/p/cesmdata/cseg/inputdata/atm/cam/chem/emis/emissions_ssp370/emissions-cmip6-ScenarioMIP_IAMC-AIM-ssp370-1-1_so4_a1_anthro-ene_vertical_mol_175001-210101_0.9x1.25_c20190222.nc',
++         'so4_a1 -> /glade/p/cesmdata/cseg/inputdata/atm/cam/chem/emis/CMIP6_emissions_1750_2015/emissions-cmip6_so4_a1_contvolcano_vertical_850-5000_0.9x1.25_c20170724.nc',
++         'so4_a2 -> /glade/p/cesmdata/cseg/inputdata/atm/cam/chem/emis/CMIP6_emissions_1750_2015/emissions-cmip6_so4_a2_contvolcano_vertical_850-5000_0.9x1.25_c20170724.nc'
++ ext_frc_type   = 'INTERP_MISSING_MONTHS'
+ 
++ srf_emis_specifier             = 'bc_a4    -> /glade/p/cesmdata/cseg/inputdata/atm/cam/chem/emis/emissions_ssp370/emissions-cmip6-ScenarioMIP_IAMC-AIM-ssp370-1-1_bc_a4_anthro_surface_mol_175001-210101_0.9x1.25_c20190222.nc',
++         'bc_a4    -> /glade/p/cesmdata/cseg/inputdata/atm/cam/chem/emis/emissions_ssp370-BB_smoothed/emissions-cmip6-ScenarioMIP_IAMC-AIM-ssp370-1-1_smoothed_bc_a4_bb_surface_mol_175001-210101_0.9x1.25_c20201016.nc',
++         'DMS      -> /glade/p/cesmdata/cseg/inputdata/atm/cam/chem/emis/emissions_ssp370-BB_smoothed/emissions-cmip6-ScenarioMIP_IAMC-AIM-ssp370-1-1_smoothed_DMS_bb_surface_mol_175001-210101_0.9x1.25_c20201016.nc',
++         'DMS      -> /glade/p/cesmdata/cseg/inputdata/atm/cam/chem/emis/emissions_ssp370/emissions-cmip6-SSP_DMS_other_surface_mol_175001-210101_0.9x1.25_c20190222.nc',
++         'num_a1   -> /glade/p/cesmdata/cseg/inputdata/atm/cam/chem/emis/emissions_ssp370-BB_smoothed/emissions-cmip6-ScenarioMIP_IAMC-AIM-ssp370-1-1_smoothed_num_so4_a1_bb_surface_mol_175001-210101_0.9x1.25_c20201016.nc',
++         'num_a1   -> /glade/p/cesmdata/cseg/inputdata/atm/cam/chem/emis/emissions_ssp370/emissions-cmip6-ScenarioMIP_IAMC-AIM-ssp370-1-1_num_so4_a1_anthro-ag-ship_surface_mol_175001-210101_0.9x1.25_c20200924.nc',
++         'num_a2   -> /glade/p/cesmdata/cseg/inputdata/atm/cam/chem/emis/emissions_ssp370/emissions-cmip6-ScenarioMIP_IAMC-AIM-ssp370-1-1_num_so4_a2_anthro-res_surface_mol_175001-210101_0.9x1.25_c20200924.nc',
++         'num_a4   -> /glade/p/cesmdata/cseg/inputdata/atm/cam/chem/emis/emissions_ssp370-BB_smoothed/emissions-cmip6-ScenarioMIP_IAMC-AIM-ssp370-1-1_smoothed_num_bc_a4_bb_surface_mol_175001-210101_0.9x1.25_c20201016.nc',
++         'num_a4   -> /glade/p/cesmdata/cseg/inputdata/atm/cam/chem/emis/emissions_ssp370/emissions-cmip6-ScenarioMIP_IAMC-AIM-ssp370-1-1_num_bc_a4_anthro_surface_mol_175001-210101_0.9x1.25_c20190222.nc',
++         'num_a4   -> /glade/p/cesmdata/cseg/inputdata/atm/cam/chem/emis/emissions_ssp370/emissions-cmip6-ScenarioMIP_IAMC-AIM-ssp370-1-1_num_pom_a4_anthro_surface_mol_175001-210101_0.9x1.25_c20190222.nc',
++         'num_a4   -> /glade/p/cesmdata/cseg/inputdata/atm/cam/chem/emis/emissions_ssp370-BB_smoothed/emissions-cmip6-ScenarioMIP_IAMC-AIM-ssp370-1-1_smoothed_num_pom_a4_bb_surface_mol_175001-210101_0.9x1.25_c20201016.nc',
++         'pom_a4   -> /glade/p/cesmdata/cseg/inputdata/atm/cam/chem/emis/emissions_ssp370/emissions-cmip6-ScenarioMIP_IAMC-AIM-ssp370-1-1_pom_a4_anthro_surface_mol_175001-210101_0.9x1.25_c20190222.nc',
++         'pom_a4   -> /glade/p/cesmdata/cseg/inputdata/atm/cam/chem/emis/emissions_ssp370-BB_smoothed/emissions-cmip6-ScenarioMIP_IAMC-AIM-ssp370-1-1_smoothed_pom_a4_bb_surface_mol_175001-210101_0.9x1.25_c20201016.nc',
++         'SO2      -> /glade/p/cesmdata/cseg/inputdata/atm/cam/chem/emis/emissions_ssp370/emissions-cmip6-ScenarioMIP_IAMC-AIM-ssp370-1-1_SO2_anthro-ag-ship-res_surface_mol_175001-210101_0.9x1.25_c20200924.nc',
++         'SO2      -> /glade/p/cesmdata/cseg/inputdata/atm/cam/chem/emis/emissions_ssp370/emissions-cmip6-ScenarioMIP_IAMC-AIM-ssp370-1-1_SO2_anthro-ene_surface_mol_175001-210101_0.9x1.25_c20190222.nc',
++         'SO2      -> /glade/p/cesmdata/cseg/inputdata/atm/cam/chem/emis/emissions_ssp370-BB_smoothed/emissions-cmip6-ScenarioMIP_IAMC-AIM-ssp370-1-1_smoothed_SO2_bb_surface_mol_175001-210101_0.9x1.25_c20201016.nc',
++         'so4_a1   -> /glade/p/cesmdata/cseg/inputdata/atm/cam/chem/emis/emissions_ssp370/emissions-cmip6-ScenarioMIP_IAMC-AIM-ssp370-1-1_so4_a1_anthro-ag-ship_surface_mol_175001-210101_0.9x1.25_c20200924.nc',
++         'so4_a1   -> /glade/p/cesmdata/cseg/inputdata/atm/cam/chem/emis/emissions_ssp370-BB_smoothed/emissions-cmip6-ScenarioMIP_IAMC-AIM-ssp370-1-1_smoothed_so4_a1_bb_surface_mol_175001-210101_0.9x1.25_c20201016.nc',
++         'so4_a2   -> /glade/p/cesmdata/cseg/inputdata/atm/cam/chem/emis/emissions_ssp370/emissions-cmip6-ScenarioMIP_IAMC-AIM-ssp370-1-1_so4_a2_anthro-res_surface_mol_175001-210101_0.9x1.25_c20200924.nc',
++         'SOAG     -> /glade/p/cesmdata/cseg/inputdata/atm/cam/chem/emis/emissions_ssp370/emissions-cmip6-ScenarioMIP_IAMC-AIM-ssp370-1-1_SOAGx1.5_anthro_surface_mol_175001-210101_0.9x1.25_c20200403.nc',
++         'SOAG     -> /glade/p/cesmdata/cseg/inputdata/atm/cam/chem/emis/emissions_ssp370-BB_smoothed/emissions-cmip6-ScenarioMIP_IAMC-AIM-ssp370-1-1_smoothed_SOAGx1.5_bb_surface_mol_175001-210101_0.9x1.25_c20201016.nc',
++         'SOAG     -> /glade/p/cesmdata/cseg/inputdata/atm/cam/chem/emis/emissions_ssp/emissions-cmip6-SOAGx1.5_biogenic_surface_mol_175001-210101_0.9x1.25_c20190329.nc'
++ srf_emis_type          = 'INTERP_MISSING_MONTHS'
++ tracer_cnst_datapath           = '/glade/p/cesmdata/cseg/inputdata/atm/cam/tracer_cnst'
++ tracer_cnst_file               = 'tracer_cnst_halons_3D_L70_1849-2101_CMIP6ensAvg_SSP3-7.0_c190403.nc'
+ 
+-!! 6hr (h2)
+-fincl3 =
+-    'PRECC:A','PRECL:A','PRECSC:A','PRECSL:A','PRECT:A','PSL:I',
+-    'U200:A','U850:I','UBOT:I','V850:I','VBOT:I','Z300:I','Z500:I',
+-    'OMEGA500:A', 'FLUT:A'
++ flbc_file              = '/glade/p/cesmdata/cseg/inputdata/atm/waccm/lb/LBC_1750-2500_CMIP6_SSP370_0p5degLat_GlobAnnAvg_c20201210.nc'
++ co2flux_fuel_file  = '/glade/p/cesmdata/cseg/inputdata/atm/cam/ggas/emissions-cmip6_CO2_anthro_surface_ScenarioMIP_IAMC-AIM-ssp370_175001-210112_fv_0.9x1.25_c20201210.nc'
+ 
+-!! daily-FC-level (h6)
+-fincl7 =
+-    'VTHzm','UVzm','UWzm','Uzm','Vzm','THzm','Wzm','MSKtem'
+diff --git a/user_mods/cesm2smyle.base/user_nl_clm b/user_mods/cesm2smyle.base/user_nl_clm
+index df3c15a..e80352a 100644
+--- a/user_mods/cesm2smyle.base/user_nl_clm
++++ b/user_mods/cesm2smyle.base/user_nl_clm
+@@ -103,3 +103,33 @@ use_c14 = .false.
+ ! However, this increases the cost of CLM by about 10%
+ glacier_region_behavior = 'single_at_atm_topo', 'virtual', 'virtual', 'virtual'
+ 
++
++!------------------------------------
++! Nan:  SSP370 settings for 2014-11 onward:
++!------------------------------------
++
++&ndepdyn_nml
++ model_year_align_ndep = 1850
++ ndep_taxmode = 'cycle'
++ ndep_varlist = 'NDEP_month'
++ ndepmapalgo = 'bilinear'
++ stream_fldfilename_ndep = '/glade/p/cesmdata/cseg/inputdata/lnd/clm2/ndepdata/fndep_clm_f09_g17.CMIP6-SSP3-7.0-WACCM_1849-2101_monthly_c191007.nc'
++ stream_year_first_ndep = 1850
++ stream_year_last_ndep = 2100
++/
++&popd_streams
++ model_year_align_popdens = 1850
++ popdensmapalgo = 'bilinear'
++ stream_fldfilename_popdens = '/glade/p/cesmdata/cseg/inputdata/lnd/clm2/firedata/clmforc.Li_2018_SSP3_CMIP6_hdm_0.5x0.5_AVHRR_simyr1850-2100_c181205.nc'
++ stream_year_first_popdens = 1850
++ stream_year_last_popdens = 2100
++/
++&urbantv_streams
++ model_year_align_urbantv = 1850
++ stream_fldfilename_urbantv = '/glade/p/cesmdata/cseg/inputdata/lnd/clm2/urbandata/CLM50_tbuildmax_Oleson_2016_0.9x1.25_simyr1849-2106_c160923.nc'
++ stream_year_first_urbantv = 1850
++ stream_year_last_urbantv = 2100
++ urbantvmapalgo = 'nn'
++/
++
++
