@@ -62,9 +62,9 @@ def get_ocn_src_path(src_root, date, count=0):
 def get_data_from_campaignstore(date):
 
     source_root_local = "/glade/campaign"
-    source_path = 'cesm/development/cross-wg/S2S/CESM2/CLIMOCEANIC/{date}-00000/'.format(date=date)
+    # source_path = 'cesm/development/cross-wg/S2S/CESM2/CLIMOCEANIC/{date}-00000/'.format(date=date)
 
-    source_path = get_ocn_src_path(source_root_local, date)
+     source_path = get_ocn_src_path(source_root_local, date)
 
     dest_path = os.path.join(os.getenv("SCRATCH"),"cesm2cam6climoALL","Ocean","rest","{}".format(date))
 
