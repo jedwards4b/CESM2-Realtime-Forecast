@@ -59,9 +59,9 @@ def stage_refcase(rundir, refdir, date):
             if 'cice.r' in newfile:
                 newfile = "{}.cice.r.{}-00000.nc".format(nfname,date)
             elif 'I2000' in newfile:
-                newfile = newfile.replace("I2000Clm50BgcCrop.002runRealtime",nfname)
-                newfile = newfile.replace("I2000Clm50BgcCrop.002runContd", nfname)
-                newfile = newfile.replace("I2000Clm50BgcCrop.002run",nfname)
+                newfile = newfile.replace("I2000Clm50BgcCrop.002runRealtimeClimo_contd4",nfname)
+                # newfile = newfile.replace("I2000Clm50BgcCrop.002runContd", nfname)
+                # newfile = newfile.replace("I2000Clm50BgcCrop.002run",nfname)
             newfile = os.path.join(rundir,newfile)
             if not "cam.i" in newfile:
                 if os.path.lexists(newfile):

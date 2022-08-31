@@ -47,7 +47,7 @@ def parse_command_line(args, description):
 def get_ocn_src_path(src_root, date, count=0):
     oyr = int(date[:4]) - 1749
     odate = "{:04d}".format(oyr)+date[4:]
-    src_dir_path = os.path.join(src_root,"cesm","development","cross-wg","S2S","CESM2","OCEANIC")
+    src_dir_path = os.path.join(src_root,"cesm","development","cross-wg","S2S","CESM2","CLIMOCEANIC")
     src_path = os.path.join(src_dir_path, "{}-00000".format(odate))
     if os.path.isdir(src_path):
         return(src_path)
@@ -62,7 +62,7 @@ def get_ocn_src_path(src_root, date, count=0):
 def get_data_from_campaignstore(date):
 
     source_root_local = "/glade/campaign"
-    source_path = 'cesm/development/cross-wg/S2S/CESM2/CLIMOCEANIC/{date}-00000/'.format(date=date)
+    # source_path = 'cesm/development/cross-wg/S2S/CESM2/CLIMOCEANIC/{date}-00000/'.format(date=date)
 
     source_path = get_ocn_src_path(source_root_local, date)
 
