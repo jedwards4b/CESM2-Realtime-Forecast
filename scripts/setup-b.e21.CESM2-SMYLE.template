@@ -1,6 +1,6 @@
 #!/bin/csh -fx
 ### set env variables
-setenv CESM2_TOOLS_ROOT /glade/work/nanr/cesm_tags/CASE_tools/cesm2-smyle-MCB/
+setenv CESM2_TOOLS_ROOT /glade/work/nanr/cesm_tags/CASE_tools/cesm2-smyle-PACEMAKER/
 setenv CESMROOT /glade/work/nanr/cesm_tags/cesm2.1.4-SMYLE
 
 set COMPSET = BSMYLE
@@ -9,9 +9,9 @@ set RESOLN = f09_g17
 set RESUBMIT = 0
 set STOP_N=24
 set STOP_OPTION=nmonths
-set PROJECT=P04010022
+set PROJECT=P006010014
 
-setenv BASEROOT /glade/work/nanr/CESM2-SMYLE-MCB/
+setenv BASEROOT /glade/work/nanr/CESM2-SMYLE-PACEMAKER/
 
 set syr = 2019
 set eyr = 2019
@@ -21,14 +21,14 @@ set eyr = 2019
 
 foreach year ( `seq $ib $ie` )
 #foreach mon ( 02 05 08 11 )
-foreach mon ( 08 )
+foreach mon ( 11 )
 
 set REFCASE  = b.e21.SMYLE_IC.f09_g17.${year}-${mon}.01
 set REFROOT  = /glade/p/cesm/espwg/CESM2-SMYLE/inputdata/cesm2_init/${REFCASE}/${year}-${mon}-01/
 
 # case name counter
-set smbr =  1
-set embr =  1
+set smbr =  4
+set embr =  4
 
 @ mb = $smbr
 @ me = $embr
@@ -37,9 +37,9 @@ foreach mbr ( `seq $mb $me` )
 
 # Use restarts created from case 001 for all ensemble members;  pertlim will differentiate runs.
 if ($mbr < 10) then
-        set CASE = b.e21.BSMYLE.f09_g17.MCB.${year}-${mon}.00${mbr}
+        set CASE = b.e21.BSMYLE.f09_g17.PACEMAKER.${year}-${mon}.00${mbr}
 else
-        set CASE = b.e21.BSMYLE.f09_g17.MCB.${year}-${mon}.0${mbr}
+        set CASE = b.e21.BSMYLE.f09_g17.PACEMAKER.${year}-${mon}.0${mbr}
 endif
 
 cd $CESMROOT/cime/scripts
@@ -54,6 +54,8 @@ echo 'Case   = ' $CASE
   setenv CASEROOT  $BASEROOT$CASE
   cd $CASEROOT
   ./xmlchange OCN_TRACER_MODULES="iage cfc ecosys"
+  ./xmlchange CCSM_BGC="CO2A"
+  ./xmlchange OCN_CHL_TYPE=diagnostic
 
   ./xmlchange RUN_REFCASE=$REFCASE
   ./xmlchange RUN_REFDATE=${year}-${mon}-01
@@ -73,10 +75,7 @@ echo 'Case   = ' $CASE
   cp $CESM2_TOOLS_ROOT/user_mods/cesm2smyle.base/SourceMods/src.cam/* $CASEROOT/SourceMods/src.cam/
   cp $CESM2_TOOLS_ROOT/user_mods/cesm2smyle.base/SourceMods/src.clm/* $CASEROOT/SourceMods/src.clm/
 
-  cp $CESM2_TOOLS_ROOT/user_mods/cesm2smyle.base/user_nl_cam $CASEROOT/
-  cp $CESM2_TOOLS_ROOT/user_mods/cesm2smyle.base/user_nl_clm $CASEROOT/
-  cp $CESM2_TOOLS_ROOT/user_mods/cesm2smyle.base/user_nl_cpl $CASEROOT/
-  cp $CESM2_TOOLS_ROOT/user_mods/cesm2smyle.base/user_nl_cice $CASEROOT/
+  cp $CESM2_TOOLS_ROOT/user_mods/cesm2smyle.base/user_nl_* $CASEROOT/
 
 
   ./xmlchange STOP_N=$STOP_N
