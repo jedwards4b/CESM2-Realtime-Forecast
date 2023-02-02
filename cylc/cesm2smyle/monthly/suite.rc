@@ -1,20 +1,20 @@
 #!Jinja2
 
 {% set ensemble_start = 1%}
-{% set ensemble_end   = 20%}
+{% set ensemble_end   = 5%}
 [meta]
   title = CESM CYLC workflow for ensemble from cesm2smyle
 [cylc]
   UTC mode = True
   cycle point format = CCYY-MM-DD
   [[environment]]
-    FCST_HOME = "/glade/work/nanr/cesm_tags/CASE_tools/cesm2-smyle/"
+    FCST_HOME = "/glade/work/nanr/cesm_tags/CASE_tools/cesm2-smyle-PACEMAKER/"
     CESM_ROOT = "/glade/work/nanr/cesm_tags/cesm2.1.4-SMYLE/"
     SCRATCH   = "/glade/scratch/nanr/"
     USECASE   = "cesm2smyle"
-    REFDIR    = "/glade/scratch/nanr/SMYLE/inputdata/cesm2_init/"
+    REFDIR    = "/glade/p/cesm/espwg/CESM2-SMYLE/inputdata/cesm2_init/"
     POSTPROCESS_PATH = "/glade/work/jedwards/sandboxes/CESM_postprocessing"
-    SMYLE_ROOT = "/glade/p/cesm/espwg/CESM2-SMYLE"
+    SMYLE_ROOT = "/glade/p/cesm/espwg/CESM2-SMYLE-PACEMAKER"
   [[parameters]]
     # The number of ensemble members can be changed here
     # The first number here should always be 1 and the second the number of members to run
@@ -24,17 +24,17 @@
 
 [scheduling]
   # Change the run start and end dates here
-    initial cycle point = "2019-11-01"
-    final cycle point = "2019-11-01"
+    initial cycle point = "1997-02-01"
+    final cycle point = "1997-02-01"
 
     # must start May 01, any year:
     # initial cycle point constraints = "0501T00"
     # must start Aug 01, any year:
     # initial cycle point constraints = "0801T00"
     # must start Feb 01, any year:
-    # initial cycle point constraints = "0201T00"
+    initial cycle point constraints = "0201T00"
     # must start Nov 01, any year:
-    initial cycle point constraints = "1101T00"
+    # initial cycle point constraints = "1101T00"
 
   [[dependencies]]
   # Weekly Cycling on monday, new date will submit when st_archive is complete for each member
@@ -119,7 +119,7 @@ mpirun ./timeseries > ./logs/timeseries.log.${today} 2>&1
     [[[directives]]]
        -r = n
        -j = oe
-       -v = FCST_HOME=/glade/work/nanr/cesm_tags/CASE_tools/cesm2-smyle/,SMYLE_ROOT=/glade/p/cesm/espwg/CESM2-SMYLE
+       -v = FCST_HOME=/glade/work/nanr/cesm_tags/CASE_tools/cesm2-smyle-PACEMAKER/,SMYLE_ROOT=/glade/p/cesm/espwg/CESM2-SMYLE-PACEMAKER
        -S = /bin/bash
        -l = select=1:ncpus=36:mpiprocs=36:ompthreads=1
 
@@ -127,7 +127,7 @@ mpirun ./timeseries > ./logs/timeseries.log.${today} 2>&1
        inherit = run_family
     [[run_family]]
     script = """
-cd ${SMYLE_ROOT}/cases/b.e21.BSMYLE.f09_g17.${CYLC_TASK_CYCLE_DATE}.$(printf "%03d" ${CYLC_TASK_PARAM_mbr})
+cd ${SMYLE_ROOT}/cases/b.e21.BSMYLE.f09_g17.TBI-ATL_10d50m-anom.${CYLC_TASK_CYCLE_DATE}.$(printf "%03d" ${CYLC_TASK_PARAM_mbr})
 ./case.submit --job case.run
 """
     [[[environment]]]

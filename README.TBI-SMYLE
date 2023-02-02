@@ -1,0 +1,9 @@
+/glade/work/yeager/cesm_runs/cesm2.x_B_cases/CLIVAR_TBI_hindcastpacemaker/setup-b.e21.CESM2-SMYLE
+
+The mods are designed so that the case will be ready to go without further modifications. I'm testing it now on a
+case with 10-day anomaly restoring over 50m in the Atlantic deep tropics (10S-10N). If all goes well (I should know by tomorrow),
+then we're ready to start production on a 5-member set of FEB-init hindcasts spanning 1982-2019. Here's where I'd like your help:
+How can we better automate the case setup, build, execution of these simulations? Currently, the script builds separately for each case, but we should be able to reuse the executable. What is your advice for job management of all these simulations?
+How can we postprocess into timeseries format to facilitate direct comparison with SMYLE-FEB?
+Thanks!
+Steve

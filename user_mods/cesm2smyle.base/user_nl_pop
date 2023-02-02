@@ -54,3 +54,9 @@
 !----------------------------------------------------------------------------------
 
 pcfc_file = '/glade/p/cesmdata/cseg/inputdata/ocn/pop/res_indpt/forcing/cfc_atm_SMYLE_OMIP_1765-2015_SSP370_2021-2100_c210602.nc'
+pt_interior_data_type = 'shr_stream'
+pt_interior_interp_freq = 'every-timestep'
+pt_interior_interp_type = 'linear'
+pt_interior_restore_file_fmt = 'nc'
+pt_interior_surface_restore = .true.
+pt_interior_variable_restore = .true.

@@ -27,8 +27,8 @@ set REFCASE  = b.e21.SMYLE_IC.f09_g17.${year}-${mon}.01
 set REFROOT  = /glade/p/cesm/espwg/CESM2-SMYLE/inputdata/cesm2_init/${REFCASE}/${year}-${mon}-01/
 
 # case name counter
-set smbr =  4
-set embr =  4
+set smbr =  1
+set embr =  1
 
 @ mb = $smbr
 @ me = $embr
