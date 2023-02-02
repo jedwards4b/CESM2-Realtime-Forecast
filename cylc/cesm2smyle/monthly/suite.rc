@@ -24,8 +24,8 @@
 
 [scheduling]
   # Change the run start and end dates here
-    initial cycle point = "1997-02-01"
-    final cycle point = "1997-02-01"
+    initial cycle point = "1998-02-01"
+    final cycle point = "1998-02-01"
 
     # must start May 01, any year:
     # initial cycle point constraints = "0501T00"
@@ -62,11 +62,11 @@ cd ${FCST_HOME}/bin/
     [[[directives]]]
        -r = n
        -j = oe
-       -v = FCST_HOME=/glade/work/nanr/cesm_tags/CASE_tools/cesm2-smyle/
+       -v = FCST_HOME=/glade/work/nanr/cesm_tags/CASE_tools/cesm2-smyle-PACEMAKER/
        -S = /bin/bash
        -l = select=1:ncpus=8:ompthreads=1
     [[[environment]]]
-       SMYLE_ROOT = "/glade/p/cesm/espwg/CESM2-SMYLE"
+       SMYLE_ROOT = "/glade/p/cesm/espwg/CESM2-SMYLE-PACEMAKER"
 
   [[build_model]]
     script = """
@@ -104,14 +104,14 @@ if [ ! -d "postprocess" ]; then
    create_postprocess_cylc -caseroot=`pwd`
 fi
 cd postprocess
-pp_config --set TIMESERIES_OUTPUT_ROOTDIR=/glade/campaign/cesm/development/espwg/SMYLE/archive/b.e21.BSMYLE.f09_g17.${CYLC_TASK_CYCLE_DATE}.$(printf "%03d" ${CYLC_TASK_PARAM_mbr})
+pp_config --set TIMESERIES_OUTPUT_ROOTDIR=/glade/campaign/cesm/development/espwg/SMYLE-PACEMAKER/archive/b.e21.BSMYLE.f09_g17.TBI-ATL_10d50m-anom.${CYLC_TASK_CYCLE_DATE}.$(printf "%03d" ${CYLC_TASK_PARAM_mbr})
 today=`date '+%Y%m%d-%H%M%S'`
 mpirun ./timeseries > ./logs/timeseries.log.${today} 2>&1
 """
     [[[environment]]]
       #CYLC_TASK_CYCLE_MONTH = $(cylc cyclepoint --template=%m)
       CYLC_TASK_CYCLE_DATE = $(cylc cyclepoint --template=%Y-%m)
-      SMYLE_ROOT = "/glade/p/cesm/espwg/CESM2-SMYLE"
+      SMYLE_ROOT = "/glade/p/cesm/espwg/CESM2-SMYLE-PACEMAKER"
     [[[job]]]
       batch system = pbs
       batch submit command template = qsubcasper -q casper -l walltime=03:00:00 -A CESM0021 '%(job)s'

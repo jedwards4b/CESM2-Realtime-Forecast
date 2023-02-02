@@ -178,9 +178,9 @@ def build_base_case(date, baseroot, basecasename, basemonth,res, ensemble_start,
 
 
             case.set_value("STOP_OPTION","nmonths")
-            case.set_value("STOP_N", 24)
+            case.set_value("STOP_N", 23)
             case.set_value("REST_OPTION","nmonths")
-            case.set_value("REST_N", 24)
+            case.set_value("REST_N", 23)
 
             case.set_value("CCSM_BGC","CO2A")
             case.set_value("EXTERNAL_WORKFLOW",True)
