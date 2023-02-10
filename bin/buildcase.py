@@ -70,10 +70,6 @@ def stage_refcase(rundir, refdir, date, basecasename):
             if "cam.i" in newfile:
                 if not "001" in newfile:
                     os.symlink(reffile,newfile.replace(".nc","-original.nc"))
-                else:
-                    if os.path.lexists(newfile):
-                        os.unlink(newfile)
-                    os.symlink(reffile, newfile)
             else:
                 if os.path.lexists(newfile):
                     os.unlink(newfile)
