@@ -21,9 +21,9 @@ module load cesm_postprocessing
 
 # ...
 # case name counter
-set smbr =  1
+set smbr =  4
 set embr =  4
-set year =  1989
+set year =  1982
 
 @ mb = $smbr
 @ me = $embr
