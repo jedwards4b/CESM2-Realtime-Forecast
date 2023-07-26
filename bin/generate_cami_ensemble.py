@@ -55,7 +55,7 @@ def get_rvals(date, ensemble_start,ensemble_end, model):
     random.seed(int(date[0:4])+int(date[5:7])+int(date[8:10]))
     rvals = random.sample(range(1001),k=ensemble_end//2)
     print("Rvals are {}".format(rvals))
-    rvals_file = os.path.join("/glade/p/cesm/espwg/CESM2-SMYLE/","cases","camic_"+date+".{}-{}.txt".format(ensemble_start,ensemble_end))
+    rvals_file = os.path.join("/glade/p/cesm/espwg/CESM2-SMYLE-MCB/","cases","camic_"+date+".{}-{}.txt".format(ensemble_start,ensemble_end))
     #rvals_file = os.path.join("/glade/p/cesm/espwg/CESM2-SMYLE/","cases","camic_"+date+"."+ensemble_start+"-"+ensemble_end+".txt")
     if not os.path.isfile(rvals_file):
         with open(rvals_file,"w") as fd:
@@ -167,7 +167,7 @@ def _main_func(description):
 
     sdrestdir = os.path.join("/glade/p/cesm/espwg/CESM2-SMYLE/inputdata/cesm2_init","b.e21.SMYLE_IC.f09_g17."+date[0:7]+".01","{}".format(date))
     user = os.getenv("USER")
-    baserundir = os.path.join("/glade/scratch/{}/".format(user),"SMYLE","b.e21.BSMYLE.f09_g17."+date[0:7]+".001","run.{:03d}".format(ensemble_start))
+    baserundir = os.path.join("/glade/scratch/{}/".format(user),"SMYLE-MCB","b.e21.BSMYLE.f09_g17.MCB."+date[0:7]+".001","run.{:03d}".format(ensemble_start))
     caminame = os.path.join(sdrestdir,"b.e21.SMYLE_IC.f09_g17.{}.01.cam.i.{date}-00000.nc".format(date[:7],date=date))
     outroot = "b.e21.SMYLE_IC.pert.f09_g17.cam.i."
 

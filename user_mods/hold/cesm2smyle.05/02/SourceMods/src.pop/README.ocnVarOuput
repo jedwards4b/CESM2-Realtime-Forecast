@@ -1,0 +1,80 @@
+############## ecosys_diagnistics files ################
+rm ecosys-smylen collecn colmecn colnecn coloecn colpecn
+./cpProg-ecosys.pl < coll > collecn; chmod u+x collecn; ./collecn >> ecosys-smylen
+./cpProg-ecosys.pl < colm > colmecn; chmod u+x colmecn; ./colmecn >> ecosys-smylen
+./cpProg-ecosys.pl < coln > colnecn; chmod u+x colnecn; ./colnecn >> ecosys-smylen
+./cpProg-ecosys.pl < colo > coloecn; chmod u+x coloecn; ./coloecn >> ecosys-smylen
+./cpProg-ecosys.pl < colp > colpecn; chmod u+x colpecn; ./colpecn >> ecosys-smylen
+
+
+
+############## gx1v7_tavg_contents files ################
+!! ======================
+!! tavg files
+!!  https://jupyterhub.ucar.edu/dav/user/nanr/notebooks/ncar-python-tutorial/notebooks/find-pop-vars.ipynb
+!! ./coll       !! monthly (1)
+!! ./colm       !! monthly (1)
+!! ./colo       !! daily (2)
+!! ======================
+output:  ncoll.txt
+output:  ncolm.txt
+output:  ncolo.txt
+
+cat ncol*.txt | sort > tavg-smylen      (80 vars)
+
+### Then editing with incredible help from Keith Lindsay ####
+In your script that prepares cases, please run the command
+./xmlchange OCN_TRACER_MODULES="iage cfc ecosys"
+This will turn off SF6, which will lead to all SF6 fields being removed from the output.
+This needs to be done before running case.build.
+
+In your script that prepares cases, please copy the file
+/glade/work/klindsay/cesm22_cases/SMYLE/tavg_notes/ocn.cfc.tavg.csh
+to $CASEROOT/SourceMods/src.pop
+This will only output CFC11, CFC12, STF_CFC11, STF_CFC12.
+(I figure that you will copy this file to /glade/work/nanr/cesm_tags/CASE_tools/cesm2-smyle/SourceMods/src.pop.)
+
+I've added CFC11 and CFC12 to column L of the spreadsheet.
+### ------------------
+Please copy
+/glade/work/klindsay/cesm22_cases/SMYLE/tavg_notes/ocn.mcog.tavg.csh
+to
+/glade/work/nanr/cesm_tags/CASE_tools/cesm2-smyle/SourceMods/src.pop
+This will get rid of the FRACR_BIN_NN, QSW_BIN_01 vars that we decided to drop.
+
+### ------------------
+Here's a few more mods:
+
+Copy the files
+submeso_terms_tavg_contents
+gm_bolus_terms_tavg_contents
+ocn.vmix.tavg.csh
+
+from
+/glade/work/klindsay/cesm22_cases/SMYLE/tavg_notes/
+to
+/glade/work/nanr/cesm_tags/CASE_tools/cesm2-smyle/SourceMods/src.pop
+
+These will omit the following 60-layer 3D variables that we decided to drop:
+SUBM_ADV_TEND_TEMP
+SUBM_ADV_TEND_SALT
+ISOP_ADV_TEND_TEMP
+Redi_TEND_TEMP
+ISOP_ADV_TEND_SALT
+Redi_TEND_SALT
+TIDAL_DIFF
+
+Finally, please manually add the following 2 lines to
+/glade/work/nanr/cesm_tags/CASE_tools/cesm2-smyle/SourceMods/src.pop/gx1v7_tavg_contents
+1  KPP_SRC_SALT
+1  KPP_SRC_TEMP
+These are 2 fields that we decided to add that aren't in CESM2 LENS.
+
+I think that covers everything.
+
+Then add these variables by hand.  They are used for the pop.h.once. file
+
+3  VDC_BCK
+3  VVC_BCK
+
+

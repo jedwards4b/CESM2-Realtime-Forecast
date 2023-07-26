@@ -27,8 +27,8 @@ set REFCASE  = b.e21.SMYLE_IC.f09_g17.${year}-${mon}.01
 set REFROOT  = /glade/p/cesm/espwg/CESM2-SMYLE/inputdata/cesm2_init/${REFCASE}/${year}-${mon}-01/
 
 # case name counter
-set smbr =  1
-set embr =  1
+set smbr =  2
+set embr =  2
 
 @ mb = $smbr
 @ me = $embr
@@ -54,6 +54,8 @@ echo 'Case   = ' $CASE
   setenv CASEROOT  $BASEROOT$CASE
   cd $CASEROOT
   ./xmlchange OCN_TRACER_MODULES="iage cfc ecosys"
+  ./xmlchange CCSM_BGC="CO2A"
+  ./xmlchange OCN_CHL_TYPE=diagnostic
 
   ./xmlchange RUN_REFCASE=$REFCASE
   ./xmlchange RUN_REFDATE=${year}-${mon}-01

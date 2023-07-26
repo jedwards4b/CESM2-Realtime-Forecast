@@ -1,0 +1,14 @@
+/glade/work/jesswan/scripps/NCAR-ECIP/mask_CESM/SourceMods_sample/SMYLE_sample
+
+#1::  add 'MCB_mask' as a monthly output variable for the atm component? This is an output variable 
+specified by the MCB_mask.F90 SourceMod and is the easiest way for me to see if the mask is being implemented in the correct months.
+
+#2:: Jack helped me modify one of the SourceMods files (MCB_mask.F90) to allow us to turn on MCB for the first year (2019) 
+but off the subsequent years to allow the possible ENSO event to develop. This file also points to the version of the 
+MCB mask that we want to use for August initializations in the SE Subtropical Pacific. This version of the file can be 
+found here: /glade/work/jesswan/scripps/NCAR-ECIP/mask_CESM/SourceMods_sample/SMYLE_sample.
+
+#3:: The last thing we may want to change is another SourceMods file (micro_mg2_0.F90) that specifies the 
+magnitude of the MCB perturbation. Currently, this file is increasing the CDNC to 375 #/cm3, but we may want to 
+start with a stronger perturbation to get a signal, closer to 500 #/cm3. I've modified this file and put it in the 
+same directory as in #3. You should be able to copy all the files in this directory to /SourceMods/src.cam for your case.

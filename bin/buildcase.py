@@ -94,7 +94,7 @@ def per_run_case_updates(case, date, sdrestdir, user_mods_dir, rundir):
     case.set_value("RUN_REFDATE",date)
     case.set_value("RUN_STARTDATE",date)
     case.set_value("RUN_REFDIR",sdrestdir)
-    case.set_value("PROJECT","NCGD0047")
+    case.set_value("PROJECT","P06010014")
     case.set_value("OCN_TRACER_MODULES","iage cfc ecosys")
 #    dout_s_root = case.get_value("DOUT_S_ROOT")
 #    dout_s_root = os.path.join(os.path.dirname(dout_s_root),casename)
@@ -102,8 +102,11 @@ def per_run_case_updates(case, date, sdrestdir, user_mods_dir, rundir):
 #        dout_s_root = dout_s_root.replace("/glade/scratch/","/glade/p/nsc/ncgd0042/")
 #    case.set_value("DOUT_S_ROOT",dout_s_root)
     # restage user_nl files for each run
+    sbasemonth = str(date[5:7])
     for usermod in glob.iglob(user_mods_dir+"/user*"):
         safe_copy(usermod, caseroot)
+    for srcmod in glob.iglob(user_mods_dir+"/SourceMods/src.cam/"+sbasemonth+"/*.F90"):
+        safe_copy(srcmod, caseroot+"/SourceMods/src.cam/")
 
     case.case_setup()
 
@@ -132,17 +135,18 @@ def build_base_case(date, baseroot, basecasename, basemonth,res, ensemble_start,
         if not os.path.isdir(caseroot):
             case.create(os.path.basename(caseroot), cesmroot, compset, res,
                         run_unsupported=True, answer="r",walltime="12:00:00",
-                        user_mods_dir=user_mods_dir, pecount=pecount, project="NCGD0047", workflowid="timeseries")
+                        user_mods_dir=user_mods_dir, pecount=pecount, project="P06010014", workflowid="timeseries")
             # make sure that changing the casename will not affect these variables
             user = os.getenv("USER")
-            cimeroot = os.path.join("/glade/scratch/{}/".format(user),"SMYLE")
-            exeroot = os.path.join("/glade/scratch/{}/".format(user),"SMYLE/exerootdir/bld")
+            sbasemonth = str(date[5:7])
+            cimeroot = os.path.join("/glade/scratch/{}/".format(user),"SMYLE-MCB")
+            exeroot = os.path.join("/glade/scratch/{}/".format(user),"SMYLE-MCB/"+sbasemonth+"exerootdir/bld")
             case.set_value("CIME_OUTPUT_ROOT",cimeroot)
             #case.set_value("CIME_OUTPUT_ROOT","/glade/scratch/nanr/SMYLE")
-            if exeroot and os.path.exists(os.path.join(exeroot,"cesm.exe")):
-                case.set_value("EXEROOT",exeroot)
-            else:
-                case.set_value("EXEROOT",case.get_value("EXEROOT", resolved=True))
+            #if exeroot and os.path.exists(os.path.join(exeroot,"cesm.exe")):
+                #case.set_value("EXEROOT",exeroot)
+            #else:
+                #case.set_value("EXEROOT",case.get_value("EXEROOT", resolved=True))
 
             case.set_value("RUNDIR",case.get_value("RUNDIR",resolved=True)+".001")
             case.set_value("CAM_CONFIG_OPTS",case.get_value("CAM_CONFIG_OPTS")+" -cosp ")
@@ -220,14 +224,16 @@ def clone_base_case(date, caseroot, ensemble_start, ensemble_end, sdrestdir, use
 def _main_func(description):
     #date, basecasename = parse_command_line(sys.argv, description)
     date, model, ensemble_start, ensemble_end = parse_command_line(sys.argv, description)
-    basecasename = "b.e21.BSMYLE.f09_g17"
+    basecasename = "b.e21.BSMYLE.f09_g17.MCB"
 
     # TODO make these input vars
 
     basemonth = int(date[5:7])
+    sbasemonth = str(date[5:7])
     baseyear = int(date[0:4])
     #baseroot = os.path.join(os.getenv("SMYLE_ROOT"),"cases")
-    baseroot = os.path.join("/glade/p/cesm/espwg/CESM2-SMYLE/","cases")
+    baseroot = os.path.join(os.getenv("SMYLE_ROOT_MCB"),"cases")
+    #baseroot = os.path.join("/glade/work/nanr/CESM2-SMYLE-MCB/","cases")
     res = "f09_g17"
     waccm = False
     if model == "cesm2smyle":
@@ -239,12 +245,15 @@ def _main_func(description):
 #    sdrestdir = os.path.join(os.getenv("SCRATCH"),"SMYLE","inputdata","cesm2_init","b.e21.SMYLE_IC.f09_g17."+date[0:7]+".01","{}".format(date))
     sdrestdir = os.path.join("/glade/p/cesm/espwg/CESM2-SMYLE/inputdata/cesm2_init","b.e21.SMYLE_IC.f09_g17."+date[0:7]+".01","{}".format(date))
 
+    #mdate = os.getenv("CYLC_TASK_CYCLE_MONTH")
     user_mods_dir = os.path.join(s2sfcstroot,"user_mods","cesm2smyle")
 
     # END TODO
     print("basemonth = {}".format(basemonth))
     caseroot = build_base_case(date, baseroot, basecasename, basemonth, res, ensemble_start,
                             compset, overwrite, sdrestdir, user_mods_dir+'.base', pecount="S")
+    #caseroot = build_base_case(date, baseroot, basecasename, basemonth, res, ensemble_start,
+                            #compset, overwrite, sdrestdir, user_mods_dir+'.'+sbasemonth, pecount="S")
     clone_base_case(date, caseroot, ensemble_start, ensemble_end, sdrestdir, user_mods_dir, overwrite)
 
 if __name__ == "__main__":

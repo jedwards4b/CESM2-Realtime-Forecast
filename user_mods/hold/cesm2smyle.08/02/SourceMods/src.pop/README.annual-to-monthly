@@ -1,0 +1,25 @@
+Thanks for pointing out the issue with the O2-related variables in the annual stream. Only having output for a single calendar year in the midst of the experiments really does limit the utility of the output.
+
+After pondering pros and cons of different ways to mitigate this, I suggest, with concurrence from Matt, the simple approach of turning off all annual mean output from POP.
+
+I think the straightforward way to implement this is to
+
+1) hand-edit
+/glade/work/nanr/cesm_tags/CASE_tools/cesm2-smyle/SourceMods/src.pop/ecosys_diagnostics
+and remove these vars (last 7 lines)
+2) copy
+/glade/work/klindsay/cesm22_cases/SMYLE/tavg_notes/ocn.ecosys.tavg.csh
+to
+/glade/work/nanr/cesm_tags/CASE_tools/cesm2-smyle/SourceMods/src.pop
+
+Step 2) is to stop the ecosys tavg framework from setting up the annual stream. POP will abort if it detects an empty stream, and step 2) will prevent this abort.
+
+
+Moving these 7 fields to the monthly stream is certainly an option. I estimate that it would add 2.3 Gb per year to the output volume. This adds up when multiplied by the number of ensemble members and start dates. If Steve is okay with that increase in volume, then let's do that. (We would rerun the hindcast to get these fields, but that is small in the grand scheme of things.)
+
+The primary caveat is that it is uncertain to me if this additional output will be used. We haven't really mapped out intended analyses, and more importantly who will do it. It might fall into the category of "If you build it they will come.". It's hard to know.
+
+That said, if Steve signs off on the volume increase, then let's do this.
+
+Nan, regarding implementation, please still do step 2. In step 1, change low_average to medium_average for these 7 fields, instead of deleting these lines.
+
