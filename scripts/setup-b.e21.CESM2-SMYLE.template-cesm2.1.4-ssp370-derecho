@@ -1,0 +1,134 @@
+#!/bin/csh -fx
+### set env variables
+setenv CESM2_TOOLS_ROOT /glade/work/nanr/cesm_tags/CASE_tools/cesm2-smyle-MCB/
+#setenv CESMROOT /glade/work/nanr/cesm_tags/cesm2.1.4-rc.08
+#setenv CESMROOT /glade/work/nanr/cesm_tags/cesm2.1.4-SMYLE
+setenv CESMROOT /glade/work/nanr/cesm_tags/cesm2.1.4
+
+set COMPSET = BSSP370smbb
+#set COMPSET = SSP370_CAM60%SMBB%SMYLE_CLM50%BGC-CROP-SMYLE_CICE%CMIP6_POP2%ECO%SMYLE_MOSART_CISM2%NOEVOLVE_WW3_BGC%BDRD
+set MACHINE = derecho
+set RESOLN = f09_g17
+set RESUBMIT = 0
+set STOP_N=24
+set STOP_OPTION=nmonths
+set PROJECT=P93300313
+
+setenv BASEROOT /glade/work/nanr/CESM2-SMYLE-MCB/
+
+set syr = 2020
+set eyr = 2020
+set mon = 02
+
+@ ib = $syr
+@ ie = $eyr
+
+foreach year ( `seq $ib $ie` )
+#foreach mon ( 02 05 08 11 )
+#foreach mon ( 02 )
+
+set REFCASE  = b.e21.SMYLE_IC.f09_g17.${year}-${mon}.01
+set REFROOT  = /glade/p/cesm/espwg/CESM2-SMYLE/inputdata/cesm2_init/${REFCASE}/${year}-${mon}-01/
+
+# case name counter
+set smbr =  1
+#set embr =  10
+set embr =  1
+
+@ mb = $smbr
+@ me = $embr
+
+foreach mbr ( `seq $mb $me` )
+
+# Use restarts created from case 001 for all ensemble members;  pertlim will differentiate runs.
+if ($mbr < 10) then
+        set CASE = b.e21.BSMYLE.f09_g17.MCB-der.${year}-${mon}.00${mbr}
+else
+        set CASE = b.e21.BSMYLE.f09_g17.MCB-der.${year}-${mon}.0${mbr}
+endif
+
+cd $CESMROOT/cime/scripts
+./create_newcase --case $BASEROOT$CASE --res $RESOLN  --compset $COMPSET 
+
+echo 'Year   = ' $year
+echo 'Member = ' $mbr
+echo 'Case   = ' $CASE
+
+
+  setenv EXEROOT   /glade/derecho/scratch/$USER/SMYLE-MCB/$CASE/run
+  setenv RUNDIR   /glade/derecho/scratch/$USER/SMYLE-MCB/$CASE/run
+  setenv CASEROOT  $BASEROOT$CASE
+  cd $CASEROOT
+  ./xmlchange OCN_TRACER_MODULES="iage cfc ecosys"
+  ./xmlchange CCSM_BGC="CO2A"
+  ./xmlchange OCN_CHL_TYPE=diagnostic
+
+  ./xmlchange RUN_REFCASE=$REFCASE
+  ./xmlchange RUN_REFDATE=${year}-${mon}-01
+  ./xmlchange RUN_STARTDATE=${year}-${mon}-01
+  ./xmlchange GET_REFCASE=FALSE
+  ./xmlchange PROJECT=P06010014
+  ./xmlchange --append CAM_CONFIG_OPTS=-cosp
+
+# ./xmlchange NTASKS_ICE=36
+# ./xmlchange NTASKS_LND=504
+# ./xmlchange ROOTPE_ICE=504
+ ./xmlchange DOUT_S_ROOT=$ENV{SCRATCH}/SMYLE-MCB/archive/$CASE
+
+  ./case.setup
+
+  cp $CESM2_TOOLS_ROOT/user_mods/cesm2smyle.base/SourceMods/src.pop/* $CASEROOT/SourceMods/src.pop/
+  cp $CESM2_TOOLS_ROOT/user_mods/cesm2smyle.base/SourceMods/src.cam/${mon}/* $CASEROOT/SourceMods/src.cam/
+  cp $CESM2_TOOLS_ROOT/user_mods/cesm2smyle.base/SourceMods/src.clm/* $CASEROOT/SourceMods/src.clm/
+
+  cp $CESM2_TOOLS_ROOT/user_mods/cesm2smyle.base/user_nl_cam $CASEROOT/
+  cp $CESM2_TOOLS_ROOT/user_mods/cesm2smyle.base/user_nl_clm $CASEROOT/
+  cp $CESM2_TOOLS_ROOT/user_mods/cesm2smyle.base/user_nl_cpl $CASEROOT/
+  cp $CESM2_TOOLS_ROOT/user_mods/cesm2smyle.base/user_nl_cice $CASEROOT/
+
+
+  ./xmlchange STOP_N=$STOP_N
+  ./xmlchange STOP_OPTION=$STOP_OPTION
+  ./xmlchange RESUBMIT=$RESUBMIT
+
+# =========================
+# add pertlim perturbation to 
+# micro members 2 .. N 
+# =========================
+
+# if ($mbr != 1) then
+# cat >> head.${mbr} << EOF
+# ! micro-member perturbation
+# pertlim = ${mbr}.d-14
+
+# EOF
+
+# mv user_nl_cam tmp.cam
+# cat head.${mbr} tmp.cam  > user_nl_cam
+# rm tmp.cam head.${mbr}
+
+# endif
+# =========================
+# END - pertlim 
+# =========================
+
+echo " Copy Restarts -------------"
+if (! -d $RUNDIR) then
+        echo 'mkdir ' $RUNDIR
+        mkdir -p $RUNDIR
+endif
+
+   cp    ${REFROOT}/rpointer* $RUNDIR/
+   ln -s ${REFROOT}/b.e21*    $RUNDIR/
+
+echo " End restarts copy -----------"
+
+#echo $RUNDIR
+
+# ./preview_namelists
+
+# ./case.build >& bld.`date +%m%d-%H%M`
+end             # member loop
+
+exit
+

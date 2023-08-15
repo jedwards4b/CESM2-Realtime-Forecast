@@ -1,0 +1,2 @@
+cp /glade/work/jesswan/scripps/SMYLE-MCB/mask_CESM/SourceMods_LaNina_2019-2020/MCB_2020-02/* .
+rm cam_diagnostics.F90

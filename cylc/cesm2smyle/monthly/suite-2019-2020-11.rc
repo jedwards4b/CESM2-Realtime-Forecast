@@ -1,0 +1,153 @@
+#!Jinja2
+
+{% set ensemble_start = 1%}
+{% set ensemble_end   = 10%}
+[meta]
+  title = CESM CYLC workflow for ensemble from cesm2smyle
+[cylc]
+  UTC mode = True
+  cycle point format = CCYY-MM-DD
+  [[environment]]
+    FCST_HOME = "/glade/work/nanr/cesm_tags/CASE_tools/cesm2-smyle-MCB/"
+    CESM_ROOT = "/glade/work/nanr/cesm_tags/cesm2.1.4-SMYLE/"
+    SCRATCH   = "/glade/scratch/nanr/"
+    USECASE   = "cesm2smyle"
+    REFDIR    = "/glade/scratch/nanr/SMYLE/inputdata/cesm2_init/"
+    POSTPROCESS_PATH = "/glade/work/jedwards/sandboxes/CESM_postprocessing"
+    SMYLE_ROOT = "/glade/p/cesm/espwg/CESM2-SMYLE"
+    SMYLE_ROOT_MCB = "/glade/p/cesm/espwg/CESM2-SMYLE-MCB"
+  [[parameters]]
+    # The number of ensemble members can be changed here
+    # The first number here should always be 1 and the second the number of members to run
+    # the member to start with is firstmember
+    mbr = {{ ensemble_start }}..{{ ensemble_end }}
+
+
+[scheduling]
+  # Change the run start and end dates here
+    initial cycle point = "2020-11-01"
+    final cycle point = "2020-11-01"
+
+    # must start May 01, any year:
+    # initial cycle point constraints = "0501T00"
+    # must start Aug 01, any year:
+    # initial cycle point constraints = "0801T00"
+    # must start Feb 01, any year:
+    # initial cycle point constraints = "0201T00"
+    # must start Nov 01, any year:
+     initial cycle point constraints = "1101T00"
+
+  [[dependencies]]
+  # Weekly Cycling on monday, new date will submit when st_archive is complete for each member
+  # run needs to finish, not nessasarily successfully for next step to start
+  # 3 month cycle
+  # [[[R/P3M]]]
+  #     st_archive<mbr>[-P3M] => build_model => run_family:finish-all
+    [[[R/P1Y]]]
+      graph = """
+        pp_family:finish-all 
+        st_archive<mbr>[-P1Y] => get_data => build_model => run_family:finish-all
+        run<mbr> => st_archive<mbr> => pp<mbr>
+             """
+[runtime]
+  [[get_data]]
+    script = """
+module load ncl nco 
+cd ${FCST_HOME}/bin/
+./generate_cami_ensemble.py --ensemble-start {{ ensemble_start }} --ensemble-end {{ ensemble_end }}
+"""
+    [[[job]]]
+      batch system = pbs
+      batch submit command template = qsubcasper -q casper -l walltime=01:00:00 -A P06010014 '%(job)s'
+      shell = /bin/bash
+    [[[directives]]]
+       -r = n
+       -j = oe
+       -v = FCST_HOME=/glade/work/nanr/cesm_tags/CASE_tools/cesm2-smyle-MCB/
+       -S = /bin/bash
+       -l = select=1:ncpus=8:ompthreads=1
+    [[[environment]]]
+       SMYLE_ROOT = "/glade/p/cesm/espwg/CESM2-SMYLE"
+       SMYLE_ROOT_MCB = "/glade/p/cesm/espwg/CESM2-SMYLE-MCB"
+
+  [[build_model]]
+    script = """
+cd ${FCST_HOME}/bin/
+./buildcase-2019-2020_laNina.py --ensemble-start {{ ensemble_start }} --ensemble-end {{ ensemble_end }}
+"""
+    [[[job]]]
+      batch system = pbs
+      batch submit command template = qsub -q share -l walltime=01:00:00 -A P06010014 '%(job)s'
+      shell = /bin/bash
+    [[[directives]]]
+       -r = n
+       -j = oe
+       -V =
+       -S = /bin/bash
+       -l = select=1:ncpus=18:ompthreads=18
+
+  [[st_archive<mbr>]]
+    script = """
+cd ${SMYLE_ROOT_MCB}/cases/b.e21.BSMYLE.f09_g17.MCB.${CYLC_TASK_CYCLE_DATE}.$(printf "%03d" ${CYLC_TASK_PARAM_mbr})
+./case.submit --job case.st_archive
+"""
+    [[[environment]]]
+      CYLC_TASK_CYCLE_MONTH = $(cylc cyclepoint --template=%m)
+      CYLC_TASK_CYCLE_DATE = $(cylc cyclepoint --template=%Y-%m)
+    [[pp<mbr>]]
+      inherit = pp_family
+    [[pp_family]]
+      script = """
+cd ${SMYLE_ROOT_MCB}/cases/b.e21.BSMYLE.f09_g17.MCB.${CYLC_TASK_CYCLE_DATE}.$(printf "%03d" ${CYLC_TASK_PARAM_mbr})
+unset PYTHONPATH
+module use /glade/work/bdobbins/Software/Modules
+module load cesm_postprocessing
+if [ ! -d "postprocess" ]; then
+   create_postprocess_cylc -caseroot=`pwd`
+fi
+cd postprocess
+pp_config --set TIMESERIES_OUTPUT_ROOTDIR=/glade/campaign/cesm/development/espwg/SMYLE/archive/b.e21.BSMYLE.f09_g17.MCB.${CYLC_TASK_CYCLE_DATE}.$(printf "%03d" ${CYLC_TASK_PARAM_mbr})
+today=`date '+%Y%m%d-%H%M%S'`
+mpirun ./timeseries > ./logs/timeseries.log.${today} 2>&1
+"""
+    [[[environment]]]
+      CYLC_TASK_CYCLE_MONTH = $(cylc cyclepoint --template=%m)
+      CYLC_TASK_CYCLE_DATE = $(cylc cyclepoint --template=%Y-%m)
+      SMYLE_ROOT = "/glade/p/cesm/espwg/CESM2-SMYLE"
+      SMYLE_ROOT_MCB = "/glade/p/cesm/espwg/CESM2-SMYLE-MCB"
+    [[[job]]]
+      batch system = pbs
+      batch submit command template = qsubcasper -q casper -l walltime=03:00:00 -A P06010014 '%(job)s'
+      shell = /bin/bash
+    [[[directives]]]
+       -r = n
+       -j = oe
+       -v = FCST_HOME=/glade/work/nanr/cesm_tags/CASE_tools/cesm2-smyle-MCB/,SMYLE_ROOT=/glade/p/cesm/espwg/CESM2-SMYLE/,SMYLE_ROOT_MCB=/glade/p/cesm/espwg/CESM2-SMYLE-MCB
+       -S = /bin/bash
+       -l = select=1:ncpus=36:mpiprocs=36:ompthreads=1
+
+    [[run<mbr>]]
+       inherit = run_family
+    [[run_family]]
+    script = """
+cd ${SMYLE_ROOT_MCB}/cases/b.e21.BSMYLE.f09_g17.MCB.${CYLC_TASK_CYCLE_DATE}.$(printf "%03d" ${CYLC_TASK_PARAM_mbr})
+./case.submit --job case.run
+"""
+    [[[environment]]]
+      CYLC_TASK_CYCLE_MONTH = $(cylc cyclepoint --template=%m)
+      CYLC_TASK_CYCLE_DATE = $(cylc cyclepoint --template=%Y-%m)
+    [[[job]]]
+      # Retry each run up to 2 times with different fv_nsplit values
+      # execution retry delays = 2*PT6S
+      batch system = pbs
+      batch submit command template = qsub -q economy -l walltime=12:00:00 -A P06010014 '%(job)s'
+    [[[directives]]]
+       -r = n
+       -j = oe
+       -V =
+       -S = /bin/bash
+       # dont forget to change this line if you change pelayout
+       # How can we connect this to the pelayout?
+       -l = select=20:ncpus=36:mpiprocs=36:ompthreads=1
+    [[[events]]]
+        handler events = retry, failed
