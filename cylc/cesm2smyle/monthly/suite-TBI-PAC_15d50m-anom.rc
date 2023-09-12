@@ -24,10 +24,14 @@
 
 [scheduling]
   # Change the run start and end dates here
-    # initial cycle point = "1978-02-01"
-    # final cycle point = "1978-02-01"
-    initial cycle point = "2019-02-01"
-    final cycle point = "2019-02-01"
+     initial cycle point = "1980-02-01"
+     final cycle point = "1980-02-01"
+    # initial cycle point = "1979-02-01"
+    # final cycle point = "1979-02-01"
+    # initial cycle point = "2019-02-01"
+    # final cycle point = "2019-02-01"
+    # initial cycle point = "2013-02-01"
+    # final cycle point = "2013-02-01"
 
     # must start May 01, any year:
     # initial cycle point constraints = "0501T00"
@@ -55,11 +59,11 @@
     script = """
 module load ncl nco 
 cd ${FCST_HOME}/bin/
-./generate_cami_ensemble-15d50m.py --ensemble-start {{ ensemble_start }} --ensemble-end {{ ensemble_end }}
+./generate_cami_ensemble-15d50m-PAC.py --ensemble-start {{ ensemble_start }} --ensemble-end {{ ensemble_end }}
 """
     [[[job]]]
       batch system = pbs
-      batch submit command template = qsubcasper -q casper -l walltime=01:00:00 -A P93300313 '%(job)s'
+      batch submit command template = qsubcasper -q casper -l walltime=01:00:00 -A CESM0020 '%(job)s'
       shell = /bin/bash
     [[[directives]]]
        -r = n
@@ -73,11 +77,11 @@ cd ${FCST_HOME}/bin/
   [[build_model]]
     script = """
 cd ${FCST_HOME}/bin/
-./buildcase-15d50m.py --ensemble-start {{ ensemble_start }} --ensemble-end {{ ensemble_end }}
+./buildcase-15d50m-PAC.py --ensemble-start {{ ensemble_start }} --ensemble-end {{ ensemble_end }}
 """
     [[[job]]]
       batch system = pbs
-      batch submit command template = qsub -q share -l walltime=01:00:00 -A P93300313 '%(job)s'
+      batch submit command template = qsub -q share -l walltime=01:00:00 -A CESM0020 '%(job)s'
       shell = /bin/bash
     [[[directives]]]
        -r = n
@@ -88,7 +92,7 @@ cd ${FCST_HOME}/bin/
 
   [[st_archive<mbr>]]
     script = """
-cd ${SMYLE_ROOT}/cases/b.e21.BSMYLE.f09_g17.TBI-ATL_15d50m-anom.${CYLC_TASK_CYCLE_DATE}.$(printf "%03d" ${CYLC_TASK_PARAM_mbr})
+cd ${SMYLE_ROOT}/cases/b.e21.BSMYLE.f09_g17.TBI-PAC_15d50m-anom.${CYLC_TASK_CYCLE_DATE}.$(printf "%03d" ${CYLC_TASK_PARAM_mbr})
 ./case.submit --job case.st_archive
 """
     [[[environment]]]
@@ -98,7 +102,7 @@ cd ${SMYLE_ROOT}/cases/b.e21.BSMYLE.f09_g17.TBI-ATL_15d50m-anom.${CYLC_TASK_CYCL
       inherit = pp_family
     [[pp_family]]
       script = """
-cd ${SMYLE_ROOT}/cases/b.e21.BSMYLE.f09_g17.TBI-ATL_15d50m-anom.${CYLC_TASK_CYCLE_DATE}.$(printf "%03d" ${CYLC_TASK_PARAM_mbr})
+cd ${SMYLE_ROOT}/cases/b.e21.BSMYLE.f09_g17.TBI-PAC_15d50m-anom.${CYLC_TASK_CYCLE_DATE}.$(printf "%03d" ${CYLC_TASK_PARAM_mbr})
 unset PYTHONPATH
 module use /glade/work/bdobbins/Software/Modules
 module load cesm_postprocessing
@@ -106,7 +110,7 @@ if [ ! -d "postprocess" ]; then
    create_postprocess_cylc -caseroot=`pwd`
 fi
 cd postprocess
-pp_config --set TIMESERIES_OUTPUT_ROOTDIR=/glade/campaign/cesm/development/espwg/SMYLE-PACEMAKER/archive/b.e21.BSMYLE.f09_g17.TBI-ATL_15d50m-anom.${CYLC_TASK_CYCLE_DATE}.$(printf "%03d" ${CYLC_TASK_PARAM_mbr})
+pp_config --set TIMESERIES_OUTPUT_ROOTDIR=/glade/campaign/cesm/development/espwg/SMYLE-PACEMAKER/archive/b.e21.BSMYLE.f09_g17.TBI-PAC_15d50m-anom.${CYLC_TASK_CYCLE_DATE}.$(printf "%03d" ${CYLC_TASK_PARAM_mbr})
 today=`date '+%Y%m%d-%H%M%S'`
 mpirun ./timeseries > ./logs/timeseries.log.${today} 2>&1
 """
@@ -116,7 +120,7 @@ mpirun ./timeseries > ./logs/timeseries.log.${today} 2>&1
       SMYLE_ROOT = "/glade/p/cesm/espwg/CESM2-SMYLE-PACEMAKER"
     [[[job]]]
       batch system = pbs
-      batch submit command template = qsubcasper -q casper -l walltime=03:00:00 -A P93300313 '%(job)s'
+      batch submit command template = qsubcasper -q casper -l walltime=03:00:00 -A CESM0020 '%(job)s'
       shell = /bin/bash
     [[[directives]]]
        -r = n
@@ -129,7 +133,7 @@ mpirun ./timeseries > ./logs/timeseries.log.${today} 2>&1
        inherit = run_family
     [[run_family]]
     script = """
-cd ${SMYLE_ROOT}/cases/b.e21.BSMYLE.f09_g17.TBI-ATL_15d50m-anom.${CYLC_TASK_CYCLE_DATE}.$(printf "%03d" ${CYLC_TASK_PARAM_mbr})
+cd ${SMYLE_ROOT}/cases/b.e21.BSMYLE.f09_g17.TBI-PAC_15d50m-anom.${CYLC_TASK_CYCLE_DATE}.$(printf "%03d" ${CYLC_TASK_PARAM_mbr})
 ./case.submit --job case.run
 """
     [[[environment]]]
@@ -139,7 +143,7 @@ cd ${SMYLE_ROOT}/cases/b.e21.BSMYLE.f09_g17.TBI-ATL_15d50m-anom.${CYLC_TASK_CYCL
       # Retry each run up to 2 times with different fv_nsplit values
       # execution retry delays = 2*PT6S
       batch system = pbs
-      batch submit command template = qsub -q economy -l walltime=12:00:00 -A P93300313 '%(job)s'
+      batch submit command template = qsub -q regular -l walltime=12:00:00 -A CESM0021 '%(job)s'
     [[[directives]]]
        -r = n
        -j = oe
