@@ -63,7 +63,7 @@ cd ${FCST_HOME}/bin/
 """
     [[[job]]]
       batch system = pbs
-      batch submit command template = qsubcasper -q casper -l walltime=01:00:00 -A P06010014 '%(job)s'
+      batch submit command template = qsubcasper -q casper -l walltime=01:00:00 -A CESM0020 '%(job)s'
       shell = /bin/bash
     [[[directives]]]
        -r = n
@@ -81,7 +81,7 @@ cd ${FCST_HOME}/bin/
 """
     [[[job]]]
       batch system = pbs
-      batch submit command template = qsub -q share -l walltime=01:00:00 -A P06010014 '%(job)s'
+      batch submit command template = qsub -q share -l walltime=01:00:00 -A CESM0020 '%(job)s'
       shell = /bin/bash
     [[[directives]]]
        -r = n
@@ -120,7 +120,7 @@ mpirun ./timeseries > ./logs/timeseries.log.${today} 2>&1
       SMYLE_ROOT = "/glade/p/cesm/espwg/CESM2-SMYLE-PACEMAKER"
     [[[job]]]
       batch system = pbs
-      batch submit command template = qsubcasper -q casper -l walltime=03:00:00 -A P06010014 '%(job)s'
+      batch submit command template = qsubcasper -q casper -l walltime=03:00:00 -A CESM0020 '%(job)s'
       shell = /bin/bash
     [[[directives]]]
        -r = n
@@ -143,7 +143,7 @@ cd ${SMYLE_ROOT}/cases/b.e21.BSMYLE.f09_g17.TBI-SOC_15d50m-anom.${CYLC_TASK_CYCL
       # Retry each run up to 2 times with different fv_nsplit values
       # execution retry delays = 2*PT6S
       batch system = pbs
-      batch submit command template = qsub -q regular -l walltime=12:00:00 -A P06010014 '%(job)s'
+      batch submit command template = qsub -q regular -l walltime=12:00:00 -A CESM0020 '%(job)s'
     [[[directives]]]
        -r = n
        -j = oe
