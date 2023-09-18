@@ -59,7 +59,7 @@
     script = """
 module load ncl nco 
 cd ${FCST_HOME}/bin/
-./generate_cami_ensemble-15d50m-PAC.py --ensemble-start {{ ensemble_start }} --ensemble-end {{ ensemble_end }}
+./generate_cami_ensemble-15d50m-SOC.py --ensemble-start {{ ensemble_start }} --ensemble-end {{ ensemble_end }}
 """
     [[[job]]]
       batch system = pbs
@@ -77,7 +77,7 @@ cd ${FCST_HOME}/bin/
   [[build_model]]
     script = """
 cd ${FCST_HOME}/bin/
-./buildcase-15d50m-PAC.py --ensemble-start {{ ensemble_start }} --ensemble-end {{ ensemble_end }}
+./buildcase-15d50m-SOC.py --ensemble-start {{ ensemble_start }} --ensemble-end {{ ensemble_end }}
 """
     [[[job]]]
       batch system = pbs
@@ -92,7 +92,7 @@ cd ${FCST_HOME}/bin/
 
   [[st_archive<mbr>]]
     script = """
-cd ${SMYLE_ROOT}/cases/b.e21.BSMYLE.f09_g17.TBI-PAC_15d50m-anom.${CYLC_TASK_CYCLE_DATE}.$(printf "%03d" ${CYLC_TASK_PARAM_mbr})
+cd ${SMYLE_ROOT}/cases/b.e21.BSMYLE.f09_g17.TBI-SOC_15d50m-anom.${CYLC_TASK_CYCLE_DATE}.$(printf "%03d" ${CYLC_TASK_PARAM_mbr})
 ./case.submit --job case.st_archive
 """
     [[[environment]]]
@@ -102,7 +102,7 @@ cd ${SMYLE_ROOT}/cases/b.e21.BSMYLE.f09_g17.TBI-PAC_15d50m-anom.${CYLC_TASK_CYCL
       inherit = pp_family
     [[pp_family]]
       script = """
-cd ${SMYLE_ROOT}/cases/b.e21.BSMYLE.f09_g17.TBI-PAC_15d50m-anom.${CYLC_TASK_CYCLE_DATE}.$(printf "%03d" ${CYLC_TASK_PARAM_mbr})
+cd ${SMYLE_ROOT}/cases/b.e21.BSMYLE.f09_g17.TBI-SOC_15d50m-anom.${CYLC_TASK_CYCLE_DATE}.$(printf "%03d" ${CYLC_TASK_PARAM_mbr})
 unset PYTHONPATH
 module use /glade/work/bdobbins/Software/Modules
 module load cesm_postprocessing
@@ -110,7 +110,7 @@ if [ ! -d "postprocess" ]; then
    create_postprocess_cylc -caseroot=`pwd`
 fi
 cd postprocess
-pp_config --set TIMESERIES_OUTPUT_ROOTDIR=/glade/campaign/cesm/development/espwg/SMYLE-PACEMAKER/archive/b.e21.BSMYLE.f09_g17.TBI-PAC_15d50m-anom.${CYLC_TASK_CYCLE_DATE}.$(printf "%03d" ${CYLC_TASK_PARAM_mbr})
+pp_config --set TIMESERIES_OUTPUT_ROOTDIR=/glade/campaign/cesm/development/espwg/SMYLE-PACEMAKER/archive/b.e21.BSMYLE.f09_g17.TBI-SOC_15d50m-anom.${CYLC_TASK_CYCLE_DATE}.$(printf "%03d" ${CYLC_TASK_PARAM_mbr})
 today=`date '+%Y%m%d-%H%M%S'`
 mpirun ./timeseries > ./logs/timeseries.log.${today} 2>&1
 """
@@ -125,7 +125,7 @@ mpirun ./timeseries > ./logs/timeseries.log.${today} 2>&1
     [[[directives]]]
        -r = n
        -j = oe
-       -v = FCST_HOME=/glade/work/nanr/cesm_tags/CASE_tools/cesm2-smyle-PACEMAKER/,SMYLE_ROOT=/glade/p/cesm/espwg/CESM2-SMYLE-PACEMAKER
+       -v = FCST_HOME=/glade/work/$USER/cesm_tags/CASE_tools/cesm2-smyle-PACEMAKER/,SMYLE_ROOT=/glade/p/cesm/espwg/CESM2-SMYLE-PACEMAKER
        -S = /bin/bash
        -l = select=1:ncpus=36:mpiprocs=36:ompthreads=1
 
@@ -133,7 +133,7 @@ mpirun ./timeseries > ./logs/timeseries.log.${today} 2>&1
        inherit = run_family
     [[run_family]]
     script = """
-cd ${SMYLE_ROOT}/cases/b.e21.BSMYLE.f09_g17.TBI-PAC_15d50m-anom.${CYLC_TASK_CYCLE_DATE}.$(printf "%03d" ${CYLC_TASK_PARAM_mbr})
+cd ${SMYLE_ROOT}/cases/b.e21.BSMYLE.f09_g17.TBI-SOC_15d50m-anom.${CYLC_TASK_CYCLE_DATE}.$(printf "%03d" ${CYLC_TASK_PARAM_mbr})
 ./case.submit --job case.run
 """
     [[[environment]]]
