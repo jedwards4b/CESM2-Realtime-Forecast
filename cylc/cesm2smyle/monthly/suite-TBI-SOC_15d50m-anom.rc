@@ -68,7 +68,7 @@ cd ${FCST_HOME}/bin/
     [[[directives]]]
        -r = n
        -j = oe
-       -v = FCST_HOME=/glade/work/$USER/cesm_tags/CASE_tools/cesm2-smyle-PACEMAKER/
+       -v = FCST_HOME=/glade/work/nanr/cesm_tags/CASE_tools/cesm2-smyle-PACEMAKER/
        -S = /bin/bash
        -l = select=1:ncpus=8:ompthreads=1
     [[[environment]]]
@@ -125,7 +125,7 @@ mpirun ./timeseries > ./logs/timeseries.log.${today} 2>&1
     [[[directives]]]
        -r = n
        -j = oe
-       -v = FCST_HOME=/glade/work/$USER/cesm_tags/CASE_tools/cesm2-smyle-PACEMAKER/,SMYLE_ROOT=/glade/p/cesm/espwg/CESM2-SMYLE-PACEMAKER
+       -v = FCST_HOME=/glade/work/nanr/cesm_tags/CASE_tools/cesm2-smyle-PACEMAKER/,SMYLE_ROOT=/glade/p/cesm/espwg/CESM2-SMYLE-PACEMAKER
        -S = /bin/bash
        -l = select=1:ncpus=36:mpiprocs=36:ompthreads=1
 

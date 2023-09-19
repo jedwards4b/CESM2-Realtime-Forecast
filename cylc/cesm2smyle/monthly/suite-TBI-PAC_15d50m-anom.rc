@@ -26,8 +26,8 @@
   # Change the run start and end dates here
     #initial cycle point = "1978-02-01"
     #final cycle point = "1978-02-01"
-     initial cycle point = "1989-02-01"
-     final cycle point = "1989-02-01"
+     initial cycle point = "1987-02-01"
+     final cycle point = "1987-02-01"
     # initial cycle point = "2019-02-01"
     # final cycle point = "2019-02-01"
     # initial cycle point = "2013-02-01"
@@ -68,7 +68,7 @@ cd ${FCST_HOME}/bin/
     [[[directives]]]
        -r = n
        -j = oe
-       -v = FCST_HOME=/glade/work/$USER/cesm_tags/CASE_tools/cesm2-smyle-PACEMAKER/
+       -v = FCST_HOME=/glade/work/nanr/cesm_tags/CASE_tools/cesm2-smyle-PACEMAKER/
        -S = /bin/bash
        -l = select=1:ncpus=8:ompthreads=1
     [[[environment]]]
