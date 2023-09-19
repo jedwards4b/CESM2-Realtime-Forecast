@@ -167,7 +167,7 @@ def _main_func(description):
 
     sdrestdir = os.path.join("/glade/p/cesm/espwg/CESM2-SMYLE/inputdata/cesm2_init","b.e21.SMYLE_IC.f09_g17."+date[0:7]+".01","{}".format(date))
     user = os.getenv("USER")
-    baserundir = os.path.join("/glade/scratch/{}/".format(user),"SMYLE-PACEMAKER","b.e21.BSMYLE.f09_g17.TBI-S0C_15d50m-anom."+date[0:7]+".001","run.{:03d}".format(ensemble_start))
+    baserundir = os.path.join("/glade/scratch/{}/".format(user),"SMYLE-PACEMAKER","b.e21.BSMYLE.f09_g17.TBI-SOC_15d50m-anom."+date[0:7]+".001","run.{:03d}".format(ensemble_start))
     caminame = os.path.join(sdrestdir,"b.e21.SMYLE_IC.f09_g17.{}.01.cam.i.{date}-00000.nc".format(date[:7],date=date))
     outroot = "b.e21.SMYLE_IC.pert.f09_g17.cam.i."
 
