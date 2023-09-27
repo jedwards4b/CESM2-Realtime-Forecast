@@ -35,10 +35,14 @@ set smbr =  1
 foreach mbr ( `seq $mb $me` )
 if ($mbr < 10) then
         #set CASE = b.e21.BSMYLE.f09_g17.TBI-IND_10d50m-anom.${year}-${mon}.00${mbr}
-        set CASE = b.e21.BSMYLE.f09_g17.TBI-IND_15d50m-anom.${year}-${mon}.00${mbr}
+        #set CASE = b.e21.BSMYLE.f09_g17.TBI-IND_15d50m-anom.${year}-${mon}.00${mbr}
+        #set CASE = b.e21.BSMYLE.f09_g17.TBI-SOC_15d50m-anom.${year}-${mon}.00${mbr}
+        set CASE = b.e21.BSMYLE.f09_g17.TBI-PAC_15d50m-anom.${year}-${mon}.00${mbr}
 else
         #set CASE = b.e21.BSMYLE.f09_g17.TBI-IND_10d50m-anom.${year}-${mon}.0${mbr}
-        set CASE = b.e21.BSMYLE.f09_g17.TBI-IND_15d50m-anom.${year}-${mon}.0${mbr}
+        #set CASE = b.e21.BSMYLE.f09_g17.TBI-IND_15d50m-anom.${year}-${mon}.0${mbr}
+        #set CASE = b.e21.BSMYLE.f09_g17.TBI-SOC_15d50m-anom.${year}-${mon}.0${mbr}
+        set CASE = b.e21.BSMYLE.f09_g17.TBI-PAC_15d50m-anom.${year}-${mon}.0${mbr}
 endif
 
 

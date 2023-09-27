@@ -9,11 +9,12 @@ setenv LOGSDIR  /glade/campaign/cesm/development/espwg/SMYLE-PACEMAKER/logs
 setenv RESTDIR  /glade/campaign/cesm/development/espwg/SMYLE-PACEMAKER/restarts
 setenv POPDDIR  /glade/campaign/cesm/development/espwg/SMYLE-PACEMAKER/popd
 
-set syr = 1978
+set syr = 1981
 set eyr = 2018
 
 #setenv ARCHSTEVE  /glade/scratch/yeager/SMYLE-PACEMAKER/archive/
-setenv ARCHNANR  /glade/scratch/$USER/SMYLE-PACEMAKER/archive/
+#setenv ARCHNANR  /glade/scratch/$USER/SMYLE-PACEMAKER/archive/
+setenv ARCHNANR  /glade/scratch/sglanvil/SMYLE-PACEMAKER/archive/
 
 @ ib = $syr
 @ ie = $eyr
@@ -35,11 +36,13 @@ foreach mbr ( `seq $mb $me` )
 if ($mbr < 10) then
         #set CASE = b.e21.BSMYLE.f09_g17.TBI-ATL_10d50m-anom.${year}-${mon}.00${mbr}
         #set CASE = b.e21.BSMYLE.f09_g17.TBI-ATL_15d50m-anom.${year}-${mon}.00${mbr}
-        set CASE = b.e21.BSMYLE.f09_g17.TBI-IND_15d50m-anom.${year}-${mon}.00${mbr}
+        #set CASE = b.e21.BSMYLE.f09_g17.TBI-IND_15d50m-anom.${year}-${mon}.00${mbr}
+        set CASE = b.e21.BSMYLE.f09_g17.TBI-PAC_15d50m-anom.${year}-${mon}.00${mbr}
 else
         #set CASE = b.e21.BSMYLE.f09_g17.TBI-ATL_10d50m-anom.${year}-${mon}.0${mbr}
         #set CASE = b.e21.BSMYLE.f09_g17.TBI-ATL_15d50m-anom.${year}-${mon}.0${mbr}
-        set CASE = b.e21.BSMYLE.f09_g17.TBI-IND_15d50m-anom.${year}-${mon}.0${mbr}
+        #set CASE = b.e21.BSMYLE.f09_g17.TBI-IND_15d50m-anom.${year}-${mon}.0${mbr}
+        set CASE = b.e21.BSMYLE.f09_g17.TBI-PAC_15d50m-anom.${year}-${mon}.0${mbr}
 endif
 
 set USE_ARCHDIR = $ARCHNANR
