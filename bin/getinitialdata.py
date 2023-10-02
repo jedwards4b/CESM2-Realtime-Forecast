@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-import os, sys
+import os, sys, shutil
 cesmroot = os.environ.get('CESM_ROOT')
 s2sfcstroot = os.path.join(os.path.dirname(os.path.join(os.path.abspath(__file__))), os.path.pardir)
 
@@ -18,7 +18,7 @@ import glob
 from datetime import datetime, timedelta
 from standard_script_setup import *
 from argparse              import RawTextHelpFormatter
-from globus_utils          import *
+#from globus_utils          import *
 from CIME.utils            import safe_copy
 
 def parse_command_line(args, description):
@@ -72,7 +72,9 @@ def get_data_from_campaignstore(date):
 #    if os.path.exists(os.path.join(dest_path,"rpointer.ocn.restart")):
 #        print("Data already exists in {}".format(dest_path))
 #        return
-#    if(not os.path.exists(dest_path)):
+    if os.path.exists(dest_path):
+        shutil.rmtree(dest_path)
+
     os.makedirs(dest_path)
     lnd_source_path = 'cesm/development/cross-wg/S2S/land/rest/{}-00000/'.format(date)
 

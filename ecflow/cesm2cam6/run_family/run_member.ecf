@@ -1,0 +1,10 @@
+%include <multinode.h>
+%include <head.h>
+
+module load %CESM_WORKFLOW%
+month=$(echo %FCSTDATE% | cut -c 6,7)
+member=$(echo %TASK% | cut -c 11-)
+cd %FCST_WORK%/%CESM_WORKFLOW%.$month.$member
+./case.submit --job case.run
+
+%include <tail.h>

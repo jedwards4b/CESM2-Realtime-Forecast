@@ -6,3 +6,4 @@ bin/diff.out
 bin/pp.test.*
 bin/pp.test~
 cylc/#month_wrapper.nc#
+ecflow/*.log

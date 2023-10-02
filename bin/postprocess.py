@@ -21,7 +21,7 @@ from standard_script_setup import *
 from CIME.case             import Case
 from CIME.utils            import run_cmd
 from argparse              import RawTextHelpFormatter
-from globus_utils          import *
+#from globus_utils          import *
 
 def str2bool(v):
     if isinstance(v, bool):
@@ -141,7 +141,8 @@ def _main_func(description):
             dout_s_root = case.get_value("DOUT_S_ROOT")
             dout_s_root = dout_s_root[:-13] + date + ".{0:02d}".format(curmem)
             os.environ["DOUT_S_ROOT"] = dout_s_root
-        #print("HERE rundir {} dout_s_root {}".format(rundir,dout_s_root))
+        os.environ["ARCHIVEROOT"] = os.environ["SCRATCH"]
+            #        print("HERE rundir {} dout_s_root {}".format(rundir,dout_s_root))
         outfiles = run_ncl_scripts()
         # Copy data to ftp site
         if sendtoftp:
@@ -153,10 +154,22 @@ def _main_func(description):
         if sendtoglobus:
             for _file in outfiles:
                 if "p1" in _file:
-                    newfile = _file.replace("scratch","p/datashare")
+                    if "derecho" in _file:
+                        newfile = _file.replace("derecho/scratch","p/datashare")
+                    else:
+                        newfile = _file.replace("scratch","p/datashare")
+
+                    print(f"newfile is {newfile}")
                     if not os.path.isdir(os.path.dirname(newfile)):
-                        os.makedirs(os.path.dirname(newfile))
-                    shutil.copy2(_file, _file.replace("scratch","p/datashare"))
+                        try:
+                            os.makedirs(os.path.dirname(newfile))
+                        except:
+                            sendtoglobus = False
+                            break
+                    if "derecho" in _file:
+                        shutil.copy2(_file, _file.replace("derecho/scratch","p/datashare"))
+                    else:
+                        shutil.copy2(_file, _file.replace("scratch","p/datashare"))
 
 
 
@@ -178,7 +191,8 @@ def _main_func(description):
         #Concatinate cice history into a single file
 
         fnameout = basecasename+"v2."+basemonth+"."+date+".{0:02d}".format(curmem)+".cice.hd.nc"
-        outdir = "/glade/scratch/ssfcst/cesm2cam6v2/ice"
+        scratch = os.getenv("SCRATCH")
+        outdir = os.path.join(scratch,"cesm2cam6v2","ice")
 
         print("ICE PATH")
         print(outdir)
@@ -191,14 +205,14 @@ def _main_func(description):
         fnameout = fnameout.replace("cice.hd.nc","pop.h.nday1.nc")
 
         print("Copying ocn daily files into {}".format(fnameout))
-        outdir = "/glade/scratch/ssfcst/cesm2cam6v2/ocn"
+        outdir = os.path.join(scratch,"cesm2cam6v2","ocn")
 
         for _file in glob.iglob(os.path.join(ocnhistpath,"*pop.h.*.nc")):
             newfname = os.path.basename(_file).replace("cesm2cam6.","cesm2cam6v2.")
             run_cmd("nccopy -4 -d 1 {}  {}".format(_file, os.path.join(outdir,newfname)), verbose=True, from_dir=ocnhistpath)
 
 
-        outdir = "/glade/scratch/ssfcst/cesm2cam6v2/3hourly"
+        outdir = os.path.join(scratch, "cesm2cam6v2", "3hourly")
 
         for _file in glob.iglob(os.path.join(atmhistpath,"*cam.h4*.nc")):
             print("Copying {} file into {}".format(_file,outdir))
@@ -206,7 +220,7 @@ def _main_func(description):
 
             run_cmd("nccopy -4 -d 1 -VTS,PS,PSL,QBOT,TMQ,UBOT,VBOT,lat,lon,date,time_bnds,time,gw,ndcur,nscur,nsteph {}  {}".format(_file, os.path.join(outdir,newfname)), verbose=True, from_dir=atmhistpath)
 
-        outdir = "/glade/scratch/ssfcst/cesm2cam6v2/6hourly"
+        outdir = os.path.join(scratch,"cesm2cam6v2","6hourly")
 
         for _file in glob.iglob(os.path.join(atmhistpath,"*cam.h3*.nc")):
             print("Copying {} file into {}".format(_file,outdir))
@@ -214,7 +228,8 @@ def _main_func(description):
 
             run_cmd("nccopy -4 -d 1 -VU850,V850,TMQ,PRECT,uIVT,vIVT,IVT,PS,PSL,UBOT,VBOT,Z200,Z500,U10,lat,lon,date,time_bnds,time,gw,ndcur,nscur,nsteph {}  {}".format(_file, os.path.join(outdir,newfname)), verbose=True, from_dir=atmhistpath)
 
-        outdir = "/glade/scratch/ssfcst/cesm2cam6v2/daily"
+        outdir = os.path.join(scratch,"cesm2cam6v2","daily")
+
 
         for _file in glob.iglob(os.path.join(atmhistpath,"*cam.h2*.nc")):
             print("Copying {} file into {}".format(_file, outdir))
@@ -224,8 +239,7 @@ def _main_func(description):
 #            print("Copying {} file into {}".format(_file, outdir))
 #            run_cmd("nccopy -4 -d 1 -VU10,TGCLDIWP,TGCLDLWP,lev,ilev,lat,lon,date,time_bnds,time,gw,ndcur,nscur,nsteph {} {}".format(_file, os.path.join(outdir,os.path.basename(_file))), verbose=True, from_dir=atmhistpath)
 
-        outdir = "/glade/scratch/ssfcst/cesm2cam6v2/lnd/"
-
+        outdir = os.path.join(scratch,"cesm2cam6v2","lnd")
         print("LND OUTDIR:")
         print(outdir)
 

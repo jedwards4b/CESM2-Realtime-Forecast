@@ -1,0 +1,8 @@
+%include <singlenode.h>
+%include <head.h>
+module load intel udunits ncl nco 
+cd %FCST_HOME%/bin/
+./getinitialdata.py --date %FCSTDATE%
+./generate_cami_ensemble.py --date %FCSTDATE% --ensemble-start %ENSEMBLE_START% --ensemble-end %ENSEMBLE_END%
+
+%include <tail.h>

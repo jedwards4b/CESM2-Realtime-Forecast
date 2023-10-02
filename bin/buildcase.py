@@ -10,7 +10,7 @@ _LIBDIR = os.path.join(cesmroot,"cime","scripts","Tools")
 sys.path.append(_LIBDIR)
 _LIBDIR = os.path.join(cesmroot,"cime","scripts","lib")
 sys.path.append(_LIBDIR)
-
+print(f"cesmroot is {cesmroot} sys path is {sys.path}")
 import glob, shutil
 from datetime import timedelta, datetime
 import CIME.build as build
@@ -84,7 +84,7 @@ def per_run_case_updates(case, date, sdrestdir, user_mods_dir, rundir):
     case.set_value("RUN_STARTDATE",date)
     case.set_value("RUN_REFDIR",sdrestdir)
     case.set_value("REST_OPTION",'none')
-    case.set_value("PROJECT","P93300007")
+#    case.set_value("PROJECT","P93300007")
 #    dout_s_root = case.get_value("DOUT_S_ROOT")
 #    dout_s_root = os.path.join(os.path.dirname(dout_s_root),casename)
 #    if dout_s_root.startswith("/glade/scratch"):
@@ -182,7 +182,7 @@ def _main_func(description):
 
     basemonth = int(date[5:7])
     baseyear = int(date[0:4])
-    baseroot = os.getenv("WORK")
+    baseroot = os.getenv("FCST_WORK")
     res = "f09_g17"
 
     if baseyear < 2014 or (baseyear == 2014 and basemonth < 11):
