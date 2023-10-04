@@ -1,0 +1,81 @@
+ ! Users should add all user specific namelist changes below in the form of 
+! namelist_var = new_namelist_value 
+
+!!      h0,  h1, h2, h3,  h4,  h5,  h6,  h7,  h8
+nhtfrq = 0, -24, -6, -3,  -1,   1, -24,-120,-240 
+mfilt  = 1,   5, 20, 40, 120, 240, 365,  73, 365 
+ndens  = 2,   2,  2,  2,   2,   2,   1,   1,   1
+
+!! monthly (h0)
+fincl1 = 
+	'ADRAIN','ADSNOW','ANRAIN','ANSNOW','AQRAIN','AQSNOW','AREI','AREL','AWNC','AWNI','CCN3','CLDICE','CLDLIQ',
+	'CLOUD','CME','CO2','CO2_FFF','CO2_LND','CO2_OCN','CONCLD','DCQ','DTCOND','DTCORE','DTV','EVAPPREC','EVAPQZM',
+	'EVAPTZM','FICE','FREQI','FREQL','FREQR','FREQS','H2O','ICIMR','ICWMR','IWC','MASS','NUMICE','NUMLIQ','NUMRAI',
+	'NUMSNO','OMEGA','OMEGAT','PDELDRY','PTEQ','PTTEND','Q','QRAIN','QRL','QRS','QSNOW','QT','RAINQM','REFF_AERO',
+	'RELHUM','RELVAR','SNOWQM','STEND_CLUBB','T','TAQ','TOT_CLD_VISTAU','TTEND_TOT','TTGWORO','U','UTEND_CLUBB',
+	'UTGWORO','UU','V','VD01','VQ','VT','VTEND_CLUBB','VU','VV','WSUB','Z3','ZM_CLUBB','ZMDQ','ZMDT','ZMMTT','ZMMU',
+	'ACTREL','AEROD_v','AODABSdn','AODBCdn','AODdnDUST1','AODdnDUST2','AODdnDUST3','AODdnMODE1','AODdnMODE2','AODdnMODE3',
+	'AODDUST','AODDUST1','AODDUST2','AODDUST3','AODNIRstdn','AODPOMdn','AODSO4dn','AODSOAdn','AODSSdn','AODUVdn','AODUVstdn',
+	'AODVIS','AODVISdn','AODVISstdn','AREA','bc_a1_SRF','bc_a4_SRF','BURDENBCdn','BURDENDUSTdn','BURDENPOMdn','BURDENSEASALTdn',
+	'BURDENSO4dn','BURDENSOAdn','CAPE','CDNUMC','CLDHGH','CLDLOW','CLDMED','CLDTOT','dst_a1_SRF','dst_a2_SRF','dst_a3_SRF',
+	'FCTL','FLDS','FLDSC','FLNR','FLNS','FLNSC','FLNT','FLNTC','FLUT','FLUTC','FREQZM','FSDS','FSDSC','FSNR','FSNS','FSNSC',
+	'FSNT','FSNTC','FSNTOA','FSNTOAC','FSUTOA','ICEFRAC','LANDFRAC','LHFLX','LWCF','MSKtem','ncl_a1_SRF','ncl_a2_SRF','ncl_a3_SRF',
+	'num_a1_SRF','num_a2_SRF','num_a3_SRF','num_a4_SRF','OCNFRAC','PBLH','PHIS','pom_a1_SRF','pom_a4_SRF','PRECC','PRECL','PRECSC',
+	'PRECSL','PRECT','PS','PSL','QFLX','QREFHT','RHREFHT','SFCO2','SFCO2_FFF','SFCO2_LND','SFCO2_OCN','SHFLX','SNOWHICE','SNOWHLND',
+	'SO2_SRF','so4_a1_SRF','so4_a2_SRF','so4_a3_SRF','soa_a1_SRF','soa_a2_SRF','SOAG_SRF','SOLIN','SOLLD','SOLSD','SSAVIS','SWCF',
+	'TAUBLJX','TAUBLJY','TAUGWX','TAUGWY','TAUX','TAUY','TGCLDCWP','TGCLDIWP','TGCLDLWP','THzm','TMCO2','TMCO2_FFF','TMCO2_LND','TMCO2_OCN',
+	'TMQ','TREFHT','TREFHTMN','TREFHTMX','TROP_P','TROP_T','TROP_Z','TS','TSMN','TSMX','U10','Vzm','Wzm','WSPDSRFAV','WSPDSRFMX',
+	'CLDTOT_CAL','CLDTOT_ISCCP','CLDHGH_CAL','CLDLOW_CAL','CLDMED_CAL','MEANCLDALB_ISCCP','MEANTAU_ISCCP','MEANPTOP_ISCCP'
+
+!! daily single level (h1)
+fincl2 =
+	'ACTNI','ACTNL','ACTREI','ACTREL','AODVIS','BURDENBCdn','BURDENDUSTdn','BURDENPOMdn','BURDENSEASALTdn','BURDENSO4','BURDENSO4dn','BURDENSOAdn',
+	'CAPE','CDNUMC','CLDTOT','FCTI','FCTL','FLDS','FLDSC','FLNR','FLNS','FLNSC','FLNT','FLNTC','FLUT','FLUTC','FSDS','FSDSC','FSNR','FSNS','FSNSC',
+	'FSNT','FSNTOAC','LHFLX','LWCF','MSKtem','PBLH','PHIS','PRECC','PRECL','PRECSC','PRECSL','PRECT','PRECTMX','PS','PSL','QREFHT','RHREFHT','SHFLX',
+	'SOLIN','SOLLD','SOLSD','SWCF','TAUBLJX','TAUBLJY','TAUGWX','TAUGWY','TAUX','TAUY','TGCLDIWP','TGCLDLWP','TMQ','TREFHT','TREFHTMN','TREFHTMX',
+	'TS','TSMN','TSMX','U10','WSPDSRFAV','WSPDSRFMX','OMEGA1000','OMEGA850','OMEGA700','OMEGA500','OMEGA200','OMEGA100','OMEGA050','OMEGA010',
+	'Q1000','Q850','Q700','Q500','Q200','Q100','Q050','Q010','T1000','T850','T700','T500','T200','T100','T050','T010',
+	'U1000','U850','U700','U500','U200','U100','U050','U010','V1000','V850','V700','V500','V200','V100','V050','V010',
+	'Z1000','Z850','Z700','Z500','Z200','Z100','Z050','Z010','MSKtem','VTHzm','UVzm','UWzm','Uzm','Vzm','THzm','Wzm'
+
+!! 6hr (h2) 
+fincl3 =
+	'Q950:I','Q900:I','Q850:I','Q700:I','Q500:I','Q200:I','T950:I','T900:I','T850:I','T700:I','T500:I','T200:I',
+	'U950:I','U900:I','U850:I','U700:I','U500:I','U200:I','V950:I','V900:I','V850:I','V700:I','V500:I','V200:I',
+	'FLUT:A','OMEGA500:A','PRECC:A','PRECSC:A','PRECSL:A','PRECT:A','PSL:I','U200:A',
+	'UBOT:I','VBOT:I','Z300:I','Z500:I','TMQ:I','uIVT:I','vIVT:I'
+
+!! 3hr (h3)
+fincl4 = 
+	'CLDLOW:A','PRECC:A','UBOT:A','VBOT:A','PRECT:A'
+
+!! To reduce data volume, these can be EXCLUDED from h0:
+fexcl1 = 'CLD_CAL','FISCCP1_COSP','RFL_PARASOL','CFAD_SR532_CAL','MOL532_CAL','MEANTB_ISCCP','MEANTBCLR_ISCCP'
+
+ srf_emis_specifier             = 'bc_a4    -> /glade/p/cesmdata/cseg/inputdata/atm/cam/chem/emis/emissions_ssp370/emissions-cmip6-ScenarioMIP_IAMC-AIM-ssp370-1-1_bc_a4_anthro_surface_mol_175001-210101_0.9x1.25_c20190222.nc',
+         'bc_a4    -> /glade/p/cesmdata/cseg/inputdata/atm/cam/chem/emis/emissions_ssp370-BB_smoothed/emissions-cmip6-ScenarioMIP_IAMC-AIM-ssp370-1-1_smoothed_bc_a4_bb_surface_mol_175001-210101_0.9x1.25_c20201016.nc',
+         'DMS      -> /glade/p/cesmdata/cseg/inputdata/atm/cam/chem/emis/emissions_ssp370-BB_smoothed/emissions-cmip6-ScenarioMIP_IAMC-AIM-ssp370-1-1_smoothed_DMS_bb_surface_mol_175001-210101_0.9x1.25_c20201016.nc',
+         'DMS      -> /glade/p/cesmdata/cseg/inputdata/atm/cam/chem/emis/emissions_ssp370/emissions-cmip6-SSP_DMS_other_surface_mol_175001-210101_0.9x1.25_c20190222.nc',
+         'num_a1   -> /glade/p/cesmdata/cseg/inputdata/atm/cam/chem/emis/emissions_ssp370-BB_smoothed/emissions-cmip6-ScenarioMIP_IAMC-AIM-ssp370-1-1_smoothed_num_so4_a1_bb_surface_mol_175001-210101_0.9x1.25_c20201016.nc',
+         'num_a1   -> /glade/p/cesmdata/cseg/inputdata/atm/cam/chem/emis/emissions_ssp370/emissions-cmip6-ScenarioMIP_IAMC-AIM-ssp370-1-1_num_so4_a1_anthro-ag-ship_surface_mol_175001-210101_0.9x1.25_c20200924.nc',
+         'num_a2   -> /glade/p/cesmdata/cseg/inputdata/atm/cam/chem/emis/emissions_ssp370/emissions-cmip6-ScenarioMIP_IAMC-AIM-ssp370-1-1_num_so4_a2_anthro-res_surface_mol_175001-210101_0.9x1.25_c20200924.nc',
+         'num_a4   -> /glade/p/cesmdata/cseg/inputdata/atm/cam/chem/emis/emissions_ssp370-BB_smoothed/emissions-cmip6-ScenarioMIP_IAMC-AIM-ssp370-1-1_smoothed_num_bc_a4_bb_surface_mol_175001-210101_0.9x1.25_c20201016.nc',
+         'num_a4   -> /glade/p/cesmdata/cseg/inputdata/atm/cam/chem/emis/emissions_ssp370/emissions-cmip6-ScenarioMIP_IAMC-AIM-ssp370-1-1_num_bc_a4_anthro_surface_mol_175001-210101_0.9x1.25_c20190222.nc',
+         'num_a4   -> /glade/p/cesmdata/cseg/inputdata/atm/cam/chem/emis/emissions_ssp370/emissions-cmip6-ScenarioMIP_IAMC-AIM-ssp370-1-1_num_pom_a4_anthro_surface_mol_175001-210101_0.9x1.25_c20190222.nc',
+         'num_a4   -> /glade/p/cesmdata/cseg/inputdata/atm/cam/chem/emis/emissions_ssp370-BB_smoothed/emissions-cmip6-ScenarioMIP_IAMC-AIM-ssp370-1-1_smoothed_num_pom_a4_bb_surface_mol_175001-210101_0.9x1.25_c20201016.nc',
+         'pom_a4   -> /glade/p/cesmdata/cseg/inputdata/atm/cam/chem/emis/emissions_ssp370/emissions-cmip6-ScenarioMIP_IAMC-AIM-ssp370-1-1_pom_a4_anthro_surface_mol_175001-210101_0.9x1.25_c20190222.nc',
+         'pom_a4   -> /glade/p/cesmdata/cseg/inputdata/atm/cam/chem/emis/emissions_ssp370-BB_smoothed/emissions-cmip6-ScenarioMIP_IAMC-AIM-ssp370-1-1_smoothed_pom_a4_bb_surface_mol_175001-210101_0.9x1.25_c20201016.nc',
+         'SO2      -> /glade/p/cesmdata/cseg/inputdata/atm/cam/chem/emis/emissions_ssp370/emissions-cmip6-ScenarioMIP_IAMC-AIM-ssp370-1-1_SO2_anthro-ag-ship-res_surface_mol_175001-210101_0.9x1.25_c20200924.nc',
+         'SO2      -> /glade/p/cesmdata/cseg/inputdata/atm/cam/chem/emis/emissions_ssp370/emissions-cmip6-ScenarioMIP_IAMC-AIM-ssp370-1-1_SO2_anthro-ene_surface_mol_175001-210101_0.9x1.25_c20190222.nc',
+         'SO2      -> /glade/p/cesmdata/cseg/inputdata/atm/cam/chem/emis/emissions_ssp370-BB_smoothed/emissions-cmip6-ScenarioMIP_IAMC-AIM-ssp370-1-1_smoothed_SO2_bb_surface_mol_175001-210101_0.9x1.25_c20201016.nc',
+         'so4_a1   -> /glade/p/cesmdata/cseg/inputdata/atm/cam/chem/emis/emissions_ssp370/emissions-cmip6-ScenarioMIP_IAMC-AIM-ssp370-1-1_so4_a1_anthro-ag-ship_surface_mol_175001-210101_0.9x1.25_c20200924.nc',
+         'so4_a1   -> /glade/p/cesmdata/cseg/inputdata/atm/cam/chem/emis/emissions_ssp370-BB_smoothed/emissions-cmip6-ScenarioMIP_IAMC-AIM-ssp370-1-1_smoothed_so4_a1_bb_surface_mol_175001-210101_0.9x1.25_c20201016.nc',
+         'so4_a2   -> /glade/p/cesmdata/cseg/inputdata/atm/cam/chem/emis/emissions_ssp370/emissions-cmip6-ScenarioMIP_IAMC-AIM-ssp370-1-1_so4_a2_anthro-res_surface_mol_175001-210101_0.9x1.25_c20200924.nc',
+         'SOAG     -> /glade/p/cesmdata/cseg/inputdata/atm/cam/chem/emis/emissions_ssp370/emissions-cmip6-ScenarioMIP_IAMC-AIM-ssp370-1-1_SOAGx1.5_anthro_surface_mol_175001-210101_0.9x1.25_c20200403.nc',
+         'SOAG     -> /glade/p/cesmdata/cseg/inputdata/atm/cam/chem/emis/emissions_ssp370-BB_smoothed/emissions-cmip6-ScenarioMIP_IAMC-AIM-ssp370-1-1_smoothed_SOAGx1.5_bb_surface_mol_175001-210101_0.9x1.25_c20201016.nc',
+         'SOAG     -> /glade/p/cesmdata/cseg/inputdata/atm/cam/chem/emis/emissions_ssp/emissions-cmip6-SOAGx1.5_biogenic_surface_mol_175001-210101_0.9x1.25_c20190329.nc'
+ srf_emis_type          = 'INTERP_MISSING_MONTHS'
+
+
+history_dust                   = .true. 
+do_circulation_diags           = .true. 

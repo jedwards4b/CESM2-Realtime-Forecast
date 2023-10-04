@@ -8,13 +8,16 @@ setenv CAMPAIGN  /glade/campaign/cesm/development/espwg/SMYLE/inputdata/cesm2_in
 
 set syr = 1970
 set eyr = 2018
+set syr = 1958
+set eyr = 1969
 
 @ ib = $syr
 @ ie = $eyr
 
 foreach year ( `seq $ib $ie` )
 #foreach mon ( 11 02 05 08 )
-foreach mon ( 11 02 05 )
+#foreach mon ( 11 02 05 )
+foreach mon ( 11 )
 
 
 # case name counter

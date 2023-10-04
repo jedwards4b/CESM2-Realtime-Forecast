@@ -1,0 +1,256 @@
+
+
+setenv CESM2_TOOLS_ROOT /glade/work/nanr/cesm_tags/CASE_tools/cesm2-smyle/
+setenv CESM2_TOOLS_ROOT /glade/work/nanr/cesm_tags/CASE_tools/cesm2-smyle/
+setenv CESMROOT /glade/work/nanr/cesm_tags/cesm2.1.4-SMYLE
+setenv CESMROOT /glade/work/nanr/cesm_tags/cesm2.1.4-SMYLE
+
+if ( $HOST != casper10 ) then
+if ( casper-login2 != casper10 ) then
+echo "ERROR:  Must be run on Casper"
+echo ERROR:  Must be run on Casper
+ERROR:  Must be run on Casper
+
+endif
+endif
+
+
+
+set syr = 1969
+set syr = 1969
+set eyr = 1969
+set eyr = 1969
+
+@ ib = $syr
+@ ib = 1969
+@ ie = $eyr
+@ ie = 1969
+
+foreach year ( `seq $ib $ie` )
+foreach year ( `seq $ib $ie` )
+seq 1969 1969
+
+
+foreach mon ( 11 )
+foreach mon ( 11 )
+
+
+
+
+set case = b.e21.SMYLE_IC.f09_g17.${year}-${mon}.01
+set case = b.e21.SMYLE_IC.f09_g17.1969-11.01
+
+
+
+set Picdir = /glade/p/cesm/espwg/CESM2-SMYLE/inputdata/cesm2_init/{$case}/
+set Picdir = /glade/p/cesm/espwg/CESM2-SMYLE/inputdata/cesm2_init/{b.e21.SMYLE_IC.f09_g17.1969-11.01}/
+set icdir = /glade/p/cesm/espwg/CESM2-SMYLE/inputdata/cesm2_init/{$case}/${year}-${mon}-01
+set icdir = /glade/p/cesm/espwg/CESM2-SMYLE/inputdata/cesm2_init/{b.e21.SMYLE_IC.f09_g17.1969-11.01}/1969-11-01
+if ( ! -d ${Picdir} ) then
+if ( ! -d /glade/p/cesm/espwg/CESM2-SMYLE/inputdata/cesm2_init/b.e21.SMYLE_IC.f09_g17.1969-11.01/ ) then
+if ( ! -d ${icdir} ) then
+if ( ! -d /glade/p/cesm/espwg/CESM2-SMYLE/inputdata/cesm2_init/b.e21.SMYLE_IC.f09_g17.1969-11.01/1969-11-01 ) then
+
+
+set doThis99 = 1
+set doThis99 = 1
+if ( $doThis99 == 1 ) then
+if ( 1 == 1 ) then
+
+
+set atmcase = JRA55_0.9x1.25_L32
+set atmcase = JRA55_0.9x1.25_L32
+set lndcase = smyle_Transient
+set lndcase = smyle_Transient
+
+
+set atmfname = ${atmcase}.cam2.i.${year}-${mon}-01-00000.nc
+set atmfname = JRA55_0.9x1.25_L32.cam2.i.1969-11-01-00000.nc
+set lndfname = ${lndcase}.clm2.r.${year}-${mon}-01-00000.nc
+set lndfname = smyle_Transient.clm2.r.1969-11-01-00000.nc
+set roffname = ${lndcase}.mosart.r.${year}-${mon}-01-00000.nc
+set roffname = smyle_Transient.mosart.r.1969-11-01-00000.nc
+
+
+
+
+set atmdir = /glade/campaign/cesm/development/espwg/SMYLE/initial_conditions/CAM_Regridded-JRA55/
+set atmdir = /glade/campaign/cesm/development/espwg/SMYLE/initial_conditions/CAM_Regridded-JRA55/
+set lnddir = /glade/campaign/cesm/development/espwg/SMYLE/CLM5_init/rest/${year}-${mon}-01-00000/
+set lnddir = /glade/campaign/cesm/development/espwg/SMYLE/CLM5_init/rest/1969-11-01-00000/
+
+
+set atmfout = ${case}.cam.i.${year}-${mon}-01-00000.nc
+set atmfout = b.e21.SMYLE_IC.f09_g17.1969-11.01.cam.i.1969-11-01-00000.nc
+set lndfout = ${case}.clm2.r.${year}-${mon}-01-00000.nc
+set lndfout = b.e21.SMYLE_IC.f09_g17.1969-11.01.clm2.r.1969-11-01-00000.nc
+set roffout = ${case}.mosart.r.${year}-${mon}-01-00000.nc
+set roffout = b.e21.SMYLE_IC.f09_g17.1969-11.01.mosart.r.1969-11-01-00000.nc
+
+echo $atmfout
+echo b.e21.SMYLE_IC.f09_g17.1969-11.01.cam.i.1969-11-01-00000.nc
+b.e21.SMYLE_IC.f09_g17.1969-11.01.cam.i.1969-11-01-00000.nc
+
+set doThis = 1
+set doThis = 1
+
+if ( $doThis == 1 ) then
+if ( 1 == 1 ) then
+cp $atmdir/${atmfname} $icdir/$atmfout
+cp /glade/campaign/cesm/development/espwg/SMYLE/initial_conditions/CAM_Regridded-JRA55//JRA55_0.9x1.25_L32.cam2.i.1969-11-01-00000.nc /glade/p/cesm/espwg/CESM2-SMYLE/inputdata/cesm2_init/b.e21.SMYLE_IC.f09_g17.1969-11.01/1969-11-01/b.e21.SMYLE_IC.f09_g17.1969-11.01.cam.i.1969-11-01-00000.nc
+cp $lnddir/${lndfname} $icdir/$lndfout
+cp /glade/campaign/cesm/development/espwg/SMYLE/CLM5_init/rest/1969-11-01-00000//smyle_Transient.clm2.r.1969-11-01-00000.nc /glade/p/cesm/espwg/CESM2-SMYLE/inputdata/cesm2_init/b.e21.SMYLE_IC.f09_g17.1969-11.01/1969-11-01/b.e21.SMYLE_IC.f09_g17.1969-11.01.clm2.r.1969-11-01-00000.nc
+cp: cannot stat ‘/glade/campaign/cesm/development/espwg/SMYLE/CLM5_init/rest/1969-11-01-00000//smyle_Transient.clm2.r.1969-11-01-00000.nc’: No such file or directory
+cp $lnddir/${roffname} $icdir/$roffout
+cp /glade/campaign/cesm/development/espwg/SMYLE/CLM5_init/rest/1969-11-01-00000//smyle_Transient.mosart.r.1969-11-01-00000.nc /glade/p/cesm/espwg/CESM2-SMYLE/inputdata/cesm2_init/b.e21.SMYLE_IC.f09_g17.1969-11.01/1969-11-01/b.e21.SMYLE_IC.f09_g17.1969-11.01.mosart.r.1969-11-01-00000.nc
+cp: cannot stat ‘/glade/campaign/cesm/development/espwg/SMYLE/CLM5_init/rest/1969-11-01-00000//smyle_Transient.mosart.r.1969-11-01-00000.nc’: No such file or directory
+ncatted -a OriginalFile,global,a,c,$atmfname $icdir/$atmfout
+ncatted -a OriginalFile,global,a,c,JRA55_0.9x1.25_L32.cam2.i.1969-11-01-00000.nc /glade/p/cesm/espwg/CESM2-SMYLE/inputdata/cesm2_init/b.e21.SMYLE_IC.f09_g17.1969-11.01/1969-11-01/b.e21.SMYLE_IC.f09_g17.1969-11.01.cam.i.1969-11-01-00000.nc
+ncatted -a OriginalFile,global,a,c,$lndfname $icdir/$lndfout
+ncatted -a OriginalFile,global,a,c,smyle_Transient.clm2.r.1969-11-01-00000.nc /glade/p/cesm/espwg/CESM2-SMYLE/inputdata/cesm2_init/b.e21.SMYLE_IC.f09_g17.1969-11.01/1969-11-01/b.e21.SMYLE_IC.f09_g17.1969-11.01.clm2.r.1969-11-01-00000.nc
+ncatted: ERROR file /glade/p/cesm/espwg/CESM2-SMYLE/inputdata/cesm2_init/b.e21.SMYLE_IC.f09_g17.1969-11.01/1969-11-01/b.e21.SMYLE_IC.f09_g17.1969-11.01.clm2.r.1969-11-01-00000.nc not found. It does not exist on the local filesystem, nor does it match remote filename patterns (e.g., http://foo or foo.bar.edu:file).
+ncatted: HINT file-not-found errors usually arise from filename typos, incorrect paths, missing files, or capricious gods. Please verify spelling and location of requested file. If the file resides on a High Performance Storage System (HPSS) accessible via the 'hsi' command, then add the --hpss option and re-try command.
+ncatted -a OriginalFile,global,a,c,$roffname $icdir/$roffout
+ncatted -a OriginalFile,global,a,c,smyle_Transient.mosart.r.1969-11-01-00000.nc /glade/p/cesm/espwg/CESM2-SMYLE/inputdata/cesm2_init/b.e21.SMYLE_IC.f09_g17.1969-11.01/1969-11-01/b.e21.SMYLE_IC.f09_g17.1969-11.01.mosart.r.1969-11-01-00000.nc
+ncatted: ERROR file /glade/p/cesm/espwg/CESM2-SMYLE/inputdata/cesm2_init/b.e21.SMYLE_IC.f09_g17.1969-11.01/1969-11-01/b.e21.SMYLE_IC.f09_g17.1969-11.01.mosart.r.1969-11-01-00000.nc not found. It does not exist on the local filesystem, nor does it match remote filename patterns (e.g., http://foo or foo.bar.edu:file).
+ncatted: HINT file-not-found errors usually arise from filename typos, incorrect paths, missing files, or capricious gods. Please verify spelling and location of requested file. If the file resides on a High Performance Storage System (HPSS) accessible via the 'hsi' command, then add the --hpss option and re-try command.
+
+endif
+endif
+
+
+
+set ocncase = g.e22.GOMIPECOIAF_JRA-1p4-2018.TL319_g17.SMYLE.005
+set ocncase = g.e22.GOMIPECOIAF_JRA-1p4-2018.TL319_g17.SMYLE.005
+set first_rest_year = 1958
+set first_rest_year = 1958
+set ocean_base_year = 306
+set ocean_base_year = 306
+
+
+
+
+
+@ offset = $first_rest_year - $ocean_base_year
+@ offset = 1958 - 306
+@ ocnyr = $year - $offset
+@ ocnyr = 1969 - 1652
+
+set ocndir = /glade/campaign/cesm/development/espwg/SMYLE/SMYLE-FOSI/rest/0${ocnyr}-${mon}-01-00000/
+set ocndir = /glade/campaign/cesm/development/espwg/SMYLE/SMYLE-FOSI/rest/0317-11-01-00000/
+set icefout = ${case}.cice.r.${year}-${mon}-01-00000.nc
+set icefout = b.e21.SMYLE_IC.f09_g17.1969-11.01.cice.r.1969-11-01-00000.nc
+set lndfout = ${case}.clm2.r.${year}-${mon}-01-00000.nc
+set lndfout = b.e21.SMYLE_IC.f09_g17.1969-11.01.clm2.r.1969-11-01-00000.nc
+set roffout = ${case}.mosart.r.${year}-${mon}-01-00000.nc
+set roffout = b.e21.SMYLE_IC.f09_g17.1969-11.01.mosart.r.1969-11-01-00000.nc
+
+set icefname = ${ocncase}.cice.r.0${ocnyr}-${mon}-01-00000.nc
+set icefname = g.e22.GOMIPECOIAF_JRA-1p4-2018.TL319_g17.SMYLE.005.cice.r.0317-11-01-00000.nc
+set poprfname = ${ocncase}.pop.r.0${ocnyr}-${mon}-01-00000.nc
+set poprfname = g.e22.GOMIPECOIAF_JRA-1p4-2018.TL319_g17.SMYLE.005.pop.r.0317-11-01-00000.nc
+set poprofname = ${ocncase}.pop.ro.0${ocnyr}-${mon}-01-00000
+set poprofname = g.e22.GOMIPECOIAF_JRA-1p4-2018.TL319_g17.SMYLE.005.pop.ro.0317-11-01-00000
+set poprhfname = ${ocncase}.pop.rh.ecosys.nyear1.0${ocnyr}-${mon}-01-00000.nc
+set poprhfname = g.e22.GOMIPECOIAF_JRA-1p4-2018.TL319_g17.SMYLE.005.pop.rh.ecosys.nyear1.0317-11-01-00000.nc
+set popwwfname = ${ocncase}.ww3.r.0${ocnyr}-${mon}-01-00000
+set popwwfname = g.e22.GOMIPECOIAF_JRA-1p4-2018.TL319_g17.SMYLE.005.ww3.r.0317-11-01-00000
+
+set poprfout = ${case}.pop.r.${year}-${mon}-01-00000.nc
+set poprfout = b.e21.SMYLE_IC.f09_g17.1969-11.01.pop.r.1969-11-01-00000.nc
+set poprofout = ${case}.pop.ro.${year}-${mon}-01-00000
+set poprofout = b.e21.SMYLE_IC.f09_g17.1969-11.01.pop.ro.1969-11-01-00000
+set poprhfout = ${case}.pop.rh.ecosys.nyear1.${year}-${mon}-01-00000.nc
+set poprhfout = b.e21.SMYLE_IC.f09_g17.1969-11.01.pop.rh.ecosys.nyear1.1969-11-01-00000.nc
+set popwwfout = ${case}.ww3.r.${year}-${mon}-01-00000
+set popwwfout = b.e21.SMYLE_IC.f09_g17.1969-11.01.ww3.r.1969-11-01-00000
+
+echo $icefname
+echo g.e22.GOMIPECOIAF_JRA-1p4-2018.TL319_g17.SMYLE.005.cice.r.0317-11-01-00000.nc
+g.e22.GOMIPECOIAF_JRA-1p4-2018.TL319_g17.SMYLE.005.cice.r.0317-11-01-00000.nc
+echo $poprfname
+echo g.e22.GOMIPECOIAF_JRA-1p4-2018.TL319_g17.SMYLE.005.pop.r.0317-11-01-00000.nc
+g.e22.GOMIPECOIAF_JRA-1p4-2018.TL319_g17.SMYLE.005.pop.r.0317-11-01-00000.nc
+
+set doThis2 = 1
+set doThis2 = 1
+if ( $doThis2 == 1 ) then
+if ( 1 == 1 ) then
+
+cp $ocndir/${icefname} $icdir/${icefout}
+cp /glade/campaign/cesm/development/espwg/SMYLE/SMYLE-FOSI/rest/0317-11-01-00000//g.e22.GOMIPECOIAF_JRA-1p4-2018.TL319_g17.SMYLE.005.cice.r.0317-11-01-00000.nc /glade/p/cesm/espwg/CESM2-SMYLE/inputdata/cesm2_init/b.e21.SMYLE_IC.f09_g17.1969-11.01/1969-11-01/b.e21.SMYLE_IC.f09_g17.1969-11.01.cice.r.1969-11-01-00000.nc
+cp: cannot stat ‘/glade/campaign/cesm/development/espwg/SMYLE/SMYLE-FOSI/rest/0317-11-01-00000//g.e22.GOMIPECOIAF_JRA-1p4-2018.TL319_g17.SMYLE.005.cice.r.0317-11-01-00000.nc’: No such file or directory
+cp $ocndir/${poprfname} $icdir/${poprfout}
+cp /glade/campaign/cesm/development/espwg/SMYLE/SMYLE-FOSI/rest/0317-11-01-00000//g.e22.GOMIPECOIAF_JRA-1p4-2018.TL319_g17.SMYLE.005.pop.r.0317-11-01-00000.nc /glade/p/cesm/espwg/CESM2-SMYLE/inputdata/cesm2_init/b.e21.SMYLE_IC.f09_g17.1969-11.01/1969-11-01/b.e21.SMYLE_IC.f09_g17.1969-11.01.pop.r.1969-11-01-00000.nc
+cp: cannot stat ‘/glade/campaign/cesm/development/espwg/SMYLE/SMYLE-FOSI/rest/0317-11-01-00000//g.e22.GOMIPECOIAF_JRA-1p4-2018.TL319_g17.SMYLE.005.pop.r.0317-11-01-00000.nc’: No such file or directory
+cp $ocndir/${poprofname} $icdir/${poprofout}
+cp /glade/campaign/cesm/development/espwg/SMYLE/SMYLE-FOSI/rest/0317-11-01-00000//g.e22.GOMIPECOIAF_JRA-1p4-2018.TL319_g17.SMYLE.005.pop.ro.0317-11-01-00000 /glade/p/cesm/espwg/CESM2-SMYLE/inputdata/cesm2_init/b.e21.SMYLE_IC.f09_g17.1969-11.01/1969-11-01/b.e21.SMYLE_IC.f09_g17.1969-11.01.pop.ro.1969-11-01-00000
+cp: cannot stat ‘/glade/campaign/cesm/development/espwg/SMYLE/SMYLE-FOSI/rest/0317-11-01-00000//g.e22.GOMIPECOIAF_JRA-1p4-2018.TL319_g17.SMYLE.005.pop.ro.0317-11-01-00000’: No such file or directory
+cp $ocndir/${poprhfname} $icdir/${poprhfout}
+cp /glade/campaign/cesm/development/espwg/SMYLE/SMYLE-FOSI/rest/0317-11-01-00000//g.e22.GOMIPECOIAF_JRA-1p4-2018.TL319_g17.SMYLE.005.pop.rh.ecosys.nyear1.0317-11-01-00000.nc /glade/p/cesm/espwg/CESM2-SMYLE/inputdata/cesm2_init/b.e21.SMYLE_IC.f09_g17.1969-11.01/1969-11-01/b.e21.SMYLE_IC.f09_g17.1969-11.01.pop.rh.ecosys.nyear1.1969-11-01-00000.nc
+cp: cannot stat ‘/glade/campaign/cesm/development/espwg/SMYLE/SMYLE-FOSI/rest/0317-11-01-00000//g.e22.GOMIPECOIAF_JRA-1p4-2018.TL319_g17.SMYLE.005.pop.rh.ecosys.nyear1.0317-11-01-00000.nc’: No such file or directory
+cp $ocndir/${popwwfname} $icdir/${popwwfout}
+cp /glade/campaign/cesm/development/espwg/SMYLE/SMYLE-FOSI/rest/0317-11-01-00000//g.e22.GOMIPECOIAF_JRA-1p4-2018.TL319_g17.SMYLE.005.ww3.r.0317-11-01-00000 /glade/p/cesm/espwg/CESM2-SMYLE/inputdata/cesm2_init/b.e21.SMYLE_IC.f09_g17.1969-11.01/1969-11-01/b.e21.SMYLE_IC.f09_g17.1969-11.01.ww3.r.1969-11-01-00000
+cp: cannot stat ‘/glade/campaign/cesm/development/espwg/SMYLE/SMYLE-FOSI/rest/0317-11-01-00000//g.e22.GOMIPECOIAF_JRA-1p4-2018.TL319_g17.SMYLE.005.ww3.r.0317-11-01-00000’: No such file or directory
+
+ncatted -a OriginalFile,global,a,c,$icefname $icdir/$icefout
+ncatted -a OriginalFile,global,a,c,g.e22.GOMIPECOIAF_JRA-1p4-2018.TL319_g17.SMYLE.005.cice.r.0317-11-01-00000.nc /glade/p/cesm/espwg/CESM2-SMYLE/inputdata/cesm2_init/b.e21.SMYLE_IC.f09_g17.1969-11.01/1969-11-01/b.e21.SMYLE_IC.f09_g17.1969-11.01.cice.r.1969-11-01-00000.nc
+ncatted: ERROR file /glade/p/cesm/espwg/CESM2-SMYLE/inputdata/cesm2_init/b.e21.SMYLE_IC.f09_g17.1969-11.01/1969-11-01/b.e21.SMYLE_IC.f09_g17.1969-11.01.cice.r.1969-11-01-00000.nc not found. It does not exist on the local filesystem, nor does it match remote filename patterns (e.g., http://foo or foo.bar.edu:file).
+ncatted: HINT file-not-found errors usually arise from filename typos, incorrect paths, missing files, or capricious gods. Please verify spelling and location of requested file. If the file resides on a High Performance Storage System (HPSS) accessible via the 'hsi' command, then add the --hpss option and re-try command.
+ncatted -a OriginalFile,global,a,c,$poprfname $icdir/$poprfout
+ncatted -a OriginalFile,global,a,c,g.e22.GOMIPECOIAF_JRA-1p4-2018.TL319_g17.SMYLE.005.pop.r.0317-11-01-00000.nc /glade/p/cesm/espwg/CESM2-SMYLE/inputdata/cesm2_init/b.e21.SMYLE_IC.f09_g17.1969-11.01/1969-11-01/b.e21.SMYLE_IC.f09_g17.1969-11.01.pop.r.1969-11-01-00000.nc
+ncatted: ERROR file /glade/p/cesm/espwg/CESM2-SMYLE/inputdata/cesm2_init/b.e21.SMYLE_IC.f09_g17.1969-11.01/1969-11-01/b.e21.SMYLE_IC.f09_g17.1969-11.01.pop.r.1969-11-01-00000.nc not found. It does not exist on the local filesystem, nor does it match remote filename patterns (e.g., http://foo or foo.bar.edu:file).
+ncatted: HINT file-not-found errors usually arise from filename typos, incorrect paths, missing files, or capricious gods. Please verify spelling and location of requested file. If the file resides on a High Performance Storage System (HPSS) accessible via the 'hsi' command, then add the --hpss option and re-try command.
+
+ncatted -a OriginalFile,global,a,c,$poprhfname $icdir/$poprhfout
+ncatted -a OriginalFile,global,a,c,g.e22.GOMIPECOIAF_JRA-1p4-2018.TL319_g17.SMYLE.005.pop.rh.ecosys.nyear1.0317-11-01-00000.nc /glade/p/cesm/espwg/CESM2-SMYLE/inputdata/cesm2_init/b.e21.SMYLE_IC.f09_g17.1969-11.01/1969-11-01/b.e21.SMYLE_IC.f09_g17.1969-11.01.pop.rh.ecosys.nyear1.1969-11-01-00000.nc
+ncatted: ERROR file /glade/p/cesm/espwg/CESM2-SMYLE/inputdata/cesm2_init/b.e21.SMYLE_IC.f09_g17.1969-11.01/1969-11-01/b.e21.SMYLE_IC.f09_g17.1969-11.01.pop.rh.ecosys.nyear1.1969-11-01-00000.nc not found. It does not exist on the local filesystem, nor does it match remote filename patterns (e.g., http://foo or foo.bar.edu:file).
+ncatted: HINT file-not-found errors usually arise from filename typos, incorrect paths, missing files, or capricious gods. Please verify spelling and location of requested file. If the file resides on a High Performance Storage System (HPSS) accessible via the 'hsi' command, then add the --hpss option and re-try command.
+
+
+
+echo "$case.cice.r.$year-${mon}-01-00000.nc" > ${icdir}/rpointer.ice
+echo b.e21.SMYLE_IC.f09_g17.1969-11.01.cice.r.1969-11-01-00000.nc
+echo "./$case.pop.ro.$year-${mon}-01-00000" > ${icdir}/rpointer.ocn.ovf
+echo ./b.e21.SMYLE_IC.f09_g17.1969-11.01.pop.ro.1969-11-01-00000
+echo "$case.cam.r.$year-${mon}-01-00000.nc" > ${icdir}/rpointer.atm
+echo b.e21.SMYLE_IC.f09_g17.1969-11.01.cam.r.1969-11-01-00000.nc
+echo "$case.cpl.r.$year-${mon}-01-00000.nc" > ${icdir}/rpointer.drv
+echo b.e21.SMYLE_IC.f09_g17.1969-11.01.cpl.r.1969-11-01-00000.nc
+
+echo "$case.clm2.r.$year-${mon}-01-00000.nc" > ${icdir}/rpointer.lnd
+echo b.e21.SMYLE_IC.f09_g17.1969-11.01.clm2.r.1969-11-01-00000.nc
+echo "$case.mosart.r.$year-${mon}-01-00000.nc" > ${icdir}/rpointer.rof
+echo b.e21.SMYLE_IC.f09_g17.1969-11.01.mosart.r.1969-11-01-00000.nc
+echo "$case.pop.rh.ecosys.nyear1.$year-${mon}-01-00000.nc" > ${icdir}/rpointer.ocn.tavg.5
+echo b.e21.SMYLE_IC.f09_g17.1969-11.01.pop.rh.ecosys.nyear1.1969-11-01-00000.nc
+echo "$case.pop.rh.$year-${mon}-01-00000.nc" > ${icdir}/rpointer.ocn.tavg
+echo b.e21.SMYLE_IC.f09_g17.1969-11.01.pop.rh.1969-11-01-00000.nc
+
+echo "./$case.pop.r.$year-${mon}-01-00000.nc" >> ${icdir}/rpointer.ocn.restart
+echo ./b.e21.SMYLE_IC.f09_g17.1969-11.01.pop.r.1969-11-01-00000.nc
+echo "RESTART_FMT=nc" >> ${icdir}/rpointer.ocn.restart
+echo RESTART_FMT=nc
+
+endif
+endif
+
+
+
+endif
+endif
+
+
+
+
+
+
+
+
+end
+end
+end
+end
+
+exit
+exit

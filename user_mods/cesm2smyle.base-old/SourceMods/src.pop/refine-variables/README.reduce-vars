@@ -1,0 +1,55 @@
+./cpProg-ecosys.pl < coll > collec; chmod u+x collec; ./collec >> ecosys-smyle
+./cpProg-ecosys.pl < colm > colmec; chmod u+x colmec; ./colmec >> ecosys-smyle
+./cpProg-ecosys.pl < coln > colnec; chmod u+x colnec; ./colnec >> ecosys-smyle
+./cpProg-ecosys.pl < colo > coloec; chmod u+x coloec; ./coloec >> ecosys-smyle
+./cpProg-ecosys.pl < colp > colpec; chmod u+x colpec; ./colpec >> ecosys-smyle
+
+#### ./cpProg-gx1v6.pl < coll > collgx; chmod u+x collgx; ./collgx >> tavg-smyle
+#### ./cpProg-gx1v6.pl < colm > colmgx; chmod u+x colmgx; ./colmgx >> tavg-smyle
+#### ./cpProg-gx1v6.pl < coln > colngx; chmod u+x colngx; ./colngx >> tavg-smyle
+#### ./cpProg-gx1v6.pl < colo > cologx; chmod u+x cologx; ./cologx >> tavg-smyle
+#### ./cpProg-gx1v6.pl < colp > colpgx; chmod u+x colpgx; ./colpgx >> tavg-smyle
+
+
+!! Sort the ecosys lists, and then compare the output.
+cp ecosys-smyle.sort.uniq f1
+cp ecosys_diagnostics.sort f2
+
+!! difference the files.
+!! the dd file shows the variables that are in the cesm2le bgc output but not in the smyle list.
+!! We want to EXCLUDE these variables.  Note that all the lines in dd point ">" indicating that the only differences are additional
+!! variables.  The smyle variables we want to include in the spreadsheet (ecosys-smyle)  are already being output in the same
+!! frequency.  We know this because there are no '<' left arrows.
+
+diff f1 f2 > dd
+
+!! eliminate the files that are already set to 'never_average'
+cat dd | grep -v never > ddonly
+
+cat ddonly | grep ">" > ddonlyclean
+
+clear off ">"
+
+!! read in the ecosys_diagnostics file
+change-2-never.pl
+in1 = ecosys_diagnostics        (this is the cesm2-le bgc output)
+in2 = ddonly			(these are the variables that we want to turn off)
+ou1 = ecosys_diagnostics-smyle  (new output list with only the smyle output
+
+Then add these variables by hand.  They are used for the pop.h.once. file
+
+3  VDC_BCK
+3  VVC_BCK
+
+
+!! ======================
+!! tavg files
+!!  https://jupyterhub.ucar.edu/dav/user/nanr/notebooks/ncar-python-tutorial/notebooks/find-pop-vars.ipynb
+!! ======================
+./coll	!! monthly (1)
+./colm	!! monthly (1)
+./colo	!! daily (2)
+
+
+
+

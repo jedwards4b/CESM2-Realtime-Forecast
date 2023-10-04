@@ -1,0 +1,50 @@
+#!/bin/csh 
+### set env variables
+module load ncl nco
+
+setenv CESM2_TOOLS_ROOT /glade/work/nanr/cesm_tags/CASE_tools/cesm2-smyle/
+
+# ...
+set syr = 2019
+set eyr = 2019
+
+@ ib = $syr
+@ ie = $eyr
+
+foreach year ( `seq $ib $ie` )
+foreach mon ( 08 )
+#foreach mon ( 02 05 08 11 )
+
+# case name counter
+set smbr =  31
+set embr =  40
+
+@ mb = $smbr
+@ me = $embr
+
+foreach mbr ( `seq $mb $me` )
+if ($mbr < 10) then
+        set CASE = b.e21.BSMYLE.f09_g17.${year}-${mon}.00${mbr}
+else
+        set CASE = b.e21.BSMYLE.f09_g17.${year}-${mon}.0${mbr}
+endif
+
+set CASEROOT = /glade/p/cesm/espwg/CESM2-SMYLE/cases/$CASE
+
+cd $CASEROOT
+#./xmlchange CONTINUE_RUN=TRUE
+
+# end in December 2022 (17 months)
+#./xmlchange STOP_N=17
+#./xmlchange STOP_OPTION=nmonths
+#./xmlchange RESUBMIT=0
+
+# end in December 2024 (24 months)
+./xmlchange STOP_N=24
+
+end             # member loop
+end             # member loop
+end             # member loop
+
+exit
+

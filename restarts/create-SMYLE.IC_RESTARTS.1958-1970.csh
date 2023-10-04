@@ -10,8 +10,8 @@ endif
 
 
 #foreach  ye9r ( 1954 1964 1974 1984 1994 2004 )
-set syr = 1970
-set eyr = 1970
+set syr = 1958
+set eyr = 1959
 
 @ ib = $syr
 @ ie = $eyr
@@ -51,8 +51,10 @@ set lndfname = ${lndcase}.clm2.r.${year}-${mon}-01-00000.nc
 set roffname = ${lndcase}.mosart.r.${year}-${mon}-01-00000.nc
 
 # directories
-set atmdir = /glade/p/cesm/espwg/CESM2-SMYLE/initial_conditions/cam/
-set lnddir = /glade/p/cesm/espwg/CESM2-SMYLE/initial_conditions/clm/${year}-${mon}-01-00000/
+#set atmdir = /glade/p/cesm/espwg/CESM2-SMYLE/initial_conditions/cam/
+#set lnddir = /glade/p/cesm/espwg/CESM2-SMYLE/initial_conditions/clm/${year}-${mon}-01-00000/
+set atmdir = /glade/campaign/cesm/development/espwg/SMYLE/initial_conditions/CAM_Regridded-JRA55/
+set lnddir = /glade/campaign/cesm/development/espwg/SMYLE/initial_conditions/CLM5_SMYLE-Trendy/rest/${year}-${mon}-01-00000/
 
 # rename atm, land IC files
 set atmfout = ${case}.cam.i.${year}-${mon}-01-00000.nc
@@ -85,7 +87,8 @@ set ocean_base_year = 306
 # atmyr 1958 = ocnyr 306
 @ offset = $first_rest_year - $ocean_base_year 
 @ ocnyr   = $year - $offset
-set ocndir = /glade/p/cesm/espwg/CESM2-SMYLE/initial_conditions/pop_cice/0${ocnyr}-${mon}-01-00000/
+#set ocndir = /glade/p/cesm/espwg/CESM2-SMYLE/initial_conditions/pop_cice/0${ocnyr}-${mon}-01-00000/
+set ocndir = /glade/campaign/cesm/development/espwg/SMYLE/initial_conditions/SMYLE-FOSI/rest/0${ocnyr}-${mon}-01-00000/
 set icefout = ${case}.cice.r.${year}-${mon}-01-00000.nc
 set lndfout = ${case}.clm2.r.${year}-${mon}-01-00000.nc
 set roffout = ${case}.mosart.r.${year}-${mon}-01-00000.nc
@@ -124,7 +127,8 @@ echo "$case.cice.r.$year-${mon}-01-00000.nc"  > ${icdir}/rpointer.ice
 echo "./$case.pop.ro.$year-${mon}-01-00000"   > ${icdir}/rpointer.ocn.ovf
 echo "$case.cam.r.$year-${mon}-01-00000.nc"   > ${icdir}/rpointer.atm
 echo "$case.cpl.r.$year-${mon}-01-00000.nc"   > ${icdir}/rpointer.drv
-echo "$case.clm2.r.$year-${mon}-01-00000.nc"  > ${icdir}/rpointer.clm
+#echo "$case.clm2.r.$year-${mon}-01-00000.nc"  > ${icdir}/rpointer.clm
+echo "$case.clm2.r.$year-${mon}-01-00000.nc"  > ${icdir}/rpointer.lnd
 echo "$case.mosart.r.$year-${mon}-01-00000.nc"   > ${icdir}/rpointer.rof
 echo "$case.pop.rh.ecosys.nyear1.$year-${mon}-01-00000.nc"   > ${icdir}/rpointer.ocn.tavg.5
 echo "$case.pop.rh.$year-${mon}-01-00000.nc"   > ${icdir}/rpointer.ocn.tavg

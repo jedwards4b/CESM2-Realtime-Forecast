@@ -1,0 +1,29 @@
+Hi Christine (cc Nan),
+
+Sorry for the delay in responding. I'm trying to finalize SMYLE output this week. I've added your suggested
+changes to the spreadsheet (check the "SMYLE Output Final" tab). I added TMQ, vIVT, uIVT to the 6-hourly
+ATM stream, and QRUNOFF to the daily LND stream. I don't have an entry for RTM, but hopefully Nan 
+can make a note of the QCHANR request. 
+
+I'm also trying to cull output where I can to make room for these high-frequency output requests.
+
+best,
+Steve
+
+On Tue, Dec 1, 2020 at 4:50 PM Christine Shields <shields@ucar.edu> wrote:
+Hey Steve!
+
+We just had a CGD-extremes meeting, and Laura mentioned that you are finalizing output for the SMLYE runs. 
+
+I was looking at the output spreadsheet and hoped that you could perhaps add a few more high frequency output variables (for atmospheric river analysis) for the atm,lnd, and rtm components. Is it too late?
+
+Variables to consider adding:
+ATM 6-hourly (or 3-hourly):  TMQ, vIVT, uIVT 	                            !! SMYLE:  6-hrly
+LND (same frequency as atm): QRUNOFF		                            !! SMYLE:  Daily average
+RTM (" " ): QCHANR (streamflow data which would be important for impacts).  !! SMYLE ... Daily will be added.
+
+The ATM variables are for tracking and the minimum frequency is 6-hrly. The land and rtm are for diagnostics... if need be, 
+these can be daily.  The vIVT and uIVT can be output as derived variables in cam_diagnostics..F90. Nan has the code to do so. 
+
+As these are community runs, I think there will be plenty of interest in AR analysis from these runs to justify adding them (not just me)...  
+

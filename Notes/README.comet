@@ -1,0 +1,8 @@
+export FCST_HOME="$HOME/work/cesm/CESM2-Realtime-Forecast"
+export CESM_ROOT="$HOME/work/cesm/cesm2.1.x/"
+export WORK="$HOME/work/cesm/CESM2-SMYLE"
+export SCRATCH="$HOME/work/cesm/scratch"
+export USECASE="cesm2smyle"
+export REFDIR="$HOME/work/cesm/inputdata/cesm2_init/"
+export POSTPROCESS_PATH="$HOME/work/cesm/CESM_postprocessing"
+export CAMI_RP_ROOT="$HOME/work/cesm/inputdata/atm/cam/RP"

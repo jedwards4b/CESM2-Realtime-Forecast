@@ -5,19 +5,26 @@ module load ncl nco
 setenv CESM2_TOOLS_ROOT /glade/work/nanr/cesm_tags/CASE_tools/cesm2-smyle/
 setenv ARCHDIR  /glade/scratch/$USER/SMYLE/archive/
 setenv TSERIES2  /glade/p/cesm/espwg/CESM2-SMYLE/timeseries
+setenv TSERIES2  /glade/campaign/cesm/development/espwg/SMYLE/archive
 #setenv TSERIES2  /glade/campaign/cesm/development/espwg/SMYLE/archive
 #setenv TSERIES2  /glade/campaign/cesm/development/espwg/SMYLE/archive/pre-1970
 
 # ...
-set syr = 2005
-set eyr = 2005
+set syr = 2019
+set eyr = 2019
+
+if ($syr > 2019) then
+echo " go to cesm2-realtime scripts"
+exit
+endif
 
 @ ib = $syr
 @ ie = $eyr
 
 foreach year ( `seq $ib $ie` )
 #foreach mon ( 11 )
-foreach mon ( 08 )
+#foreach mon ( 02 05 08 11)
+foreach mon ( 02 05 08 11)
 
 # case name counter
 set smbr =  1

@@ -1,0 +1,38 @@
+< 'bc_a4    -> /glade/work/buchholz/emis/tagged_emis/gfed/gfed.emis_bc_a4_0.9x1.25_mol_2018_2020_AUST_c20200912.nc',
+< 'bc_a4    -> /glade/work/buchholz/emis/tagged_emis/cmip6/ssp370/ssp370.emis_bc_a4_bb_0.9x1.25_mol_175001-210101_NOAUST_c20211001.nc',
+< 'DMS      -> /glade/work/buchholz/emis/tagged_emis/gfed/gfed.emis_DMS_0.9x1.25_mol_2018_2020_AUST_c20200912.nc',
+< 'DMS      -> /glade/work/buchholz/emis/tagged_emis/cmip6/ssp370/ssp370.emis_DMS_bb_0.9x1.25_mol_175001-210101_NOAUST_c20211001.nc',
+---
+> 'bc_a4    -> /glade/p/cesmdata/cseg/inputdata/atm/cam/chem/emis/emissions_ssp370-BB_smoothed/emissions-cmip6-ScenarioMIP_IAMC-AIM-ssp370-1-1_smoothed_bc_a4_bb_surface_mol_175001-210101_0.9x1.25_c20201016.nc',
+> 'DMS      -> /glade/p/cesmdata/cseg/inputdata/atm/cam/chem/emis/emissions_ssp370-BB_smoothed/emissions-cmip6-ScenarioMIP_IAMC-AIM-ssp370-1-1_smoothed_DMS_bb_surface_mol_175001-210101_0.9x1.25_c20201016.nc',
+
+< 'num_a1   -> /glade/work/buchholz/emis/tagged_emis/cmip6/ssp370/ssp370.emis_num_so4_a1_bb_0.9x1.25_mol_175001-210101_NOAUST_c20211001.nc',
+< 'num_a1   -> /glade/work/buchholz/emis/tagged_emis/gfed/gfed.emis_num_so4_a1_0.9x1.25_mol_2018_2020_AUST_c20200912.nc',
+---
+> 'num_a1   -> /glade/p/cesmdata/cseg/inputdata/atm/cam/chem/emis/emissions_ssp370-BB_smoothed/emissions-cmip6-ScenarioMIP_IAMC-AIM-ssp370-1-1_smoothed_num_so4_a1_bb_surface_mol_175001-210101_0.9x1.25_c20201016.nc',
+< 'num_a4   -> /glade/work/buchholz/emis/tagged_emis/gfed/gfed.emis_num_bc_a4_0.9x1.25_mol_2018_2020_AUST_c20200912.nc',
+< 'num_a4   -> /glade/work/buchholz/emis/tagged_emis/cmip6/ssp370/ssp370.emis_num_bc_a4_bb_0.9x1.25_mol_175001-210101_NOAUST_c20211001.nc',
+---
+> 'num_a4   -> /glade/p/cesmdata/cseg/inputdata/atm/cam/chem/emis/emissions_ssp370-BB_smoothed/emissions-cmip6-ScenarioMIP_IAMC-AIM-ssp370-1-1_smoothed_num_bc_a4_bb_surface_mol_175001-210101_0.9x1.25_c20201016.nc',
+< 'num_a4   -> /glade/work/buchholz/emis/tagged_emis/gfed/gfed.emis_num_pom_a4_0.9x1.25_mol_2018_2020_AUST_c20200912.nc',
+< 'num_a4   -> /glade/work/buchholz/emis/tagged_emis/cmip6/ssp370/ssp370.emis_num_pom_a4_bb_0.9x1.25_mol_175001-210101_NOAUST_c20211001.nc',
+< 'pom_a4   -> /glade/work/buchholz/emis/tagged_emis/cmip6/ssp370/ssp370.emis_pom_a4_bb_0.9x1.25_mol_175001-210101_NOAUST_c20211001.nc',
+< 'pom_a4   -> /glade/work/buchholz/emis/tagged_emis/gfed/gfed.emis_pom_a4_0.9x1.25_mol_2018_2020_AUST_c20200912.nc',
+---
+> 'num_a4   -> /glade/p/cesmdata/cseg/inputdata/atm/cam/chem/emis/emissions_ssp370-BB_smoothed/emissions-cmip6-ScenarioMIP_IAMC-AIM-ssp370-1-1_smoothed_num_pom_a4_bb_surface_mol_175001-210101_0.9x1.25_c20201016.nc',
+> 'pom_a4   -> /glade/p/cesmdata/cseg/inputdata/atm/cam/chem/emis/emissions_ssp370-BB_smoothed/emissions-cmip6-ScenarioMIP_IAMC-AIM-ssp370-1-1_smoothed_pom_a4_bb_surface_mol_175001-210101_0.9x1.25_c20201016.nc',
+
+< 'SO2      -> /glade/work/buchholz/emis/tagged_emis/cmip6/ssp370/ssp370.emis_SO2_bb_0.9x1.25_mol_175001-210101_NOAUST_c20211001.nc',
+< 'SO2      -> /glade/work/buchholz/emis/tagged_emis/gfed/gfed.emis_SO2_0.9x1.25_mol_2018_2020_AUST_c20200912.nc',
+---
+> 'SO2      -> /glade/p/cesmdata/cseg/inputdata/atm/cam/chem/emis/emissions_ssp370-BB_smoothed/emissions-cmip6-ScenarioMIP_IAMC-AIM-ssp370-1-1_smoothed_SO2_bb_surface_mol_175001-210101_0.9x1.25_c20201016.nc',
+
+< 'so4_a1   -> /glade/work/buchholz/emis/tagged_emis/gfed/gfed.emis_so4_a1_0.9x1.25_mol_2018_2020_AUST_c20200912.nc',
+< 'so4_a1   -> /glade/work/buchholz/emis/tagged_emis/cmip6/ssp370/ssp370.emis_so4_a1_bb_0.9x1.25_mol_175001-210101_NOAUST_c20211001.nc',
+---
+> 'so4_a1   -> /glade/p/cesmdata/cseg/inputdata/atm/cam/chem/emis/emissions_ssp370-BB_smoothed/emissions-cmip6-ScenarioMIP_IAMC-AIM-ssp370-1-1_smoothed_so4_a1_bb_surface_mol_175001-210101_0.9x1.25_c20201016.nc',
+
+< 'SOAG     -> /glade/work/buchholz/emis/tagged_emis/gfed/gfed.emis_SOAGx1.5_0.9x1.25_mol_2018_2020_AUST_c20200912.nc',
+< 'SOAG     -> /glade/work/buchholz/emis/tagged_emis/cmip6/ssp370/ssp370.emis_SOAGx1.5_bb_0.9x1.25_mol_175001-210101_NOAUST_c20211001.nc',
+---
+> 'SOAG     -> /glade/p/cesmdata/cseg/inputdata/atm/cam/chem/emis/emissions_ssp370-BB_smoothed/emissions-cmip6-ScenarioMIP_IAMC-AIM-ssp370-1-1_smoothed_SOAGx1.5_bb_surface_mol_175001-210101_0.9x1.25_c20201016.nc',

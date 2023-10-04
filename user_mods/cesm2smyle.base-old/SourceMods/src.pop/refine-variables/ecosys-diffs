@@ -1,0 +1,819 @@
+1a2,4
+> ALK_ALT_CO2_RESTORE_TEND : medium_average
+> ALK_ALT_CO2_RIV_FLUX : medium_average
+> ALK_ALT_CO2_zint_100m : never_average
+2a6,8
+> ALK_RESTORE_TEND : medium_average
+> ALK_RIV_FLUX : medium_average
+> ALK_zint_100m : never_average
+4a11
+> ATM_BLACK_CARBON_FLUX_CPL : medium_average
+5a13,16
+> ATM_COARSE_DUST_FLUX_CPL : medium_average
+> ATM_FINE_DUST_FLUX_CPL : medium_average
+> bSi_form : medium_average
+> bsiToSed : medium_average
+6a18
+> CaCO3_ALT_CO2_PROD : never_average
+10a23,24
+> CaCO3_form_zint_100m : medium_average
+> CaCO3_form_zint : medium_average, high_average
+12a27
+> CaCO3_PROD_zint : medium_average
+14a30,31
+> CaCO3_REMIN_zint : medium_average
+> calcToFloor : never_average
+15a33
+> calcToSed : medium_average
+25a44,46
+> DIA_IMPVF_ALK : never_average
+> DIA_IMPVF_diatChl : never_average
+> DIA_IMPVF_diatC : never_average
+26a48,51
+> DIA_IMPVF_diatP : never_average
+> DIA_IMPVF_diatSi : never_average
+> DIA_IMPVF_diazChl : never_average
+> DIA_IMPVF_diazC : never_average
+27a53
+> DIA_IMPVF_diazP : never_average
+31a58,61
+> DIA_IMPVF_DON : never_average
+> DIA_IMPVF_DONr : never_average
+> DIA_IMPVF_DOP : never_average
+> DIA_IMPVF_DOPr : never_average
+32a63,65
+> DIA_IMPVF_Lig : never_average
+> DIA_IMPVF_NH4 : never_average
+> DIA_IMPVF_NO3 : never_average
+33a67,68
+> DIA_IMPVF_PO4 : medium_average
+> DIA_IMPVF_SiO3 : never_average
+34a70,71
+> DIA_IMPVF_spChl : never_average
+> DIA_IMPVF_spC : never_average
+35a73,78
+> DIA_IMPVF_spP : never_average
+> DIA_IMPVF_zooC : never_average
+> diat_agg : medium_average, midhigh_average
+> diat_agg_zint_100m : medium_average
+> diat_agg_zint : medium_average
+> diat_bSi_form : never_average
+36a80,82
+> diatChl_RESTORE_TEND : never_average
+> diatChl_SURF : high_average
+> diatChl_zint_100m : never_average
+37a84
+> diatC_RESTORE_TEND : never_average
+39a87
+> diat_Fe_lim_surf : medium_average
+40a89,90
+> diatFe_RESTORE_TEND : never_average
+> diatFe_zint_100m : never_average
+41a92,101
+> diat_light_lim_surf : medium_average
+> diat_loss_doc : never_average
+> diat_loss_doc_zint_100m : medium_average
+> diat_loss_doc_zint : medium_average
+> diat_loss : midhigh_average
+> diat_loss_poc : never_average
+> diat_loss_poc_zint_100m : medium_average
+> diat_loss_poc_zint : medium_average
+> diat_loss_zint_100m : medium_average
+> diat_loss_zint : medium_average
+42a103
+> diat_N_lim_surf : medium_average
+43a105
+> diat_P_lim_surf : medium_average
+44a107,109
+> diatP_RESTORE_TEND : never_average
+> diatP_zint_100m : never_average
+> diat_Qp : medium_average
+46a112,117
+> diat_SiO3_lim_surf : medium_average
+> diatSi_RESTORE_TEND : never_average
+> diatSi_zint_100m : never_average
+> diaz_agg : medium_average, midhigh_average
+> diaz_agg_zint_100m : medium_average
+> diaz_agg_zint : medium_average
+47a119,121
+> diazChl_RESTORE_TEND : never_average
+> diazChl_SURF : high_average
+> diazChl_zint_100m : never_average
+48a123
+> diazC_RESTORE_TEND : never_average
+50a126
+> diaz_Fe_lim_surf : medium_average
+51a128,129
+> diazFe_RESTORE_TEND : never_average
+> diazFe_zint_100m : never_average
+52a131,140
+> diaz_light_lim_surf : medium_average
+> diaz_loss_doc : never_average
+> diaz_loss_doc_zint_100m : medium_average
+> diaz_loss_doc_zint : medium_average
+> diaz_loss : midhigh_average
+> diaz_loss_poc : never_average
+> diaz_loss_poc_zint_100m : medium_average
+> diaz_loss_poc_zint : medium_average
+> diaz_loss_zint_100m : medium_average
+> diaz_loss_zint : medium_average
+53a142,143
+> diaz_N_lim_Cweight_avg_100m : never_average
+> diaz_N_lim_surf : never_average
+54a145
+> diaz_P_lim_surf : medium_average
+55a147,149
+> diazP_RESTORE_TEND : never_average
+> diazP_zint_100m : never_average
+> diaz_Qp : medium_average
+56a151,153
+> DIC_ALT_CO2_RESTORE_TEND : never_average
+> DIC_ALT_CO2_RIV_FLUX : medium_average
+> DIC_ALT_CO2_zint_100m : never_average
+57a155,157
+> DIC_RESTORE_TEND : never_average
+> DIC_RIV_FLUX : medium_average
+> DIC_zint_100m : never_average
+58a159
+> DOC_prod : medium_average
+59a161
+> DOC_prod_zint : medium_average
+61a164,167
+> DOC_remin_zint : medium_average
+> DOC_RESTORE_TEND : never_average
+> DOC_RIV_FLUX : medium_average
+> DOCr : medium_average
+63a170,176
+> DOCr_remin_zint : medium_average
+> DOCr_RESTORE_TEND : never_average
+> DOCr_RIV_FLUX : medium_average
+> DOCr_zint_100m : never_average
+> DOC_zint_100m : never_average
+> DON : medium_average
+> DON_prod : medium_average
+64a178,180
+> DON_RESTORE_TEND : never_average
+> DON_RIV_FLUX : medium_average
+> DONr : medium_average
+65a182,200
+> DONr_RESTORE_TEND : never_average
+> DONr_RIV_FLUX : medium_average
+> DONr_zint_100m : never_average
+> DON_zint_100m : never_average
+> DOP_diat_uptake : medium_average
+> DOP_diaz_uptake : medium_average
+> DOP_loss_P_bal : never_average
+> DOP : medium_average
+> DOP_prod : medium_average
+> DOP_remin : medium_average
+> DOP_RESTORE_TEND : never_average
+> DOP_RIV_FLUX : medium_average
+> DOPr : medium_average
+> DOPr_remin : medium_average
+> DOPr_RESTORE_TEND : never_average
+> DOPr_RIV_FLUX : medium_average
+> DOPr_zint_100m : never_average
+> DOP_sp_uptake : medium_average
+> DOP_zint_100m : never_average
+67a203,206
+> dust_FLUX_IN : medium_average
+> DUST_FLUX : never_average
+> dust_REMIN : medium_average
+> dustToSed : medium_average
+70a210
+> Fefree : medium_average
+71a212,217
+> Fe_RESTORE_TEND : never_average
+> Fe_RIV_FLUX : medium_average
+> Fe_scavenge : medium_average
+> Fe_scavenge_rate : medium_average
+> FESEDFLUX : never_average
+> Fe_zint_100m : never_average
+74a221
+> FvICE_ALK : medium_average
+77a225
+> FvPER_ALK : medium_average
+80a229
+> graze_diat_doc : never_average
+81a231,233
+> graze_diat_doc_zint : medium_average
+> graze_diat : midhigh_average
+> graze_diat_poc : never_average
+82a235
+> graze_diat_poc_zint : medium_average
+83a237,238
+> graze_diat_zint : medium_average
+> graze_diat_zoo : never_average
+84a240,241
+> graze_diat_zoo_zint : medium_average
+> graze_diaz_doc : never_average
+85a243,245
+> graze_diaz_doc_zint : medium_average
+> graze_diaz : midhigh_average
+> graze_diaz_poc : never_average
+86a247
+> graze_diaz_poc_zint : medium_average
+87a249,250
+> graze_diaz_zint : medium_average
+> graze_diaz_zoo : never_average
+88a252,253
+> graze_diaz_zoo_zint : medium_average
+> graze_sp_doc : never_average
+89a255,257
+> graze_sp_doc_zint : medium_average
+> graze_sp : midhigh_average
+> graze_sp_poc : never_average
+90a259
+> graze_sp_poc_zint : medium_average
+91a261,262
+> graze_sp_zint : medium_average
+> graze_sp_zoo : never_average
+92a264,276
+> graze_sp_zoo_zint : medium_average
+> graze_zoo_doc : never_average
+> graze_zoo_doc_zint_100m : never_average
+> graze_zoo_doc_zint : never_average
+> graze_zoo : never_average
+> graze_zoo_poc : never_average
+> graze_zoo_poc_zint_100m : never_average
+> graze_zoo_poc_zint : never_average
+> graze_zoo_zint_100m : never_average
+> graze_zoo_zint : never_average
+> graze_zoo_zoo : never_average
+> graze_zoo_zoo_zint_100m : never_average
+> graze_zoo_zoo_zint : never_average
+97a282,284
+> HDIFB_ALK : never_average
+> HDIFB_diatChl : never_average
+> HDIFB_diatC : never_average
+98a286,289
+> HDIFB_diatP : never_average
+> HDIFB_diatSi : never_average
+> HDIFB_diazChl : never_average
+> HDIFB_diazC : never_average
+99a291
+> HDIFB_diazP : never_average
+100a293
+> HDIFB_DIC : medium_average
+102a296,299
+> HDIFB_DON : never_average
+> HDIFB_DONr : never_average
+> HDIFB_DOP : never_average
+> HDIFB_DOPr : never_average
+103a301,303
+> HDIFB_Lig : never_average
+> HDIFB_NH4 : never_average
+> HDIFB_NO3 : never_average
+104a305,306
+> HDIFB_PO4 : medium_average
+> HDIFB_SiO3 : never_average
+105a308,309
+> HDIFB_spChl : never_average
+> HDIFB_spC : never_average
+106a311,312
+> HDIFB_spP : never_average
+> HDIFB_zooC : never_average
+107a314,316
+> HDIFE_ALK : never_average
+> HDIFE_diatChl : never_average
+> HDIFE_diatC : never_average
+108a318,321
+> HDIFE_diatP : never_average
+> HDIFE_diatSi : never_average
+> HDIFE_diazChl : never_average
+> HDIFE_diazC : never_average
+109a323
+> HDIFE_diazP : never_average
+110a325
+> HDIFE_DIC : medium_average
+112a328,331
+> HDIFE_DON : never_average
+> HDIFE_DONr : never_average
+> HDIFE_DOP : never_average
+> HDIFE_DOPr : never_average
+113a333,335
+> HDIFE_Lig : never_average
+> HDIFE_NH4 : never_average
+> HDIFE_NO3 : never_average
+114a337,338
+> HDIFE_PO4 : medium_average
+> HDIFE_SiO3 : never_average
+115a340,341
+> HDIFE_spChl : never_average
+> HDIFE_spC : never_average
+116a343,344
+> HDIFE_spP : never_average
+> HDIFE_zooC : never_average
+117a346,348
+> HDIFN_ALK : never_average
+> HDIFN_diatChl : never_average
+> HDIFN_diatC : never_average
+118a350,353
+> HDIFN_diatP : never_average
+> HDIFN_diatSi : never_average
+> HDIFN_diazChl : never_average
+> HDIFN_diazC : never_average
+119a355
+> HDIFN_diazP : never_average
+120a357
+> HDIFN_DIC : medium_average
+122a360,363
+> HDIFN_DON : never_average
+> HDIFN_DONr : never_average
+> HDIFN_DOP : never_average
+> HDIFN_DOPr : never_average
+123a365,367
+> HDIFN_Lig : never_average
+> HDIFN_NH4 : never_average
+> HDIFN_NO3 : never_average
+124a369,370
+> HDIFN_PO4 : medium_average
+> HDIFN_SiO3 : never_average
+125a372,373
+> HDIFN_spChl : never_average
+> HDIFN_spC : never_average
+126a375,377
+> HDIFN_spP : never_average
+> HDIFN_zooC : never_average
+> insitu_temp : medium_average
+129a381,382
+> J_diatChl : never_average
+> J_diatC : never_average
+130a384,387
+> J_diatP : never_average
+> J_diatSi : never_average
+> J_diazChl : never_average
+> J_diazC : never_average
+131a389
+> J_diazP : never_average
+133a392,397
+> J_DOC : never_average
+> J_DOCr : never_average
+> J_DON : never_average
+> J_DONr : never_average
+> J_DOP : never_average
+> J_DOPr : never_average
+135a400,402
+> Jint_100m_ALK : medium_average
+> Jint_100m_diatChl : never_average
+> Jint_100m_diatC : never_average
+136a404,407
+> Jint_100m_diatP : never_average
+> Jint_100m_diatSi : never_average
+> Jint_100m_diazChl : never_average
+> Jint_100m_diazC : never_average
+137a409
+> Jint_100m_diazP : never_average
+139a412,421
+> Jint_100m_DOC : medium_average
+> Jint_100m_DOCr : medium_average
+> Jint_100m_DON : never_average
+> Jint_100m_DONr : never_average
+> Jint_100m_DOP : never_average
+> Jint_100m_DOPr : never_average
+> Jint_100m_Fe : medium_average
+> Jint_100m_Lig : never_average
+> Jint_100m_NH4 : medium_average
+> Jint_100m_NO3 : medium_average
+140a423,424
+> Jint_100m_PO4 : medium_average
+> Jint_100m_SiO3 : medium_average
+141a426,427
+> Jint_100m_spChl : never_average
+> Jint_100m_spC : never_average
+142a429,430
+> Jint_100m_spP : never_average
+> Jint_100m_zooC : never_average
+143a432,435
+> Jint_ALK : never_average
+> Jint_Ctot : never_average
+> Jint_diatChl : never_average
+> Jint_diatC : never_average
+144a437,440
+> Jint_diatP : never_average
+> Jint_diatSi : never_average
+> Jint_diazChl : never_average
+> Jint_diazC : never_average
+145a442
+> Jint_diazP : never_average
+146a444,461
+> Jint_DIC : never_average
+> Jint_DOC : never_average
+> Jint_DOCr : never_average
+> Jint_DON : never_average
+> Jint_DONr : never_average
+> Jint_DOP : never_average
+> Jint_DOPr : never_average
+> Jint_Fe : never_average
+> Jint_Fetot : never_average
+> Jint_Lig : never_average
+> Jint_NH4 : never_average
+> Jint_NO3 : never_average
+> Jint_Ntot : never_average
+> Jint_O2 : never_average
+> Jint_PO4 : never_average
+> Jint_Ptot : never_average
+> Jint_SiO3 : never_average
+> Jint_Sitot : never_average
+147a463,464
+> Jint_spChl : never_average
+> Jint_spC : never_average
+148a466,468
+> Jint_spP : never_average
+> Jint_zooC : never_average
+> J_Lig : never_average
+150a471
+> J_O2 : never_average
+153a475,476
+> J_spChl : never_average
+> J_spC : never_average
+154a478,479
+> J_spP : never_average
+> J_zooC : never_average
+155a481,483
+> KPP_SRC_ALK : never_average
+> KPP_SRC_diatChl : never_average
+> KPP_SRC_diatC : never_average
+156a485,488
+> KPP_SRC_diatP : never_average
+> KPP_SRC_diatSi : never_average
+> KPP_SRC_diazChl : never_average
+> KPP_SRC_diazC : never_average
+157a490
+> KPP_SRC_diazP : never_average
+159a493,498
+> KPP_SRC_DOC : never_average
+> KPP_SRC_DOCr : never_average
+> KPP_SRC_DON : never_average
+> KPP_SRC_DONr : never_average
+> KPP_SRC_DOP : never_average
+> KPP_SRC_DOPr : never_average
+160a500,502
+> KPP_SRC_Lig : never_average
+> KPP_SRC_NH4 : never_average
+> KPP_SRC_NO3 : never_average
+161a504,505
+> KPP_SRC_PO4 : medium_average
+> KPP_SRC_SiO3 : never_average
+162a507,508
+> KPP_SRC_spChl : never_average
+> KPP_SRC_spC : never_average
+163a510,520
+> KPP_SRC_spP : never_average
+> KPP_SRC_zooC : never_average
+> Lig_deg : medium_average
+> Lig_loss : medium_average
+> Lig : medium_average
+> Lig_photochem : medium_average
+> Lig_prod : medium_average
+> Lig_RESTORE_TEND : never_average
+> Lig_scavenge : medium_average
+> Lig_zint_100m : never_average
+> Nfix : never_average
+164a522,525
+> NH4_RESTORE_TEND : never_average
+> NH4_zint_100m : never_average
+> NHx_SURFACE_EMIS : medium_average
+> NHy_FLUX : medium_average
+166a528,531
+> NO3_RESTORE_TEND : medium_average
+> NO3_RIV_FLUX : medium_average
+> NO3_zint_100m : never_average
+> NOx_FLUX : medium_average
+167a533
+> O2_CONSUMPTION_SCALEF : never_average
+169a536
+> O2_RESTORE_TEND : never_average
+170a538,541
+> O2_zint_100m : never_average
+> O2_ZMIN_DEPTH : medium_average
+> O2_ZMIN : medium_average
+> OtherRemin : never_average
+173a545
+> pfeToSed : medium_average
+177a550
+> photoC_diat : midhigh_average
+178a552,553
+> photoC_diat_zint : medium_average, high_average
+> photoC_diaz : midhigh_average
+179a555,562
+> photoC_diaz_zint : medium_average, high_average
+> photoC_NO3_diat : never_average
+> photoC_NO3_diat_zint : never_average
+> photoC_NO3_diaz : never_average
+> photoC_NO3_diaz_zint : never_average
+> photoC_NO3_sp : never_average
+> photoC_NO3_sp_zint : never_average
+> photoC_NO3_TOT : medium_average
+180a564,565
+> photoC_NO3_TOT_zint : medium_average
+> photoC_sp : midhigh_average
+181a567
+> photoC_sp_zint : medium_average, high_average
+183a570,585
+> photoC_TOT_zint : medium_average
+> photoFe_diat : medium_average
+> photoFe_diaz : medium_average
+> photoFe_sp : medium_average
+> photoNH4_diat : medium_average
+> photoNH4_diaz : medium_average
+> photoNH4_sp : medium_average
+> photoNO3_diat : medium_average
+> photoNO3_diaz : medium_average
+> photoNO3_sp : medium_average
+> P_iron_FLUX_100m : medium_average
+> P_iron_FLUX_IN : medium_average
+> P_iron_PROD : medium_average
+> P_iron_REMIN : medium_average
+> PO4_diat_uptake : medium_average
+> PO4_diaz_uptake : medium_average
+184a587,590
+> PO4_RESTORE_TEND : medium_average
+> PO4_RIV_FLUX : medium_average
+> PO4_sp_uptake : medium_average
+> PO4_zint_100m : never_average
+186a593
+> POC_hFLUX_IN : never_average
+188a596
+> POC_PROD_zint : medium_average
+190a599
+> POC_REMIN_DIC_zint : medium_average
+192a602,605
+> POC_REMIN_DOCr_zint : medium_average
+> POC_sFLUX_IN : never_average
+> pocToFloor : never_average
+> pocToSed : medium_average
+194a608
+> ponToSed : medium_average
+195a610,614
+> POP_FLUX_IN : medium_average
+> POP_PROD : medium_average
+> POP_REMIN_DOPr : medium_average
+> POP_REMIN_PO4 : medium_average
+> popToSed : medium_average
+196a616
+> PV_O2 : never_average
+197a618,620
+> RF_TEND_ALK : never_average
+> RF_TEND_diatChl : never_average
+> RF_TEND_diatC : never_average
+198a622,625
+> RF_TEND_diatP : never_average
+> RF_TEND_diatSi : never_average
+> RF_TEND_diazChl : never_average
+> RF_TEND_diazC : never_average
+199a627
+> RF_TEND_diazP : never_average
+203a632,635
+> RF_TEND_DON : never_average
+> RF_TEND_DONr : never_average
+> RF_TEND_DOP : never_average
+> RF_TEND_DOPr : never_average
+204a637,639
+> RF_TEND_Lig : never_average
+> RF_TEND_NH4 : never_average
+> RF_TEND_NO3 : never_average
+205a641,642
+> RF_TEND_PO4 : never_average
+> RF_TEND_SiO3 : never_average
+206a644,645
+> RF_TEND_spChl : never_average
+> RF_TEND_spC : never_average
+207a647,648
+> RF_TEND_spP : never_average
+> RF_TEND_zooC : never_average
+209a651,654
+> SEAICE_BLACK_CARBON_FLUX_CPL : medium_average
+> SEAICE_DUST_FLUX_CPL : medium_average
+> SedDenitrif : medium_average
+> SiO2_FLUX_100m : medium_average
+211a657
+> SiO2_REMIN : never_average
+212a659,667
+> SiO3_RESTORE_TEND : medium_average
+> SiO3_RIV_FLUX : medium_average
+> SiO3_zint_100m : never_average
+> sp_agg : medium_average, midhigh_average
+> sp_agg_zint_100m : medium_average
+> sp_agg_zint : medium_average
+> sp_CaCO3_form : never_average
+> sp_CaCO3_form_zint_100m : never_average
+> sp_CaCO3_form_zint : never_average
+213a669,676
+> spCaCO3_RESTORE_TEND : never_average
+> spCaCO3_zint_100m : high_average
+> spChl : medium_average, midhigh_average
+> spChl_RESTORE_TEND : never_average
+> spChl_SURF : high_average
+> spChl_zint_100m : never_average
+> spC : medium_average, midhigh_average
+> spC_RESTORE_TEND : never_average
+215a679
+> sp_Fe_lim_surf : medium_average
+216a681,682
+> spFe_RESTORE_TEND : never_average
+> spFe_zint_100m : never_average
+218a685
+> sp_loss_doc : never_average
+219a687,689
+> sp_loss_doc_zint : medium_average
+> sp_loss : midhigh_average
+> sp_loss_poc : never_average
+220a691
+> sp_loss_poc_zint : medium_average
+221a693
+> sp_loss_zint : medium_average
+222a695
+> sp_N_lim_surf : medium_average
+223a697,701
+> sp_P_lim_surf : medium_average
+> spP : medium_average
+> spP_RESTORE_TEND : never_average
+> spP_zint_100m : never_average
+> sp_Qp : medium_average
+224a703,705
+> STF_ALK : medium_average
+> STF_diatChl : never_average
+> STF_diatC : never_average
+225a707,710
+> STF_diatP : never_average
+> STF_diatSi : never_average
+> STF_diazChl : never_average
+> STF_diazC : never_average
+226a712
+> STF_diazP : never_average
+227a714,724
+> STF_DIC : never_average
+> STF_DOC : never_average
+> STF_DOCr : never_average
+> STF_DON : never_average
+> STF_DONr : never_average
+> STF_DOP : never_average
+> STF_DOPr : never_average
+> STF_Fe : never_average
+> STF_Lig : never_average
+> STF_NH4 : never_average
+> STF_NO3 : never_average
+228a726,727
+> STF_PO4 : never_average
+> STF_SiO3 : never_average
+229a729,730
+> STF_spChl : never_average
+> STF_spC : never_average
+230a732,733
+> STF_spP : never_average
+> STF_zooC : never_average
+231a735,737
+> TEND_ALK : never_average
+> TEND_diatChl : never_average
+> TEND_diatC : never_average
+232a739,742
+> TEND_diatP : never_average
+> TEND_diatSi : never_average
+> TEND_diazChl : never_average
+> TEND_diazC : never_average
+233a744
+> TEND_diazP : never_average
+237a749,752
+> TEND_DON : never_average
+> TEND_DONr : never_average
+> TEND_DOP : never_average
+> TEND_DOPr : never_average
+238a754,756
+> TEND_Lig : never_average
+> TEND_NH4 : never_average
+> TEND_NO3 : never_average
+239a758,759
+> TEND_PO4 : never_average
+> TEND_SiO3 : never_average
+240a761,762
+> TEND_spChl : never_average
+> TEND_spC : never_average
+241a764
+> TEND_spP : never_average
+243a767,768
+> tend_zint_100m_diatChl : never_average
+> tend_zint_100m_diatC : never_average
+244a770,773
+> tend_zint_100m_diatP : never_average
+> tend_zint_100m_diatSi : never_average
+> tend_zint_100m_diazChl : never_average
+> tend_zint_100m_diazC : never_average
+245a775
+> tend_zint_100m_diazP : never_average
+249a780,783
+> tend_zint_100m_DON : never_average
+> tend_zint_100m_DONr : never_average
+> tend_zint_100m_DOP : never_average
+> tend_zint_100m_DOPr : never_average
+250a785
+> tend_zint_100m_Lig : never_average
+256a792,793
+> tend_zint_100m_spChl : never_average
+> tend_zint_100m_spC : never_average
+257a795,797
+> tend_zint_100m_spP : never_average
+> tend_zint_100m_zooC : never_average
+> TEND_zooC : never_average
+258a799,801
+> UE_ALK : never_average
+> UE_diatChl : never_average
+> UE_diatC : never_average
+259a803,806
+> UE_diatP : never_average
+> UE_diatSi : never_average
+> UE_diazChl : never_average
+> UE_diazC : never_average
+260a808
+> UE_diazP : never_average
+264a813,816
+> UE_DON : never_average
+> UE_DONr : never_average
+> UE_DOP : never_average
+> UE_DOPr : never_average
+265a818,820
+> UE_Lig : never_average
+> UE_NH4 : never_average
+> UE_NO3 : never_average
+266a822,823
+> UE_PO4 : medium_average
+> UE_SiO3 : never_average
+267a825,826
+> UE_spChl : never_average
+> UE_spC : never_average
+268a828,829
+> UE_spP : never_average
+> UE_zooC : never_average
+269a831,833
+> VN_ALK : never_average
+> VN_diatChl : never_average
+> VN_diatC : never_average
+270a835,838
+> VN_diatP : never_average
+> VN_diatSi : never_average
+> VN_diazChl : never_average
+> VN_diazC : never_average
+271a840
+> VN_diazP : never_average
+275a845,848
+> VN_DON : never_average
+> VN_DONr : never_average
+> VN_DOP : never_average
+> VN_DOPr : never_average
+276a850,852
+> VN_Lig : never_average
+> VN_NH4 : never_average
+> VN_NO3 : never_average
+277a854,855
+> VN_PO4 : medium_average
+> VN_SiO3 : never_average
+278a857,858
+> VN_spChl : never_average
+> VN_spC : never_average
+279a860,861
+> VN_spP : never_average
+> VN_zooC : never_average
+280a863,865
+> WT_ALK : never_average
+> WT_diatChl : never_average
+> WT_diatC : never_average
+281a867,870
+> WT_diatP : never_average
+> WT_diatSi : never_average
+> WT_diazChl : never_average
+> WT_diazC : never_average
+282a872
+> WT_diazP : never_average
+286a877,880
+> WT_DON : never_average
+> WT_DONr : never_average
+> WT_DOP : never_average
+> WT_DOPr : never_average
+287a882,884
+> WT_Lig : never_average
+> WT_NH4 : never_average
+> WT_NO3 : never_average
+288a886,887
+> WT_PO4 : medium_average
+> WT_SiO3 : never_average
+289a889,890
+> WT_spChl : never_average
+> WT_spC : never_average
+290a892,900
+> WT_spP : never_average
+> WT_zooC : never_average
+> x_graze_zoo : never_average
+> x_graze_zoo_zint_100m : never_average
+> x_graze_zoo_zint : never_average
+> zooC : medium_average, midhigh_average
+> zooC_RESTORE_TEND : never_average
+> zooC_zint_100m : high_average
+> zoo_loss_doc : never_average
+291a902,904
+> zoo_loss_doc_zint : medium_average
+> zoo_loss : never_average
+> zoo_loss_poc : never_average
+292a906
+> zoo_loss_poc_zint : medium_average
+293a908
+> zoo_loss_zint : medium_average
