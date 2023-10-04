@@ -1,0 +1,24 @@
+CASE:  b.e21.BSMYLE.f09_g17.1978-02.009
+less /glade/scratch/nanr/SMYLE/b.e21.BSMYLE.f09_g17.1978-02.001/run.009/cesm.log.7591668.chadmin1.ib0.cheyenne.ucar.edu.210413-010557
+523: n:            5 aicen:   2.832757716563081E-003
+523: ice: Vertical thermo error
+523: ERROR: ice: Vertical thermo error
+
+
+!! Note - adding pertlim to get around "vertical ice thermal" error
+!! Also applying original random perturbation per Yaga's method.
+pertlim = 9.d-14
+
+
+CASE:  b.e21.BSMYLE.f09_g17.1986-05.001/run.001
+523: ice: Vertical thermo error
+523: ERROR: ice: Vertical thermo error
+!! Note - adding pertlim to get around "vertical ice thermal" error
+pertlim = 1.d-14
+
+
+CASE: b.e21.BSMYLE.f09_g17.2010-08.017
+523: ice: Vertical thermo error
+523: ERROR: ice: Vertical thermo error
+!! Note - adding pertlim to get around "vertical ice thermal" error
+pertlim = 17.d-14

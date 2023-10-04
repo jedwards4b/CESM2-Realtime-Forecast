@@ -1,0 +1,40 @@
+Hi Francis and Simone,
+
+I was wondering if you have ever come across a situation where CESM fails to read emission files that it has previously had no problem reading? We are trying to create a CAM simulation with SMYLE SSP370 setup, and add in GFED emissions over Australia. We are masking SSP370 fires over Australia and adding in the GFED emissions just over Australia (so there are two fire emission files for each species).
+
+The problem specifically occurs when including these files:
+ 'SO2      -> /glade/work/buchholz/emis/tagged_emis/cmip6/smoothed_ssp370/emissions-cmip6-ScenarioMIP_IAMC-AIM-ssp370-1-1_smoothed_SO2_bb_surface_mol_175001-210101_0.9x1.25_NOAUST_c20220116.nc',
+
+! 'so4_a1   -> /glade/work/buchholz/emis/tagged_emis/gfed/gfed.emis_so4_a1_0.9x1.25_mol_2018_2020_AUST_c20200912.nc',
+
+! 'so4_a1   -> /glade/work/buchholz/emis/tagged_emis/cmip6/smoothed_ssp370/emissions-cmip6-ScenarioMIP_IAMC-AIM-ssp370-1-1_smoothed_so4_a1_bb_surface_mol_175001-210101_0.9x1.25_NOAUST_c20220116.nc',
+
+i.e. when we comment them out all remaining emissions files are read, but when we include any one of the emission files above, CESM fails to read the last so4_a1 file, as well as the so4_a2 anthropogenic emissions file and all of the SOAG emission files.
+
+However, note the smoothed SSP370 so4_a1 and SO2 files work just fine if there are no GFED files to read in. These GFED files worked correctly in a similar experiment with SSP245.
+
+I can't seem to find anything wrong with the emission files, maybe I'm missing something. Do you have any suggestions/ideas? Is there a limit on the number of emission files CAM can read? Nan and I are both very confused.
+
+!!===================================
+
+I think you are exceeding the max number of emis files the code can handle.  
+
+Please try using the source mods I have in:
+/glade/scratch/fvitt/QPC6_cesm2.1.3_f19_emis_test01/SourceMods/src.cam
+
+
+
+!!===================================
+
+p.s., the answer from Francis would indicate that we shouldn't see this problem in the SF simulations.
+
+It was an issue with the number of emissions files, not the number of emission sources within a file.  We dynamically handle multiple sources within each file, so I don't believe that would be a problem.
+
+The reason that this makes me confident, is that I modified individual source species within the existing files and I didn't add any new files.   The issue came with the addition of more files in the namelist, which happened in the COVID-cvd-aufire runs and the SMYLE-AUFIRE runs.  I am not sure when we triggered the issue and will have to check the COVID-gfed and COVID-cvd only runs to know for sure.
+
+Nan
+
+
+That looks substantially better! Hopefully those anthropogenic-looking signal changes over Asia and Central/North Africa will cancel out with more members.
+
+What I suspect was happening is that because most of the so4_a2 and so4_a1 were not being read, there were large impacts on precipitation, which in turn impacts wet deposition of BC --> so BC was not being washed out of the atmosphere. (Slide 16 shows WD for POM was impacted, with more wet deposition in the SMYLE run compared to AUSFIRE https://docs.google.com/presentation/d/1z7FDt7ysSXADH7MDRAVrCN4uvm07Zh5O_Fg-P8cvLlQ/edit?usp=sharing).
