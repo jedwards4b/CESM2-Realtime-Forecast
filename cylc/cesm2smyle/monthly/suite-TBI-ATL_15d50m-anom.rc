@@ -1,7 +1,7 @@
 #!Jinja2
 
-{% set ensemble_start = 1%}
-{% set ensemble_end   = 6%}
+{% set ensemble_start = 7%}
+{% set ensemble_end   = 10%}
 [meta]
   title = CESM CYLC workflow for ensemble from cesm2smyle
 [cylc]
@@ -26,8 +26,8 @@
   # Change the run start and end dates here
     # initial cycle point = "1978-02-01"
     # final cycle point = "1978-02-01"
-    initial cycle point = "2019-02-01"
-    final cycle point = "2019-02-01"
+    initial cycle point = "2018-02-01"
+    final cycle point = "2018-02-01"
 
     # must start May 01, any year:
     # initial cycle point constraints = "0501T00"

@@ -4,7 +4,8 @@ module load ncl nco
 
 setenv CESM2_TOOLS_ROOT /glade/work/nanr/cesm_tags/CASE_tools/cesm2-smyle/
 setenv ARCHDIR  /glade/scratch/$USER/SMYLE/archive/
-setenv TSERIES2  /glade/campaign/cesm/development/espwg/SMYLE-PACEMAKER/archive
+setenv TSERIES2  /glade/scratch/sglanvil/timeseries/
+#setenv TSERIES2  /glade/campaign/cesm/development/espwg/SMYLE-PACEMAKER/archive
 #setenv TSERIES2  /glade/campaign/cesm/development/espwg/SMYLE/archive
 #setenv TSERIES2  /glade/campaign/cesm/development/espwg/SMYLE/archive/pre-1970
 

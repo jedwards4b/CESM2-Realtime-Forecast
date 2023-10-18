@@ -98,8 +98,9 @@ def per_run_case_updates(case, date, sdrestdir, user_mods_dir, rundir):
         safe_copy(usermod, caseroot)
 
     # remove redundancy in user_nl_pop file
-    if member == "001":
-        tbi_mod_pop(caseroot,date)
+    #if member == "001":
+        #tbi_mod_pop(caseroot,date)
+    tbi_mod_pop(caseroot,date)
 
     case.case_setup()
 

@@ -9,10 +9,10 @@ setenv TSERIES2  /glade/campaign/cesm/development/espwg/SMYLE-PACEMAKER/archive
 #setenv TSERIES2  /glade/campaign/cesm/development/espwg/SMYLE/archive/pre-1970
 
 # ...
-# set syr = 1978
-# set eyr = 2013
-set syr = 2014
-set eyr = 2019
+set syr = 1988
+#set syr = 2015
+set syr = 1978
+set eyr = 2010
 
 #if ($syr > 2019) then
 #echo " go to cesm2-realtime scripts"
@@ -29,22 +29,24 @@ foreach mon ( 02 )
 
 # case name counter
 set smbr =  1
-if ($year < 1988) then
-  set embr =  5
-else 
-  set embr =  6
-endif
+set embr =  10
 
 @ mb = $smbr
 @ me = $embr
 
 foreach mbr ( `seq $mb $me` )
 if ($mbr < 10) then
-        #set CASE = b.e21.BSMYLE.f09_g17.TBI-ATL_10d50m-anom.${year}-${mon}.00${mbr}
+        #set CASE = b.e21.BSMYLE.f09_g17.TBI-IND_10d50m-anom.${year}-${mon}.00${mbr}
+        #set CASE = b.e21.BSMYLE.f09_g17.TBI-IND_15d50m-anom.${year}-${mon}.00${mbr}
+        #set CASE = b.e21.BSMYLE.f09_g17.TBI-SOC_15d50m-anom.${year}-${mon}.00${mbr}
         set CASE = b.e21.BSMYLE.f09_g17.TBI-ATL_15d50m-anom.${year}-${mon}.00${mbr}
+        #set CASE = b.e21.BSMYLE.f09_g17.TBI-PAC_15d50m-anom.${year}-${mon}.00${mbr}
 else
-        #set CASE = b.e21.BSMYLE.f09_g17.TBI-ATL_10d50m-anom.${year}-${mon}.0${mbr}
+        #set CASE = b.e21.BSMYLE.f09_g17.TBI-IND_10d50m-anom.${year}-${mon}.0${mbr}
+        #set CASE = b.e21.BSMYLE.f09_g17.TBI-IND_15d50m-anom.${year}-${mon}.0${mbr}
+        #set CASE = b.e21.BSMYLE.f09_g17.TBI-SOC_15d50m-anom.${year}-${mon}.0${mbr}
         set CASE = b.e21.BSMYLE.f09_g17.TBI-ATL_15d50m-anom.${year}-${mon}.0${mbr}
+        #set CASE = b.e21.BSMYLE.f09_g17.TBI-PAC_15d50m-anom.${year}-${mon}.0${mbr}
 endif
 
 

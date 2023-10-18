@@ -9,12 +9,12 @@ setenv LOGSDIR  /glade/campaign/cesm/development/espwg/SMYLE-PACEMAKER/logs
 setenv RESTDIR  /glade/campaign/cesm/development/espwg/SMYLE-PACEMAKER/restarts
 setenv POPDDIR  /glade/campaign/cesm/development/espwg/SMYLE-PACEMAKER/popd
 
-set syr = 1981
-set eyr = 2018
+set syr = 1978
+set eyr = 2010
 
 #setenv ARCHSTEVE  /glade/scratch/yeager/SMYLE-PACEMAKER/archive/
-#setenv ARCHNANR  /glade/scratch/$USER/SMYLE-PACEMAKER/archive/
-setenv ARCHNANR  /glade/scratch/sglanvil/SMYLE-PACEMAKER/archive/
+setenv ARCHNANR  /glade/scratch/$USER/SMYLE-PACEMAKER/archive/
+#setenv ARCHNANR  /glade/scratch/sglanvil/SMYLE-PACEMAKER/archive/
 
 @ ib = $syr
 @ ie = $eyr
@@ -27,7 +27,7 @@ foreach mon ( 02 )
 
 # case name counter
 set smbr =  1
-set embr =  6
+set embr =  10
 
 @ mb = $smbr
 @ me = $embr
@@ -35,14 +35,16 @@ set embr =  6
 foreach mbr ( `seq $mb $me` )
 if ($mbr < 10) then
         #set CASE = b.e21.BSMYLE.f09_g17.TBI-ATL_10d50m-anom.${year}-${mon}.00${mbr}
-        #set CASE = b.e21.BSMYLE.f09_g17.TBI-ATL_15d50m-anom.${year}-${mon}.00${mbr}
+        set CASE = b.e21.BSMYLE.f09_g17.TBI-ATL_15d50m-anom.${year}-${mon}.00${mbr}
+        #set CASE = b.e21.BSMYLE.f09_g17.TBI-SOC_15d50m-anom.${year}-${mon}.00${mbr}
         #set CASE = b.e21.BSMYLE.f09_g17.TBI-IND_15d50m-anom.${year}-${mon}.00${mbr}
-        set CASE = b.e21.BSMYLE.f09_g17.TBI-PAC_15d50m-anom.${year}-${mon}.00${mbr}
+        #set CASE = b.e21.BSMYLE.f09_g17.TBI-PAC_15d50m-anom.${year}-${mon}.00${mbr}
 else
         #set CASE = b.e21.BSMYLE.f09_g17.TBI-ATL_10d50m-anom.${year}-${mon}.0${mbr}
-        #set CASE = b.e21.BSMYLE.f09_g17.TBI-ATL_15d50m-anom.${year}-${mon}.0${mbr}
+        set CASE = b.e21.BSMYLE.f09_g17.TBI-ATL_15d50m-anom.${year}-${mon}.0${mbr}
+        #set CASE = b.e21.BSMYLE.f09_g17.TBI-SOC_15d50m-anom.${year}-${mon}.0${mbr}
         #set CASE = b.e21.BSMYLE.f09_g17.TBI-IND_15d50m-anom.${year}-${mon}.0${mbr}
-        set CASE = b.e21.BSMYLE.f09_g17.TBI-PAC_15d50m-anom.${year}-${mon}.0${mbr}
+        #set CASE = b.e21.BSMYLE.f09_g17.TBI-PAC_15d50m-anom.${year}-${mon}.0${mbr}
 endif
 
 set USE_ARCHDIR = $ARCHNANR
@@ -55,7 +57,7 @@ else
 endif
 if (! -e $LOGSDIR/$CASE.logs.tar) then
    cd $USE_ARCHDIR
-   tar -cvf $LOGSDIR/$CASE.logs.tar $CASE/logs/
+   tar -cvf $LOGSDIR/$CASE.logs.tar $CASE/logs/*.gz
 else
    echo "logs done"
 endif
