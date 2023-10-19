@@ -44,28 +44,27 @@ def parse_command_line(args, description):
 
     return date.strftime("%Y-%m-%d")
 
-def get_ocn_src_path(src_root, date, count=0):
-    oyr = int(date[:4]) - 1749
-    odate = "{:04d}".format(oyr)+date[4:]
-    src_dir_path = os.path.join(src_root,"cesm","development","cross-wg","S2S","CESM2","OCEANIC")
-    src_path = os.path.join(src_dir_path, "{}-00000".format(odate))
-    if os.path.isdir(src_path):
-        return(src_path)
-    if count > 30:
-        print("No suitable ocean restart file found")
-        return None
-    ndate = datetime.strptime(date, '%Y-%m-%d') - timedelta(days=1)
-    return(get_ocn_src_path(src_root, ndate.strftime("%Y-%m-%d"), count=count+1))
+#def get_ocn_src_path(src_root, date, count=0):
+#    oyr = int(date[:4]) - 1749
+#    odate = "{:04d}".format(oyr)+date[4:]
+#    src_dir_path = os.path.join(src_root,"cesm","development","cross-wg","S2S","CESM2","OCEANIC")
+#    src_path = os.path.join(src_dir_path, "{}-00000".format(odate))
+#    if os.path.isdir(src_path):
+#        return(src_path)
+#    if count > 30:
+#        print("No suitable ocean restart file found")
+#        return None
+#    ndate = datetime.strptime(date, '%Y-%m-%d') - timedelta(days=1)
+#    return(get_ocn_src_path(src_root, ndate.strftime("%Y-%m-%d"), count=count+1))
 
 
 
 def get_data_from_campaignstore(date):
 
     source_root_local = "/glade/campaign"
-    source_path = 'cesm/development/cross-wg/S2S/CESM2/OCEANIC/{date}-00000/'.format(date=date)
-
-    source_path = get_ocn_src_path(source_root_local, date)
-
+#    source_path = 'cesm/development/cross-wg/S2S/CESM2/OCEANIC/{date}-00000/'.format(date=date)
+#    source_path = get_ocn_src_path(source_root_local, date)
+    source_path = 'cesm/development/cross-wg/S2S/SDnudgedOcn/rest/{date}-00000/'.format(date=date)
     dest_path = os.path.join(os.getenv("SCRATCH"),"cesm2cam6","Ocean","rest","{}".format(date))
 
 
@@ -99,6 +98,10 @@ lnd_source_path)))
         newfile = lndfile.replace("I2000Clm50BgcCrop.002run",refname)
         print("Renaming {} to {}".format(lndfile,newfile))
         os.rename(os.path.join(dest_path,lndfile), os.path.join(dest_path,newfile))
+    for ocnfile in glob.iglob(dest_path+"b.e21.BWHIST.SD*"):
+        newfile = ocnfile.replace("b.e21.BWHIST.SD.f09_g17.002.nudgedOcn",refname)
+        print("Renaming {} to {}".format(ocnfile,newfile))
+        os.rename(os.path.join(dest_path,ocnfile), os.path.join(dest_path,newfile))
 
 
     cam_source_path = "/glade/campaign/cesm/development/cross-wg/S2S/CESM2/CAMI/CFSv2/"

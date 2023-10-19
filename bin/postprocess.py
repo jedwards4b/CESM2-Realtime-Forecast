@@ -121,7 +121,7 @@ def _main_func(description):
     date, member, sendtoftp, sendtoglobus = parse_command_line(sys.argv, description)
 
     basemonth = date[5:7]
-    baseroot = os.getenv("WORK")
+    baseroot = os.getenv("FCST_WORK")
     basecasename = "cesm2cam6"
     ftproot = " jedwards@thorodin.cgd.ucar.edu:/ftp/pub/jedwards/" + basecasename
 
@@ -136,7 +136,6 @@ def _main_func(description):
         print("Running postprocessing for member {} on date {}".format(curmem, date))
         os.environ["CYLC_TASK_PARAM_member"] = "{0:02d}".format(curmem)
         caseroot = os.path.join(baseroot,basecasename+"."+basemonth+".{0:02d}".format(curmem))
-
         with Case(caseroot, read_only=True) as case:
             dout_s_root = case.get_value("DOUT_S_ROOT")
             dout_s_root = dout_s_root[:-13] + date + ".{0:02d}".format(curmem)
@@ -159,7 +158,6 @@ def _main_func(description):
                     else:
                         newfile = _file.replace("scratch","p/datashare")
 
-                    print(f"newfile is {newfile}")
                     if not os.path.isdir(os.path.dirname(newfile)):
                         try:
                             os.makedirs(os.path.dirname(newfile))

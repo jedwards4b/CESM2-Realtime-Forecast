@@ -7,3 +7,10 @@ bin/pp.test.*
 bin/pp.test~
 cylc/#month_wrapper.nc#
 ecflow/*.log
+ecflow/cesm2cam6/*.job*
+ecflow/cesm2cam6/run_family/*.job*
+ecflow/cesm2cam6/run_family/run_member[1234567890][1234567890].ecf
+ecflow/cesm2cam6/run_family/*[1234567890]
+ecflow/cesm2cam6/postprocess_family/*.job*
+ecflow/cesm2cam6/postprocess_family/*[1234567890]
+ecflow/cesm2cam6/postprocess_family/postprocess_member[1234567890][1234567890].ecf
