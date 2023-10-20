@@ -42,6 +42,8 @@ def parse_command_line(args, description):
 
 def _main_func(description):
     # get the requested date or by default the latest date for which ocn data is available
+    os.environ["MODULEPATH"] = "/glade/u/apps/cseg/derecho/modules/23.06/Core" + \
+        os.pathsep + "/glade/u/apps/derecho/modules/environment"
     module("load"," cesmdev/1.0 ncarenv/23.06 ")
     module("load", "ecflow/5.9.0")
     module("list")
