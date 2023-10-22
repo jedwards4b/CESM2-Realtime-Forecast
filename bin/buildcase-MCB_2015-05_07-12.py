@@ -94,7 +94,7 @@ def per_run_case_updates(case, date, sdrestdir, user_mods_dir, rundir):
     case.set_value("RUN_REFDATE",date)
     case.set_value("RUN_STARTDATE",date)
     case.set_value("RUN_REFDIR",sdrestdir)
-    case.set_value("PROJECT","P06010014")
+    case.set_value("PROJECT","P93300313")
     case.set_value("OCN_TRACER_MODULES","iage cfc ecosys")
 #    dout_s_root = case.get_value("DOUT_S_ROOT")
 #    dout_s_root = os.path.join(os.path.dirname(dout_s_root),casename)
@@ -105,7 +105,7 @@ def per_run_case_updates(case, date, sdrestdir, user_mods_dir, rundir):
     sbasemonth = str(date[5:7])
     for usermod in glob.iglob(user_mods_dir+"/user*"):
         safe_copy(usermod, caseroot)
-    for srcmod in glob.iglob(user_mods_dir+"/SourceMods/src.cam/2015-2016_elNino-"+sbasemonth+"/*.F90"):
+    for srcmod in glob.iglob(user_mods_dir+"/SourceMods/src.cam/MCB_2015-05_07-12/*.F90"):
         safe_copy(srcmod, caseroot+"/SourceMods/src.cam/")
 
     case.case_setup()
@@ -135,7 +135,7 @@ def build_base_case(date, baseroot, basecasename, basemonth,res, ensemble_start,
         if not os.path.isdir(caseroot):
             case.create(os.path.basename(caseroot), cesmroot, compset, res,
                         run_unsupported=True, answer="r",walltime="12:00:00",
-                        user_mods_dir=user_mods_dir, pecount=pecount, project="P06010014", workflowid="timeseries")
+                        user_mods_dir=user_mods_dir, pecount=pecount, project="P93300313", workflowid="timeseries")
             # make sure that changing the casename will not affect these variables
             user = os.getenv("USER")
             sbasemonth = str(date[5:7])
@@ -224,7 +224,7 @@ def clone_base_case(date, caseroot, ensemble_start, ensemble_end, sdrestdir, use
 def _main_func(description):
     #date, basecasename = parse_command_line(sys.argv, description)
     date, model, ensemble_start, ensemble_end = parse_command_line(sys.argv, description)
-    basecasename = "b.e21.BSMYLE.f09_g17.MCB"
+    basecasename = "b.e21.BSMYLE.f09_g17.MCB_2015-05_07-12"
 
     # TODO make these input vars
 

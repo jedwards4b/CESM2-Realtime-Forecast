@@ -1,0 +1,25 @@
+Hi all,
+
+I have created the new MCB seeding masks and source mod files for the next round of simulations. This next set of 
+ensembles should all be May initialized for both the 15/16 and 97/98 El Niño.
+
+Nan-- see below for the source mod directories for each of the new experiments. The last two sets of numbers in the 
+directory name indicate the months MCB will be turned on in the first two years of the simulations. Since MCB is on for 
+parts of the first and second simulation years for the "All in" and "Last effort" experiments, I had to add an 
+extra if-statement in MCB_mask.F90. It might be worth running just 1 ensemble member for each of these 7 new experiments 
+just to make sure that the modification is working correctly before running all members, but I leave that decision to you. 
+Let me know if you have any questions!
+
+15/16 El Nino (3x10 ensemble members):
+"All in" (MCB on 06-2015 to 02-2016): /glade/work/jesswan/scripps/SMYLE-MCB/mask_CESM/SourceMods_ElNino_2015-2016/MCB_2015-05_06-02
+"Linearity hypothesis" (MCB on 07-2015 to 12-2015): /glade/work/jesswan/scripps/SMYLE-MCB/mask_CESM/SourceMods_ElNino_2015-2016/MCB_2015-05_07-12
+"Last effort" (MCB on 11-2015 to 02-2016): /glade/work/jesswan/scripps/SMYLE-MCB/mask_CESM/SourceMods_ElNino_2015-2016/MCB_2015-05_11-02
+
+97/98 El Nino (4x10 ensemble members):
+Default May initialization (MCB on 07-2015-09-2015): /glade/work/jesswan/scripps/SMYLE-MCB/mask_CESM/SourceMods_ElNino_1997-1998/MCB_1997-05
+"All in" (MCB on 06-1997 to 02-1998): /glade/work/jesswan/scripps/SMYLE-MCB/mask_CESM/SourceMods_ElNino_1997-1998/MCB_1997-05_06-02
+"Linearity hypothesis" (MCB on 07-1997 to 12-1997): /glade/work/jesswan/scripps/SMYLE-MCB/mask_CESM/SourceMods_ElNino_1997-1998/MCB_1997-05_07-12
+"Last effort" (MCB on 11-1997 to 02-1998): /glade/work/jesswan/scripps/SMYLE-MCB/mask_CESM/SourceMods_ElNino_1997-1998/MCB_1997-05_11-02
+
+Best,
+Jess
