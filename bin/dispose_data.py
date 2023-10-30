@@ -7,8 +7,8 @@ if cesmroot is None:
     raise SystemExit("ERROR: CESM_ROOT must be defined in environment")
 
 # This is needed for globus_sdk
-_LIBDIR=os.path.join(os.environ.get("HOME"),".local","lib","python3.6","site-packages")
-sys.path.append(_LIBDIR)
+#_LIBDIR=os.path.join(os.environ.get("HOME"),".local","lib","python3.6","site-packages")
+#sys.path.append(_LIBDIR)
 _LIBDIR = os.path.join(cesmroot,"cime","scripts","Tools")
 sys.path.append(_LIBDIR)
 _LIBDIR = os.path.join(cesmroot,"cime","scripts","lib")
@@ -21,7 +21,7 @@ from standard_script_setup import *
 from CIME.case             import Case
 from CIME.utils            import run_cmd
 from argparse              import RawTextHelpFormatter
-from globus_utils          import *
+#from globus_utils          import *
 
 def parse_command_line(args, description):
     parser = argparse.ArgumentParser(description=description,
@@ -67,9 +67,9 @@ def _main_func(description):
     basecasename = "cesm2cam6"
     basemonth = date[5:7]
     baseroot = os.getenv("WORK")
-    sdrestdir = os.path.join(scratch,"S2S_70LIC_globus","SDnudgedOcn","rest","{}".format(date))
-    if os.path.isdir(sdrestdir):
-        shutil.rmtree(sdrestdir)
+#    sdrestdir = os.path.join(scratch,"S2S_70LIC_globus","SDnudgedOcn","rest","{}".format(date))
+#    if os.path.isdir(sdrestdir):
+#        shutil.rmtree(sdrestdir)
     for i in range(0,10):
         member = "{0:02d}".format(i)
         caseroot = os.path.join(baseroot,basecasename+"."+basemonth+"."+member)
@@ -78,19 +78,19 @@ def _main_func(description):
             dout_s_root = case.get_value("DOUT_S_ROOT")
 
         # Clean up
-        if os.path.isdir(rundir):
-            for _file in glob.iglob(os.path.join(rundir,"*"+date+"*")):
-                os.unlink(os.path.join(rundir,_file))
+        #if os.path.isdir(rundir):
+        #    for _file in glob.iglob(os.path.join(rundir,"*"+date+"*")):
+        #        os.unlink(os.path.join(rundir,_file))
         # Clean up ocean init files
-        ocn_init_path = os.path.join(os.getenv("SCRATCH"),"cesm2cam6","Ocean","rest","{}".format(date))
-        if os.path.isdir(ocn_init_path):
-            shutil.rmtree(ocn_init_path)
+    ocn_init_path = os.path.join(os.getenv("SCRATCH"),"cesm2cam6","Ocean","rest","{}".format(date))
+    if os.path.isdir(ocn_init_path):
+        shutil.rmtree(ocn_init_path)
 
 #        for _dir in ("cpl","esp", "glc", "wav", "rest"):
 #            if os.path.isdir(os.path.join(dout_s_root,_dir)):
 #                shutil.rmtree(os.path.join(dout_s_root,_dir))
-        atmhistpath = os.path.join(dout_s_root,"atm","hist")
-        icehistpath = os.path.join(dout_s_root,"ice","hist")
+#        atmhistpath = os.path.join(dout_s_root,"atm","hist")
+#        icehistpath = os.path.join(dout_s_root,"ice","hist")
 #        if os.path.isdir(atmhistpath):
 #            for histfile in os.listdir(atmhistpath):
 #                if "h1" in histfile or "h4" in histfile:

@@ -7,8 +7,8 @@ if cesmroot is None:
     raise SystemExit("ERROR: CESM_ROOT must be defined in environment")
 
 # This is needed for globus_sdk
-_LIBDIR=os.path.join(os.environ.get("HOME"),".local","lib","python3.6","site-packages")
-sys.path.append(_LIBDIR)
+#_LIBDIR=os.path.join(os.environ.get("HOME"),".local","lib","python3.6","site-packages")
+#sys.path.append(_LIBDIR)
 _LIBDIR = os.path.join(cesmroot,"cime","scripts","Tools")
 sys.path.append(_LIBDIR)
 _LIBDIR = os.path.join(cesmroot,"cime","scripts","lib")
@@ -18,7 +18,7 @@ import glob
 from datetime import datetime, timedelta
 from standard_script_setup import *
 from argparse              import RawTextHelpFormatter
-from globus_utils          import *
+#from globus_utils          import *
 from CIME.utils            import safe_copy
 
 def parse_command_line(args, description):
@@ -49,6 +49,8 @@ def get_ocn_src_path(src_root, date, count=0):
     odate = "{:04d}".format(oyr)+date[4:]
     src_dir_path = os.path.join(src_root,"cesm","development","cross-wg","S2S","CESM2","OCEANIC")
     src_path = os.path.join(src_dir_path, "{}-00000".format(odate))
+    test = os.listdir(src_path)
+    print(test)
     if os.path.isdir(src_path):
         return(src_path)
     if count > 30:
@@ -75,7 +77,6 @@ def get_data_from_campaignstore(date):
 #    if(not os.path.exists(dest_path)):
     os.makedirs(dest_path)
     lnd_source_path = 'cesm/development/cross-wg/S2S/land/rest/{}-00000/'.format(date)
-
 
     if os.path.isdir(os.path.join(source_root_local,source_path)) and os.path.isdir(os.path.join(source_root_local,lnd_source_path)):
         source_path = os.path.join(source_root_local,source_path)

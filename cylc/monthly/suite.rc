@@ -55,7 +55,8 @@ cd ${FCST_HOME}/bin/
 """
     [[[job]]]
       batch system = pbs
-      batch submit command template = qsub -q share -l walltime=01:00:00 -A {{ account }} '%(job)s'
+      #batch submit command template = qsub -q share -l walltime=01:00:00 -A {{ account }} '%(job)s'
+      batch submit command template = qsub -q {{ run_queue }} -l walltime=02:00:00 -A {{ account }} '%(job)s'
       shell = /bin/bash
     [[[directives]]]
        -r = n

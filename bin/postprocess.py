@@ -21,7 +21,7 @@ from standard_script_setup import *
 from CIME.case             import Case
 from CIME.utils            import run_cmd
 from argparse              import RawTextHelpFormatter
-from globus_utils          import *
+#from globus_utils          import *
 
 def str2bool(v):
     if isinstance(v, bool):
@@ -99,7 +99,8 @@ def run_ncl_scripts():
 def send_data_to_campaignstore(source_path, filelist):
 #    dest_path = '/gpfs/csfs1/cesm/development/cross-wg/S2S/'
     # just run on casper and cp files
-    dest_path = '/glade/p/datashare/ssfcst/cesm2cam6v2/'
+    #dest_path = '/glade/p/datashare/espstoch/cesm2cam6v2/'
+    dest_path = '/glade/scratch/espstoch/campaign/cesm2cam6v2/'
     
     for _file in filelist:
         shutil.copy2(_file, dest_path)
@@ -150,13 +151,13 @@ def _main_func(description):
                 rsynccmd = "rsync -azvh --rsync-path=\"mkdir -p /ftp/pub/jedwards/"+basecasename+"/realtime && rsync\" {} {}/realtime/{}".format(_file, ftproot,os.path.basename(_file))
                 print("copying file {} to ftp server location {}".format(_file,ftproot+"/realtime/"))
                 run_cmd(rsynccmd,verbose=True)
-        if sendtoglobus:
-            for _file in outfiles:
-                if "p1" in _file:
-                    newfile = _file.replace("scratch","p/datashare")
-                    if not os.path.isdir(os.path.dirname(newfile)):
-                        os.makedirs(os.path.dirname(newfile))
-                    shutil.copy2(_file, _file.replace("scratch","p/datashare"))
+#        if sendtoglobus:
+#            for _file in outfiles:
+#                if "p1" in _file:
+#                    newfile = _file.replace("scratch","p/datashare")
+#                    if not os.path.isdir(os.path.dirname(newfile)):
+#                        os.makedirs(os.path.dirname(newfile))
+#                    shutil.copy2(_file, _file.replace("scratch","p/datashare"))
 
 
 
@@ -178,7 +179,7 @@ def _main_func(description):
         #Concatinate cice history into a single file
 
         fnameout = basecasename+"v2."+basemonth+"."+date+".{0:02d}".format(curmem)+".cice.hd.nc"
-        outdir = "/glade/scratch/ssfcst/cesm2cam6v2/ice"
+        outdir = "/glade/scratch/espstoch/cesm2cam6v2/ice"
 
         print("ICE PATH")
         print(outdir)
@@ -191,14 +192,14 @@ def _main_func(description):
         fnameout = fnameout.replace("cice.hd.nc","pop.h.nday1.nc")
 
         print("Copying ocn daily files into {}".format(fnameout))
-        outdir = "/glade/scratch/ssfcst/cesm2cam6v2/ocn"
+        outdir = "/glade/scratch/espstoch/cesm2cam6v2/ocn"
 
         for _file in glob.iglob(os.path.join(ocnhistpath,"*pop.h.*.nc")):
             newfname = os.path.basename(_file).replace("cesm2cam6.","cesm2cam6v2.")
             run_cmd("nccopy -4 -d 1 {}  {}".format(_file, os.path.join(outdir,newfname)), verbose=True, from_dir=ocnhistpath)
 
 
-        outdir = "/glade/scratch/ssfcst/cesm2cam6v2/6hourly"
+        outdir = "/glade/scratch/espstoch/cesm2cam6v2/6hourly"
 
         for _file in glob.iglob(os.path.join(atmhistpath,"*cam.h3*.nc")):
             print("Copying {} file into {}".format(_file,outdir))
@@ -206,7 +207,7 @@ def _main_func(description):
 
             run_cmd("nccopy -4 -d 1 -VU850,V850,TMQ,PRECT,uIVT,vIVT,IVT,PS,PSL,UBOT,VBOT,Z200,Z500,U10,lat,lon,date,time_bnds,time,gw,ndcur,nscur,nsteph {}  {}".format(_file, os.path.join(outdir,newfname)), verbose=True, from_dir=atmhistpath)
 
-        outdir = "/glade/scratch/ssfcst/cesm2cam6v2/daily"
+        outdir = "/glade/scratch/espstoch/cesm2cam6v2/daily"
 
         for _file in glob.iglob(os.path.join(atmhistpath,"*cam.h2*.nc")):
             print("Copying {} file into {}".format(_file, outdir))
@@ -216,7 +217,7 @@ def _main_func(description):
 #            print("Copying {} file into {}".format(_file, outdir))
 #            run_cmd("nccopy -4 -d 1 -VU10,TGCLDIWP,TGCLDLWP,lev,ilev,lat,lon,date,time_bnds,time,gw,ndcur,nscur,nsteph {} {}".format(_file, os.path.join(outdir,os.path.basename(_file))), verbose=True, from_dir=atmhistpath)
 
-        outdir = "/glade/scratch/ssfcst/cesm2cam6v2/lnd/"
+        outdir = "/glade/scratch/espstoch/cesm2cam6v2/lnd/"
 
         print("LND OUTDIR:")
         print(outdir)
