@@ -122,8 +122,8 @@ def per_run_case_updates(case, date, sdrestdir, user_mods_dir, rundir):
 
 
 def build_base_case(date, baseroot, basemonth,res, compset, overwrite,
-                    sdrestdir, user_mods_dir, pecount=None):
-    caseroot = os.path.join(baseroot,"cesm2cam6.{:02d}".format(basemonth)+".00")
+                    sdrestdir, workflow, user_mods_dir, pecount=None):
+    caseroot = os.path.join(baseroot,"{}.{:02d}".format(workflow,basemonth)+".00")
     if overwrite and os.path.isdir(caseroot):
         shutil.rmtree(caseroot)
 
@@ -214,12 +214,17 @@ def _main_func(description):
 
     sdrestdir = os.path.join(os.getenv("SCRATCH"),"cesm2cam6","Ocean","rest","{}".format(date))
 
-    user_mods_dir = os.path.join(s2sfcstroot,"user_mods","cesm2cam6")
+    workflow = os.getenv("CESM_WORKFLOW")
+    if not workflow:
+        print("ERROR: env variable CESM_WORKFLOW must be defined")
+        exit
+    
+    user_mods_dir = os.path.join(s2sfcstroot,"user_mods",workflow)
 
     # END TODO
     print("basemonth = {}".format(basemonth))
     caseroot = build_base_case(date, baseroot, basemonth, res,
-                            compset, overwrite, sdrestdir, user_mods_dir+'.base', pecount="S")
+                               compset, overwrite, sdrestdir, workflow, user_mods_dir+'.base', pecount="S")
     clone_base_case(date, caseroot, ensemble_start, ensemble_end, sdrestdir, user_mods_dir, overwrite)
 
 if __name__ == "__main__":

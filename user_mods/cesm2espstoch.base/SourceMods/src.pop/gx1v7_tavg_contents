@@ -1,0 +1,5 @@
+#  An integer [1,9] in the first column identifies the field's output stream number. 
+#  To deactivate a field, replace the output stream number with  # or ! 
+1  HMXL
+1  SST
+1  SSH

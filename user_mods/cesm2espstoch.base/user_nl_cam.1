@@ -1,0 +1,25 @@
+  do_circulation_diags  = .true. 
+  fv_nsplit=64
+  fv_nspltrac=64
+  fv_nspltvrm=64
+  avgflag_pertape = 'A','A', 'A', 'I', 'I'
+  nhtfrq = 0, -24, -24, -6, -24, 0, 0, 0
+  mfilt  = 1, 46, 46, 181, 46
+
+  history_cesm_forcing=.false.
+  history_scwaccm_forcing=.false.
+  history_amwg = .false.
+  history_waccm=.false.
+  empty_htapes = .true.
+  fincl1 = ' '
+  fincl2 = 'U','V','T','OMEGA','Z3','PS','PHIS','Q','UQ','VQ','RELHUM',
+  fincl3 = 'PHIS','PRECT','TS','FLUT','TREFHT','Q850','TREFHTMX:X','TREFHTMN:M','SHFLX','LHFLX','TAUX','TAUY','FSNS','ICEFRAC','CAPE','T100','T010','T030','T050','FLNT','FLNS','FSNT','FSNS','FLDS','FSDS','PRECC','PRECL','QREFHT','RHREFHT','RH600','PSL','PS','SNOWHICE','SNOWHLND','CLDTOT','TMQ','SST','LANDFRAC','OCNFRAC','UVzm','VTHzm','UWzm','WTHzm','TROP_P','TROP_T','Z500','THzm', 'Uzm', 'Vzm', 'Wzm','WSPDSRFMX:X', 'WSPDSRFAV', 'QFLX','U10','TGCLDIWP','TGCLDLWP'
+  fincl4 = 'Z200','Z500','U850','U200','V850','V200','OMEGA500','PSL','PS','U100','V100','U10','UBOT','VBOT','Z850','U010','V010','U030','V030','U050','V050','Z010','Z030','Z050'
+  fincl5 = 'RSTOCH_SPPT'
+  fincl6 = ' '
+  fincl7 = ' '
+  fincl8 = ' '
+
+&cam_stoch_nl
+ cam_stoch_sppt = 1
+ cam_stoch_sppt_seed = 1
