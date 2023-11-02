@@ -122,8 +122,8 @@ def _main_func(description):
     date, member, sendtoftp, sendtoglobus = parse_command_line(sys.argv, description)
 
     basemonth = date[5:7]
-    baseroot = os.getenv("WORK")
-    basecasename = "cesm2cam6"
+    baseroot = os.getenv("FCST_WORK")
+    basecasename = os.getenv("CESM_WORKFLOW")
     ftproot = " jedwards@thorodin.cgd.ucar.edu:/ftp/pub/jedwards/" + basecasename
 
     if member < 0:
@@ -136,10 +136,13 @@ def _main_func(description):
     for curmem in range(firstmember, lastmember+1):
         print("Running postprocessing for member {} on date {}".format(curmem, date))
         os.environ["CYLC_TASK_PARAM_member"] = "{0:02d}".format(curmem)
-        caseroot = os.path.join(baseroot,basecasename+"."+basemonth+".{0:02d}".format(curmem))
+        caseroot = os.path.join(baseroot,basecasename+"_"+date+".{0:02d}".format(curmem))
 
         with Case(caseroot, read_only=True) as case:
             dout_s_root = case.get_value("DOUT_S_ROOT")
+            if not dout_s_root:
+                print("Could not find DOUT_S_ROOT in case "+caseroot)
+                sys.exit(-2)
             dout_s_root = dout_s_root[:-13] + date + ".{0:02d}".format(curmem)
             os.environ["DOUT_S_ROOT"] = dout_s_root
         #print("HERE rundir {} dout_s_root {}".format(rundir,dout_s_root))

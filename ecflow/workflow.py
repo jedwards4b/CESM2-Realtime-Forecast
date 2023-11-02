@@ -51,7 +51,7 @@ def workflow(description):
     fcstdate = parse_command_line(sys.argv, __doc__)
     
     print(f"running for {fcstdate}")
-    fcsthome=os.path.realpath(os.path.join(os.path.dirname(__file__), os.pardir))
+    fcsthome=os.path.join(os.getenv("HOME"),workflow,"CESM2-Realtime-Forecast")
     fcstwork=os.path.join("/glade/work/",user,machine,"cases",workflow+"_"+fcstdate)
     
     print(f"workflow={workflow} cesmroot={cesmroot} fcsthome={fcsthome} fcstwork={fcstwork}")
