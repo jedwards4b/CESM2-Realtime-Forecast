@@ -70,12 +70,12 @@ def stage_refcase(rundir, refdir, date):
 
 def per_run_case_updates(case, date, sdrestdir, user_mods_dir, rundir):
     caseroot = case.get_value("CASEROOT")
-    basecasename = os.path.basename(caseroot)[:-6]
+    basecasename = os.path.basename(caseroot)[:-14]
     member = os.path.basename(caseroot)[-2:]
     mem = int(member)+1
 
     unlock_file("env_case.xml",caseroot=caseroot)
-    casename = basecasename+"."+date+"."+member
+    casename = basecasename+"_"+date+"."+member
     case.set_value("CASE",casename)
     case.flush()
     lock_file("env_case.xml",caseroot=caseroot)
@@ -123,7 +123,7 @@ def per_run_case_updates(case, date, sdrestdir, user_mods_dir, rundir):
 
 def build_base_case(date, baseroot, basemonth,res, compset, overwrite,
                     sdrestdir, workflow, user_mods_dir, pecount=None):
-    caseroot = os.path.join(baseroot,"{}.{:02d}".format(workflow,basemonth)+".00")
+    caseroot = os.path.join(baseroot,"{}_{}".format(workflow,date)+".00")
     if overwrite and os.path.isdir(caseroot):
         shutil.rmtree(caseroot)
 
@@ -143,6 +143,8 @@ def build_base_case(date, baseroot, basemonth,res, compset, overwrite,
             case.set_value("RUN_REFCASE", "b.e21.f09_g17")
             case.set_value("OCN_TRACER_MODULES","iage")
             case.set_value("OCN_CHL_TYPE","diagnostic")
+            case.set_value("NTASKS_WAV", 64)
+            case.set_value("NTASKS_GLC",1)
             # pelayout for cesm2cam6 case
 #            case.set_value("NTASKS_ATM",1152)
 #            case.set_value("NTASKS_CPL",1152)
@@ -199,7 +201,7 @@ def _main_func(description):
 
     basemonth = int(date[5:7])
     baseyear = int(date[0:4])
-    baseroot = os.getenv("WORK")
+    baseroot = os.getenv("FCST_WORK")
     res = "f09_g17"
 
     #if baseyear < 2014 or (baseyear == 2014 and basemonth < 11):
@@ -216,8 +218,7 @@ def _main_func(description):
 
     workflow = os.getenv("CESM_WORKFLOW")
     if not workflow:
-        print("ERROR: env variable CESM_WORKFLOW must be defined")
-        exit
+        raise ValueError("env variable CESM_WORKFLOW must be defined")
     
     user_mods_dir = os.path.join(s2sfcstroot,"user_mods",workflow)
 

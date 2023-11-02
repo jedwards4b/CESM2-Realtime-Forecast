@@ -29,7 +29,7 @@ def parse_command_line(args, description):
                         help="Specify a start Date")
     parser.add_argument("--ensemble-start",default=0,
                         help="Specify the first ensemble member")
-    parser.add_argument("--ensemble-end",default=10,
+    parser.add_argument("--ensemble-end",default=20,
                         help="Specify the last ensemble member")
 
     args = CIME.utils.parse_args_and_handle_standard_logging_options(args, parser)
@@ -116,10 +116,10 @@ def _main_func(description):
     date, ensemble_start, ensemble_end = parse_command_line(sys.argv, description)
 
     sdrestdir = os.path.join(os.getenv("SCRATCH"),"cesm2cam6","Ocean","rest","{}".format(date))
-    baserundir = os.path.join(os.getenv("SCRATCH"),"cesm2cam6."+date[5:7]+".00","run.00")
+    baserundir = os.path.join(os.getenv("SCRATCH"),"cesm2espstoch_"+date+".00","run.00")
     caminame = os.path.join(sdrestdir,"b.e21.f09_g17.cam.i.{date}-00000.nc".format(date=date))
     outroot = "b.e21.f09_g17.cam.i."
-
+    print(f"baserundir is {baserundir}")
     create_cam_ic_perturbed(caminame,ensemble_start, ensemble_end, date,baserundir, outroot=outroot)
 
 if __name__ == "__main__":

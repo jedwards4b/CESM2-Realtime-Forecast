@@ -50,7 +50,7 @@ def get_ocn_src_path(src_root, date, count=0):
     src_dir_path = os.path.join(src_root,"cesm","development","cross-wg","S2S","CESM2","OCEANIC")
     src_path = os.path.join(src_dir_path, "{}-00000".format(odate))
     test = os.listdir(src_path)
-    print(test)
+    #print(test)
     if os.path.isdir(src_path):
         return(src_path)
     if count > 30:
@@ -71,11 +71,12 @@ def get_data_from_campaignstore(date):
     dest_path = os.path.join(os.getenv("SCRATCH"),"cesm2cam6","Ocean","rest","{}".format(date))
 
 
-#    if os.path.exists(os.path.join(dest_path,"rpointer.ocn.restart")):
-#        print("Data already exists in {}".format(dest_path))
-#        return
-#    if(not os.path.exists(dest_path)):
-    os.makedirs(dest_path)
+    #    if os.path.exists(os.path.join(dest_path,"rpointer.ocn.restart")):
+    #        print("Data already exists in {}".format(dest_path))
+    #        return
+    if(not os.path.exists(dest_path)):
+        os.makedirs(dest_path)
+
     lnd_source_path = 'cesm/development/cross-wg/S2S/land/rest/{}-00000/'.format(date)
 
     if os.path.isdir(os.path.join(source_root_local,source_path)) and os.path.isdir(os.path.join(source_root_local,lnd_source_path)):

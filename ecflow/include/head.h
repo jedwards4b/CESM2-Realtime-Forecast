@@ -13,9 +13,9 @@ export ECF_RID=$$             # record the process id. Also used for zombie dete
 export FCST_HOME=%FCST_HOME%
 export FCST_WORK=%FCST_WORK%
 export CESM_ROOT=%CESM_ROOT%
-    
+export CESM_WORKFLOW=%CESM_WORKFLOW%
+  
 # export NO_ECF=1             # uncomment to run as a standalone task on the command line
- 
 # Optionally define the path where to find ecflow_client
 # make sure client and server use the *same* version.
 # Important when there are multiple versions of ecFlow

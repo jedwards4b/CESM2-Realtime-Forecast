@@ -32,7 +32,7 @@ def parse_command_line(args, description):
         date = datetime.today() - timedelta(days=1)
 
 
-    return date.strftime("%Y-%m-%d")
+    return date.strftime("%Y_%m_%d")
 
 def workflow(description):
     print("Creating suite definition")
@@ -42,37 +42,49 @@ def workflow(description):
     user = os.getenv("USER")
     expect(home and workflow and machine and user,f"Missing required env variable: home={home} CESM_WORKFLOW={workflow} machine={machine} user={user}")
     
-
-
     # user changes here
     ensemble_start = 0
     ensemble_end = 20
     project="P93300606"
 
-    #fcstdate="2023-09-25"
+    #fcstdate="2023_09_25"
     fcstdate = parse_command_line(sys.argv, __doc__)
     
     print(f"running for {fcstdate}")
     fcsthome=os.path.realpath(os.path.join(os.path.dirname(__file__), os.pardir))
-    fcstwork=os.path.join("/glade/work/",user,machine,"cases","cesm2espstoch")
+    fcstwork=os.path.join("/glade/work/",user,machine,"cases",workflow+"_"+fcstdate)
     
     print(f"workflow={workflow} cesmroot={cesmroot} fcsthome={fcsthome} fcstwork={fcstwork}")
-    
-    run_member = os.path.join(home,workflow,"run_family","run_member.ecf")
-    pp_member =  os.path.join(home,workflow,"postprocess_family","postprocess_member.ecf")
-    
+
+    workdir = os.path.join(home,workflow+"_"+fcstdate)
+    if os.path.isdir(workdir):
+        txt = input(f"Direcotry {workdir} exists, delete? (y or n) ")
+        if txt == 'y':
+            shutil.rmtree(workdir)
+        else:
+            sys.exit(-1)
+            
+    shutil.copytree(os.path.join(home,"template"), workdir)
+    workflow_date = workflow+"_"+fcstdate
+    run_member = os.path.join(home,workflow_date,"run_family","run_member.ecf")
+    pp_member =  os.path.join(home,workflow_date,"postprocess_family","postprocess_member.ecf")
+    getdata = os.path.join(home,workflow_date,"getdata.ecf")
+    buildcase = os.path.join(home,workflow_date,"buildcase.ecf")
+#    shutil.copy(getdata,getdata.replace(".ecf","_"+fcstdate+".ecf"))
+#    shutil.copy(buildcase,buildcase.replace(".ecf","_"+fcstdate+".ecf"))
     for i in range(ensemble_start, ensemble_end+1):
-        new_member = os.path.join(home,workflow,"run_family",f"run_member{i:02d}.ecf")
+        new_member = os.path.join(home,workflow_date,"run_family",f"run_member_{i:02d}.ecf")
         shutil.copy(run_member, new_member)
-        new_pp = os.path.join(home,workflow,"postprocess_family",f"postprocess_member{i:02d}.ecf")
+        new_pp = os.path.join(home,workflow_date,"postprocess_family",f"postprocess_member_{i:02d}.ecf")
         shutil.copy(pp_member, new_pp)
-    
-    defs = Defs(Suite(workflow,
+    logdir = os.path.join(home,workflow_date,"log")
+    os.mkdir(logdir)
+    defs = Defs(Suite(workflow_date,
                       Edit(PROJECT=project,
                            ECF_JOB_CMD="qsub %ECF_JOB% 1>%ECF_JOBOUT% 2>&1",
                            CESM_WORKFLOW=workflow,
                            CESM_ROOT=cesmroot,
-                           FCSTDATE=fcstdate,
+                           FCSTDATE=fcstdate.replace("_","-"),
                            ENSEMBLE_START=ensemble_start,
                            ENSEMBLE_END=ensemble_end,
                            FCST_HOME=fcsthome,
@@ -81,17 +93,17 @@ def workflow(description):
                            ECF_PORT=4238,
                            ECF_HOST="derecho6",
                            ECF_HOME=home,
-                           LOGDIR=os.path.join(home,"log")),
-                      Task("getdata"),
-                      Task("buildcase").add(
-                          Trigger("getdata == complete")),
+                           LOGDIR=logdir),
+                      Task(f"getdata"),
+                      Task(f"buildcase").add(
+                          Trigger("/"+workflow_date+"/getdata == complete")),
                       Family("run_family").add(
-                          [Task(f"run_member{i:02d}",
-                                Trigger("/"+workflow+"/buildcase == complete"))
+                          [Task(f"run_member_{i:02d}",
+                                Trigger("/"+workflow_date + "/buildcase == complete"))
                 for i in range(ensemble_start, ensemble_end+1)]),
                       Family("postprocess_family").add(
-                          [Task(f"postprocess_member{i:02d}",
-                                Trigger("/"+workflow+f"/run_family/run_member{i:02d} == complete"))
+                          [Task(f"postprocess_member_{i:02d}",
+                                Trigger("/" + workflow_date + f"/run_family/run_member_{i:02d} == complete"))
                            for i in range(ensemble_start, ensemble_end+1)]),
                       ))
 
@@ -100,8 +112,8 @@ def workflow(description):
     print("Checking job creation: .ecf -> .job0")
     print(defs.check_job_creation())
 
-    print("Saving definition to file 'cesm2espstoch.def'")
-    defs.save_as_defs("cesm2espstoch.def")
+    print(f"Saving definition to file '{workflow_date}.def'")
+    defs.save_as_defs(f"{workflow_date}.def")
 
 # To restore the definition from file 'test.def' we can use:
 # restored_defs = ecflow.Defs("test.def")
