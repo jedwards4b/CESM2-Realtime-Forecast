@@ -124,7 +124,8 @@ def build_base_case(date, baseroot, basemonth,res, compset, overwrite,
             case.set_value("GET_REFCASE",False)
             case.set_value("RUN_REFDIR",sdrestdir)
             case.set_value("RUN_REFCASE", "b.e21.f09_g17")
-            case.set_value("OCN_TRACER_MODULES","iage")
+#            case.set_value("OCN_TRACER_MODULES","iage")
+            case.set_value("OCN_TRACER_MODULES","")
             case.set_value("OCN_CHL_TYPE","diagnostic")
             # pelayout for cesm2cam6 case
 #            case.set_value("NTASKS_ATM",1152)

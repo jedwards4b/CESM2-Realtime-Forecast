@@ -30,10 +30,11 @@
 [runtime]
   [[get_data]]
     script = """
-module load ncl nco {{ model }}
+module use ~/modulefiles
+module load ncarenv ncl nco {{ model }}
 cd ${FCST_HOME}/bin/
 ./getinitialdata.py
-./generate_cami_ensemble.py  --ensemble-start {{ ensemble_start }} --ensemble-end {{ ensemble_end }}
+./generate_cami_ensemble.py  --ensemble-start {{ensemble_start}} --ensemble-end {{ensemble_end}}
 """
     [[[job]]]
       batch system = pbs
@@ -48,6 +49,7 @@ cd ${FCST_HOME}/bin/
 
   [[build_model]]
     script = """
+module use ~/modulefiles
 module load {{model}}
 export PROJECT={{account}}
 cd ${FCST_HOME}/bin/
@@ -55,7 +57,7 @@ cd ${FCST_HOME}/bin/
 """
     [[[job]]]
       batch system = pbs
-      batch submit command template = qsub -q share -l walltime=01:00:00 -A {{ account }} '%(job)s'
+      batch submit command template = qsub -q premium -l walltime=01:00:00 -A {{ account }} '%(job)s'
       shell = /bin/bash
     [[[directives]]]
        -r = n
@@ -66,6 +68,7 @@ cd ${FCST_HOME}/bin/
 
   [[st_archive<member>]]
     script = """
+    module use ~/modulefiles
     module load {{ model }}
 cd ${WORK}/{{ model }}.${CYLC_TASK_CYCLE_MONTH}.$(printf "%02d" ${CYLC_TASK_PARAM_member})
 ./case.submit --job case.st_archive
@@ -75,15 +78,22 @@ cd ${WORK}/{{ model }}.${CYLC_TASK_CYCLE_MONTH}.$(printf "%02d" ${CYLC_TASK_PARA
       inherit = postprocess_family
     [[postprocess_family]]
       script = """
-  source /etc/profile.d/modules.sh
-  module purge
+#!/usr/bin/env bash
+   source  /etc/profile.d/z00_modules.sh
+#  source  /glade/u/apps/casper/23.10/spack/opt/spack/lmod/8.7.24/gcc/7.5.0/m4jx/lmod/lmod/init/bash
+#  module use /glade/u/apps/casper/modules/23.10/Core
+#  module purge
+  module avail
+  module load ncarenv/23.09
   module use {{FCST_HOME}}/modulefiles
-  module load intel
-  module load python 
+  #module load intel/2023.2.1
+  #module load python 
   module load netcdf
   module load ncl 
   module load nco 
+  module use ~/modulefiles
   module load {{model}}
+  export ARCHIVEROOT=/glade/scratch/ssfcst/
   cd ${WORK}/{{ model }}.{{ MONTH }}.$(printf "%02d" ${CYLC_TASK_PARAM_member})
   CLA="--member ${CYLC_TASK_PARAM_member} "
   if [ "{{sendtoftp}}" == "True" ] ; then
@@ -106,6 +116,7 @@ cd ${WORK}/{{ model }}.${CYLC_TASK_CYCLE_MONTH}.$(printf "%02d" ${CYLC_TASK_PARA
     [[dispose]]
     # Globus process, must run on host
       script = """
+    module use ~/modulefiles
     module load {{ model }}
 ${FCST_HOME}/bin/dispose_data.py
 """
@@ -113,6 +124,7 @@ ${FCST_HOME}/bin/dispose_data.py
        inherit = run_family
     [[run_family]]
     script = """
+module use ~/modulefiles
 module load {{ model }}
 filename={{ model }}.${CYLC_TASK_CYCLE_MONTH}.$(printf "%02d" ${CYLC_TASK_PARAM_member})
 cd ${WORK}/${filename}

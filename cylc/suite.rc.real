@@ -16,7 +16,7 @@
 {% set sendtoftp      = true %}
 {% set sendtoglobus      = true %}
 {% set account = "CESM0020" %}
-{% set run_queue = "regular" %}
+{% set run_queue = "premium" %}
 
 # don't change anything below here
 
