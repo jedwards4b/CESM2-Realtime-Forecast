@@ -7,8 +7,8 @@ if cesmroot is None:
     raise SystemExit("ERROR: CESM_ROOT must be defined in environment")
 
 # This is needed for globus_sdk
-_LIBDIR=os.path.join(os.environ.get("HOME"),".local","lib","python3.6","site-packages")
-sys.path.append(_LIBDIR)
+#_LIBDIR=os.path.join(os.environ.get("HOME"),".local","lib","python3.6","site-packages")
+#sys.path.append(_LIBDIR)
 _LIBDIR = os.path.join(cesmroot,"cime","scripts","Tools")
 sys.path.append(_LIBDIR)
 _LIBDIR = os.path.join(cesmroot,"cime","scripts","lib")
@@ -21,7 +21,7 @@ from standard_script_setup import *
 from CIME.case             import Case
 from CIME.utils            import run_cmd
 from argparse              import RawTextHelpFormatter
-from globus_utils          import *
+#from globus_utils          import *
 
 def parse_command_line(args, description):
     parser = argparse.ArgumentParser(description=description,

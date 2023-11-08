@@ -6,7 +6,7 @@ begin
   ; combination
   ndpm = (/31,28,31,30,31,30,31,31,30,31,30,31/) ; no leap
   ; npath = "/glade/p/nsc/ncgd0042/ssfcst/cdas_data/"
-  npath = "/glade/scratch/ssfcst/cdas_data/"
+  npath = "/glade/scratch/espstoch/cdas_data/"
 
   fns = systemfunc("ls "+npath+"*das*."+yyyy+mm+"*.sfluxgrbf06.grib2")
 
@@ -57,7 +57,7 @@ begin
   ;------------------------------------------------------------------------------
 
 ;  nfd = "/glade/p/nsc/ncgd0042/ssfcst/forcing_files/"
-  nfd = "/glade/scratch/ssfcst/forcing_files/"
+  nfd = "/glade/scratch/espstoch/forcing_files/"
   nfpre = "clmforc.NCEPCFSv2.c2019.0.2d.576x1152."
 
 ; begin with first of 3 streams
@@ -131,7 +131,7 @@ begin
       ; beginning in 2011, grid changes to higher res. read in desired lat, lon
       ; for regridding
 ;      fnd = "/glade/p/nsc/ncgd0042/ssfcst/cdas_data/dims.nc"
-      fnd = "/glade/scratch/ssfcst/cdas_data/dims.nc"
+      fnd = "/glade/scratch/espstoch/cdas_data/dims.nc"
       datd = addfile(fnd,"r")
       latin = datd->lat
       lonin = datd->lon

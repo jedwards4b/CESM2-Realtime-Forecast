@@ -2,9 +2,9 @@
   fv_nsplit=32
   fv_nspltrac=32
   fv_nspltvrm=32
-  avgflag_pertape = 'A','A', 'A', 'I','I'
-  nhtfrq = 0, -24, -24, -6, -3, 0, 0, 0
-  mfilt  = 1, 46, 46, 181, 361
+  avgflag_pertape = 'A','A', 'A', 'I','I','I'
+  nhtfrq = 0, -24, -24, -6, -3, -24, 0, 0
+  mfilt  = 1, 46, 46, 181, 361, 46
 
   history_cesm_forcing=.false.
   history_scwaccm_forcing=.false.
@@ -19,3 +19,4 @@
   fincl6 = ' '
   fincl7 = ' '
   fincl8 = ' '
+

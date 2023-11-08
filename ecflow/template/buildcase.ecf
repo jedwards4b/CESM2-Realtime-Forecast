@@ -1,0 +1,10 @@
+%include <singlenode.h>
+%include <head.h>
+
+cd %FCST_HOME%/bin/
+
+module load %CESM_WORKFLOW%
+
+./buildcase.py --date %FCSTDATE% --ensemble-start %ENSEMBLE_START% --ensemble-end %ENSEMBLE_END%
+
+%include <tail.h>

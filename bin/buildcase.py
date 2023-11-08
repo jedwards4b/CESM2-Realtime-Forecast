@@ -11,6 +11,7 @@ sys.path.append(_LIBDIR)
 _LIBDIR = os.path.join(cesmroot,"cime","scripts","lib")
 sys.path.append(_LIBDIR)
 
+print(f"sys path is {sys.path}")
 import glob, shutil
 from datetime import timedelta, datetime
 import CIME.build as build
@@ -70,14 +71,17 @@ def stage_refcase(rundir, refdir, date):
 
 def per_run_case_updates(case, date, sdrestdir, user_mods_dir, rundir):
     caseroot = case.get_value("CASEROOT")
-    basecasename = os.path.basename(caseroot)[:-6]
+    basecasename = os.path.basename(caseroot)[:-14]
     member = os.path.basename(caseroot)[-2:]
+    mem = int(member)+1
 
     unlock_file("env_case.xml",caseroot=caseroot)
-    casename = basecasename+"."+date+"."+member
+    casename = basecasename+"_"+date+"."+member
     case.set_value("CASE",casename)
     case.flush()
     lock_file("env_case.xml",caseroot=caseroot)
+
+    seed = (mem+int(date[0:4]+date[5:7]+date[8:10]))*100
 
     case.set_value("CONTINUE_RUN",False)
     case.set_value("RUN_REFDATE",date)
@@ -93,7 +97,20 @@ def per_run_case_updates(case, date, sdrestdir, user_mods_dir, rundir):
     # restage user_nl files for each run
     for usermod in glob.iglob(user_mods_dir+"/user*"):
         safe_copy(usermod, caseroot)
+#   add seed changes here
 
+        #print("date abby = {}".format(seed))
+        with open("user_nl_cam") as fin, open("user_nl_cam.new","w") as fout:
+           input_lines = fin.readlines()
+           for line in input_lines:
+              if "cam_stoch_sppt_seed" in line:
+                 fout.write(" cam_stoch_sppt_seed = {}\n".format(seed))
+              else:
+                 fout.write(line)
+
+        os.rename("user_nl_cam.new", "user_nl_cam")
+
+#   end seed changes
     case.case_setup()
 
     stage_refcase(rundir, sdrestdir, date)
@@ -106,8 +123,8 @@ def per_run_case_updates(case, date, sdrestdir, user_mods_dir, rundir):
 
 
 def build_base_case(date, baseroot, basemonth,res, compset, overwrite,
-                    sdrestdir, user_mods_dir, pecount=None):
-    caseroot = os.path.join(baseroot,"cesm2cam6.{:02d}".format(basemonth)+".00")
+                    sdrestdir, workflow, user_mods_dir, pecount=None):
+    caseroot = os.path.join(baseroot,"{}_{}".format(workflow,date)+".00")
     if overwrite and os.path.isdir(caseroot):
         shutil.rmtree(caseroot)
 
@@ -115,7 +132,8 @@ def build_base_case(date, baseroot, basemonth,res, compset, overwrite,
         if not os.path.isdir(caseroot):
             case.create(os.path.basename(caseroot), cesmroot, compset, res,
                         run_unsupported=True, answer="r",walltime="04:00:00",
-                        user_mods_dir=user_mods_dir, pecount=pecount, output_root=os.getenv("SCRATCH"))
+                        user_mods_dir=user_mods_dir, pecount=pecount, 
+			output_root=os.getenv("SCRATCH"))
             # make sure that changing the casename will not affect these variables        
             case.set_value("EXEROOT",case.get_value("EXEROOT", resolved=True))
             case.set_value("RUNDIR",case.get_value("RUNDIR",resolved=True)+".00")
@@ -127,6 +145,8 @@ def build_base_case(date, baseroot, basemonth,res, compset, overwrite,
 #            case.set_value("OCN_TRACER_MODULES","iage")
             case.set_value("OCN_TRACER_MODULES","")
             case.set_value("OCN_CHL_TYPE","diagnostic")
+            case.set_value("NTASKS_WAV", 64)
+            case.set_value("NTASKS_GLC",1)
             # pelayout for cesm2cam6 case
 #            case.set_value("NTASKS_ATM",1152)
 #            case.set_value("NTASKS_CPL",1152)
@@ -183,10 +203,11 @@ def _main_func(description):
 
     basemonth = int(date[5:7])
     baseyear = int(date[0:4])
-    baseroot = os.getenv("WORK")
+    baseroot = os.getenv("FCST_WORK")
     res = "f09_g17"
 
-    if baseyear < 2014 or (baseyear == 2014 and basemonth < 11):
+    #if baseyear < 2014 or (baseyear == 2014 and basemonth < 11):
+    if baseyear < 2014 or (baseyear == 2014 and basemonth < 12):
         compset = "BHIST"
     else:
         compset = "BSSP585"
@@ -197,12 +218,16 @@ def _main_func(description):
 
     sdrestdir = os.path.join(os.getenv("SCRATCH"),"cesm2cam6","Ocean","rest","{}".format(date))
 
-    user_mods_dir = os.path.join(s2sfcstroot,"user_mods","cesm2cam6")
+    workflow = os.getenv("CESM_WORKFLOW")
+    if not workflow:
+        raise ValueError("env variable CESM_WORKFLOW must be defined")
+    
+    user_mods_dir = os.path.join(s2sfcstroot,"user_mods",workflow)
 
     # END TODO
     print("basemonth = {}".format(basemonth))
     caseroot = build_base_case(date, baseroot, basemonth, res,
-                            compset, overwrite, sdrestdir, user_mods_dir+'.base', pecount="S")
+                               compset, overwrite, sdrestdir, workflow, user_mods_dir+'.base', pecount="S")
     clone_base_case(date, caseroot, ensemble_start, ensemble_end, sdrestdir, user_mods_dir, overwrite)
 
 if __name__ == "__main__":

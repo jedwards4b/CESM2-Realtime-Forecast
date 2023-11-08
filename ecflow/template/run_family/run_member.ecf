@@ -1,0 +1,12 @@
+%include <multinode.h>
+%include <head.h>
+export MODULESHOME=/glade/u/apps/derecho/23.06/spack/opt/spack/lmod/8.7.20/gcc/7.5.0/pdxb/lmod/lmod
+source $MODULESHOME/init/bash
+module load %CESM_WORKFLOW%
+#month=$(echo %FCSTDATE% | cut -c 6,7)
+member=$(echo %TASK% | cut -c 12-)
+echo %FCSTDATE% $member
+cd %FCST_WORK%/%CESM_WORKFLOW%_%FCSTDATE%.$member
+./case.submit --job case.run
+
+%include <tail.h>
