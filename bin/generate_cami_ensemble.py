@@ -73,7 +73,7 @@ def get_rvals(date, ensemble_start, ensemble_end):
         with open(rvals_file,"w") as fd:
             fd.write("{}".format(newrvals))
         rvals = newrvals
-    print "LEN of rvals is {}".format(len(rvals))
+    print("LEN of rvals is {}".format(len(rvals)))
     return rvals
 
 def create_cam_ic_perturbed(original, ensemble_start, ensemble_end, date, baserundir, outroot="b.e21.f09_g17.cam.i.", factor=0.15):
@@ -98,7 +98,7 @@ def create_cam_ic_perturbed(original, ensemble_start, ensemble_end, date, baseru
 
     perturb_files = []
     for i in range(ensemble_start,ensemble_end, 2):
-        print "HERE rvals[{}] = {}".format(i//2,rvals[i//2])
+        print("HERE rvals[{}] = {}".format(i//2,rvals[i//2]))
         perturb_file = os.path.join("S2S_70LIC",
                                     "{}".format(month),
                                     "70Lwaccm6.cam.i.M{}.diff.{}.nc".format(month,rvals[i//2]))

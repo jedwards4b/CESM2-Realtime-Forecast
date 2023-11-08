@@ -9,7 +9,10 @@
   cycle point format = CCYY-MM-DD
   [[parameters]]
     # The number of ensemble members can be changed here
-    member = {{ ensemble_start }}..{{ ensemble_end }}
+    FCST_HOME = /glade/u/home/ssfcst/70Lwaccm6/CESM2-Realtime-Forecast
+    ensemble_start = 0
+    ensemble_end = 20
+    member = {{ensemble_start}}..{{ensemble_end}}
 
   [[environment]]
     CYLC_TASK_CYCLE_MONTH = {{MONTH}}
@@ -30,10 +33,11 @@
 [runtime]
   [[get_data]]
     script = """
+module use ~/modulefiles
 module load ncarenv ncl nco {{ model }}
 cd ${FCST_HOME}/bin/
 ./getinitialdata.py
-./generate_cami_ensemble.py  --ensemble-start {{ ensemble_start }} --ensemble-end {{ ensemble_end }}
+./generate_cami_ensemble.py --ensemble-start {{ensemble_start}} --ensemble-end {{ensemble_end}}
 """
     [[[job]]]
       batch system = pbs
@@ -42,19 +46,21 @@ cd ${FCST_HOME}/bin/
     [[[directives]]]
        -r = n
        -j = oe
-       -v = FCST_HOME=/glade/u/home/ssfcst/{{ model }}/CESM2-Realtime-Forcast
+       -v = FCST_HOME=/glade/u/home/ssfcst/70Lwaccm6/CESM2-Realtime-Forecast
        -S = /bin/bash
        -l = select=1:ncpus=18:ompthreads=18
 
   [[build_model]]
     script = """
-module load {{ model }}
+module use ~/modulefiles
+module load {{model}}
+export PROJECT={{account}}
 cd ${FCST_HOME}/bin/
-./buildcase.py
+./buildcase.py --ensemble-start {{ensemble_start}} --ensemble-end {{ensemble_end}}
 """
     [[[job]]]
       batch system = pbs
-      batch submit command template = qsub -q share -l walltime=01:00:00 -A {{account}} '%(job)s'
+      batch submit command template = qsub -q premium -l walltime=01:00:00 -A {{account}} '%(job)s'
       shell = /bin/bash
     [[[directives]]]
        -r = n
@@ -65,6 +71,7 @@ cd ${FCST_HOME}/bin/
 
   [[st_archive<member>]]
     script = """
+module use ~/modulefiles
 module load {{ model }}
 cd ${WORK}/{{ model }}.${CYLC_TASK_CYCLE_MONTH}.$(printf "%02d" ${CYLC_TASK_PARAM_member})
 ./case.submit --job case.st_archive
@@ -74,13 +81,26 @@ cd ${WORK}/{{ model }}.${CYLC_TASK_CYCLE_MONTH}.$(printf "%02d" ${CYLC_TASK_PARA
       inherit = postprocess_family
     [[postprocess_family]]
       script = """
-  source /etc/profile.d/modules.sh
-  module purge
-  module use $HOME/modulefiles
-  module load intel python netcdf
-  module load ncl nco {{ model }}
+
+#!/usr/bin/env bash
+   source  /etc/profile.d/z00_modules.sh
+#  source  /glade/u/apps/casper/23.10/spack/opt/spack/lmod/8.7.24/gcc/7.5.0/m4jx/lmod/lmod/init/bash
+#  module use /glade/u/apps/casper/modules/23.10/Core
+#  module purge
+  module avail
+  module load ncarenv/23.09
+  module use {{FCST_HOME}}/modulefiles
+  #module load intel/2023.2.1
+  #module load python
+  module load netcdf
+  module load ncl
+  module load nco
+  module use ~/modulefiles
+  module load {{model}}
+  export ARCHIVEROOT=/glade/scratch/ssfcst/
   cd ${WORK}/{{ model }}.{{ MONTH }}.$(printf "%02d" ${CYLC_TASK_PARAM_member})
   ${FCST_HOME}/bin/postprocess.py --sendtoftp {{sendtoftp}} --member ${CYLC_TASK_PARAM_member}
+
 """
     [[[job]]]
       batch system = pbs
@@ -92,13 +112,15 @@ cd ${WORK}/{{ model }}.${CYLC_TASK_CYCLE_MONTH}.$(printf "%02d" ${CYLC_TASK_PARA
     [[dispose]]
     # Globus process, must run on host
       script = """
-module load {{ model }}
+    module use ~/modulefiles
+    module load {{ model }}
 ${FCST_HOME}/bin/dispose_data.py
 """
     [[run<member>]]
        inherit = run_family
     [[run_family]]
     script = """
+module use ~/modulefiles
 module load {{ model }}
 filename={{ model }}.${CYLC_TASK_CYCLE_MONTH}.$(printf "%02d" ${CYLC_TASK_PARAM_member})
 cd ${WORK}/${filename}

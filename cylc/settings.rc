@@ -9,4 +9,4 @@
 {% set day_end        = '15' %}
 {% set sendtoftp      = false %}
 {% set account = "P93300007" %}
-{% set run_queue = "regular" %}
+{% set run_queue = "premium" %}
