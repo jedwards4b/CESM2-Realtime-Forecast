@@ -11,10 +11,10 @@ set RESOLN = f09_g17
 set RESUBMIT = 3
 set STOP_N=24
 set STOP_OPTION=nmonths
-set PROJECT=NCGD0047
+set PROJECT=CESM0020
 
-set syr = 1969
-set eyr = 1969
+set syr = 1958
+set eyr = 1958
 
 @ ib = $syr
 @ ie = $eyr
@@ -28,8 +28,8 @@ foreach mon ( 11 )
 
 
 # case name counter
-set smbr =  11
-set embr =  11
+set smbr =  21
+set embr =  30
 
 @ mb = $smbr
 @ me = $embr

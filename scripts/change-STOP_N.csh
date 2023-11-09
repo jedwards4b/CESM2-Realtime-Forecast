@@ -7,18 +7,19 @@ setenv DOUT_S_ROOT  /glade/scratch/$USER/SMYLE/archive/
 setenv CASEROOT /glade/p/cesm/espwg/CESM2-SMYLE-EXTEND/cases
 
 # ...
-set syr = 1992
-set eyr = 1992
+set syr = 2019
+set eyr = 2019
 
 @ ib = $syr
 @ ie = $eyr
 
 foreach year ( `seq $ib $ie` )
-foreach mon ( 11 )
+#foreach mon ( 11 )
+foreach mon ( 08 )
 
 # case name counter
-set smbr =  11
-set embr =  20
+set smbr =  21
+set embr =  30
 
 @ mb = $smbr
 @ me = $embr

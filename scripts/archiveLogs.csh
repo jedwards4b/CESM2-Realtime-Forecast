@@ -2,16 +2,16 @@
 ### set env variables
 module load ncl nco
 
-setenv CESM2_TOOLS_ROOT /glade/work/$USER/cesm_tags/CASE_tools/cesm2-smyle-extend/
+setenv CESM2_TOOLS_ROOT /glade/work/$USER/cesm_tags/CASE_tools/cesm2-smyle-DP/
 setenv ARCHDIR1  /glade/scratch/$USER/SMYLE-EXTEND/archive/
-setenv TSERIES  /glade/campaign/cesm/development/espwg/SMYLE-EXTEND/timeseries
-setenv LOGSDIR  /glade/campaign/cesm/development/espwg/SMYLE-EXTEND/logs
-setenv POPDDIR  /glade/campaign/cesm/development/espwg/SMYLE-EXTEND/popd
+setenv TSERIES  /glade/campaign/cesm/development/espwg/CESM2-DP/timeseries
+setenv LOGSDIR  /glade/campaign/cesm/development/espwg/CESM2-DP/logs
+setenv POPDDIR  /glade/campaign/cesm/development/espwg/CESM2-DP/popd
 
 set USE_ARCHDIR = $ARCHDIR1
 
-set syr = 2020
-set eyr = 2020
+set syr = 1963
+set eyr = 1964
 #set syr = 2014
 #set eyr = 2014
 
@@ -50,12 +50,12 @@ if (! -e $LOGSDIR/$CASE.logs.tar) then
 else
    echo "logs done"
 endif
-#if (! -e $RESTDIR/$CASE.rest.tar) then
-   #cd $USE_ARCHDIR
-   #tar -cvf $RESTDIR/$CASE.rest.tar $CASE/rest/
-#else
-   #echo "rest done"
-#endif
+if (! -e $RESTDIR/$CASE.rest.tar) then
+   cd $USE_ARCHDIR
+   tar -cvf $RESTDIR/$CASE.rest.tar $CASE/rest/
+else
+   echo "rest done"
+endif
 if (! -e $POPDDIR/$CASE.popd.tar) then
    cd $USE_ARCHDIR
    tar -cvf $POPDDIR/$CASE.popd.tar $CASE/ocn/hist/*.pop.d*
