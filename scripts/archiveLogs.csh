@@ -50,12 +50,12 @@ if (! -e $LOGSDIR/$CASE.logs.tar) then
 else
    echo "logs done"
 endif
-if (! -e $RESTDIR/$CASE.rest.tar) then
-   cd $USE_ARCHDIR
-   tar -cvf $RESTDIR/$CASE.rest.tar $CASE/rest/
-else
-   echo "rest done"
-endif
+#if (! -e $RESTDIR/$CASE.rest.tar) then
+   #cd $USE_ARCHDIR
+   #tar -cvf $RESTDIR/$CASE.rest.tar $CASE/rest/
+#else
+   #echo "rest done"
+#endif
 if (! -e $POPDDIR/$CASE.popd.tar) then
    cd $USE_ARCHDIR
    tar -cvf $POPDDIR/$CASE.popd.tar $CASE/ocn/hist/*.pop.d*
