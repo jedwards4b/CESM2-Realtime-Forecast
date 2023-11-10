@@ -10,7 +10,7 @@ setenv RESTDIR  /glade/campaign/cesm/development/espwg/SMYLE-PACEMAKER/restarts
 setenv POPDDIR  /glade/campaign/cesm/development/espwg/SMYLE-PACEMAKER/popd
 
 set syr = 1978
-set eyr = 2010
+set eyr = 2018
 
 #setenv ARCHSTEVE  /glade/scratch/yeager/SMYLE-PACEMAKER/archive/
 setenv ARCHNANR  /glade/scratch/$USER/SMYLE-PACEMAKER/archive/

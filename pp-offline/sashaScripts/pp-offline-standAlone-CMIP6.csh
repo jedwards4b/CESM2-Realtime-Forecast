@@ -9,10 +9,10 @@ setenv CASEROOT /glade/scratch/$USER/post-proc/
 module use /glade/work/bdobbins/Software/Modules
 module load cesm_postprocessing
 
-foreach YEAR ( `seq 1990 1990` )
+foreach YEAR ( `seq 2004 2004` )
 	foreach mbr ( `seq 7 10` )
 		set mbr_padZeros = `printf %03d $mbr`
-		set CASE = b.e21.BSMYLE.f09_g17.TBI-PAC_15d50m-anom.${YEAR}-02.${mbr_padZeros}
+		set CASE = b.e21.BSMYLE.f09_g17.TBI-SOC_15d50m-anom.${YEAR}-02.${mbr_padZeros}
 		set usembr = ${mbr_padZeros}
 		mkdir -p $CASEROOT/$CASE
 		cd $CASEROOT/$CASE
