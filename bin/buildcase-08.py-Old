@@ -125,8 +125,8 @@ def build_base_case(date, baseroot, basecasename, basemonth,res, ensemble_start,
                         user_mods_dir=user_mods_dir, pecount=pecount, project="CESM0015", workflowid="timeseries")
             # make sure that changing the casename will not affect these variables
             user = os.getenv("USER")
-            cimeroot = os.path.join("/glade/scratch/{}/".format(user),"SMYLE-DP")
-            exeroot = os.path.join("/glade/scratch/{}/".format(user),"SMYLE-DP/exerootdir/bld")
+            cimeroot = os.path.join("/glade/scratch/{}/".format(user),"SMYLE-EXTEND")
+            exeroot = os.path.join("/glade/scratch/{}/".format(user),"SMYLE-EXTEND/exerootdir/bld")
             case.set_value("CIME_OUTPUT_ROOT",cimeroot)
             if exeroot and os.path.exists(os.path.join(exeroot,"cesm.exe")):
                 case.set_value("EXEROOT",exeroot)
@@ -146,9 +146,9 @@ def build_base_case(date, baseroot, basecasename, basemonth,res, ensemble_start,
             case.set_value("OCN_CHL_TYPE","diagnostic")
             case.set_value("NTHRDS", 1)
             case.set_value("STOP_OPTION","nmonths")
-            case.set_value("STOP_N", 24)
+            case.set_value("STOP_N", 12)
             case.set_value("REST_OPTION","nmonths")
-            case.set_value("REST_N", 24)
+            case.set_value("REST_N", 12)
 
             case.set_value("CCSM_BGC","CO2A")
             case.set_value("EXTERNAL_WORKFLOW",True)
@@ -184,7 +184,7 @@ def clone_base_case(date, caseroot, ensemble_start, ensemble_end, sdrestdir, use
         #sdrestdir = os.path.join("/glade/scratch/nanr/SMYLE-EXTEND/archive","b.e21.BSMYLE.f09_g17."+date[0:7]+".{0:03d}".format(i),"rest","{0:04d}-11-01-00000".format(baseyear+2))
         #sdrestdir = os.path.join("/glade","scratch","{}".format(user),"SMYLE-EXTEND","archive","b.e21.BSMYLE.f09_g17."+date[0:7]+".{0:03d}".format(i),"rest","{0:04d}-11-01-00000".format(baseyear+2))
         #sdrestdir = os.path.join("/glade","scratch","{}".format(user),"SMYLE","archive","b.e21.BSMYLE.f09_g17."+date[0:7]+".{0:03d}".format(i),"rest","{0:04d}-11-01-00000".format(baseyear+2))
-        sdrestdir = os.path.join("/glade","scratch","nanr","SMYLE","archive","b.e21.BSMYLE.f09_g17."+date[0:7]+".{0:03d}".format(i),"rest","{0:04d}-11-01-00000".format(baseyear+2))
+        sdrestdir = os.path.join("/glade","scratch","nanr","SMYLE-EXTEND","archive","b.e21.BSMYLE.f09_g17."+date[0:7]+".{0:03d}".format(i),"rest","{0:04d}-11-01-00000".format(baseyear+2))
         if ensemble_end > ensemble_start:
             caseroot = caseroot[:-nint] + member_string
         if overwrite and os.path.isdir(caseroot):
@@ -211,7 +211,7 @@ def _main_func(description):
     basemonth = int(date[5:7])
     baseyear = int(date[0:4])
     #baseroot = os.path.join(os.getenv("SMYLE_ROOT"),"cases")
-    baseroot = os.path.join("/glade/p/cesm/espwg/CESM2-SMYLE-DP/","cases")
+    baseroot = os.path.join("/glade/p/cesm/espwg/CESM2-SMYLE-EXTEND/","cases")
     res = "f09_g17"
     waccm = False
     compset = "BSMYLE"

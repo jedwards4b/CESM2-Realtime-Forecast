@@ -146,9 +146,9 @@ def build_base_case(date, baseroot, basecasename, basemonth,res, ensemble_start,
             case.set_value("OCN_CHL_TYPE","diagnostic")
             case.set_value("NTHRDS", 1)
             case.set_value("STOP_OPTION","nmonths")
-            case.set_value("STOP_N", 24)
+            case.set_value("STOP_N", 12)
             case.set_value("REST_OPTION","nmonths")
-            case.set_value("REST_N", 24)
+            case.set_value("REST_N", 12)
 
             case.set_value("CCSM_BGC","CO2A")
             case.set_value("EXTERNAL_WORKFLOW",True)
@@ -181,10 +181,10 @@ def clone_base_case(date, caseroot, ensemble_start, ensemble_end, sdrestdir, use
     for i in range(ensemble_start+1, ensemble_end+1):
         member_string = '{{0:0{0:d}d}}'.format(nint).format(i)
         user = os.getenv("USER")
-        #sdrestdir = os.path.join("/glade/scratch/nanr/SMYLE-EXTEND/archive","b.e21.BSMYLE.f09_g17."+date[0:7]+".{0:03d}".format(i),"rest","{0:04d}-11-01-00000".format(baseyear+2))
-        #sdrestdir = os.path.join("/glade","scratch","{}".format(user),"SMYLE-EXTEND","archive","b.e21.BSMYLE.f09_g17."+date[0:7]+".{0:03d}".format(i),"rest","{0:04d}-11-01-00000".format(baseyear+2))
+        #sdrestdir = os.path.join("/glade/scratch/nanr/SMYLE-DP/archive","b.e21.BSMYLE.f09_g17."+date[0:7]+".{0:03d}".format(i),"rest","{0:04d}-11-01-00000".format(baseyear+2))
+        #sdrestdir = os.path.join("/glade","scratch","{}".format(user),"SMYLE-DP","archive","b.e21.BSMYLE.f09_g17."+date[0:7]+".{0:03d}".format(i),"rest","{0:04d}-11-01-00000".format(baseyear+2))
         #sdrestdir = os.path.join("/glade","scratch","{}".format(user),"SMYLE","archive","b.e21.BSMYLE.f09_g17."+date[0:7]+".{0:03d}".format(i),"rest","{0:04d}-11-01-00000".format(baseyear+2))
-        sdrestdir = os.path.join("/glade","scratch","nanr","SMYLE","archive","b.e21.BSMYLE.f09_g17."+date[0:7]+".{0:03d}".format(i),"rest","{0:04d}-11-01-00000".format(baseyear+2))
+        sdrestdir = os.path.join("/glade","scratch","nanr","SMYLE-DP","archive","b.e21.BSMYLE.f09_g17."+date[0:7]+".{0:03d}".format(i),"rest","{0:04d}-11-01-00000".format(baseyear+2))
         if ensemble_end > ensemble_start:
             caseroot = caseroot[:-nint] + member_string
         if overwrite and os.path.isdir(caseroot):
@@ -221,7 +221,7 @@ def _main_func(description):
     overwrite = True
     user = os.getenv("USER")
     sdrestdir = os.path.join("/glade","scratch","{}".format(user),"SMYLE","archive","b.e21.BSMYLE.f09_g17."+date[0:7]+".{0:03d}".format(ensemble_start),"rest","{0:04d}-11-01-00000".format(baseyear+2))
-    #sdrestdir = os.path.join("/glade/scratch/nanr/SMYLE-EXTEND/archive","b.e21.BSMYLE.f09_g17."+date[0:7]+".{0:03d}".format(ensemble_start),"rest","{0:04d}-11-01-00000".format(baseyear+2))
+    #sdrestdir = os.path.join("/glade/scratch/nanr/SMYLE-DP/archive","b.e21.BSMYLE.f09_g17."+date[0:7]+".{0:03d}".format(ensemble_start),"rest","{0:04d}-11-01-00000".format(baseyear+2))
 
     user_mods_dir = os.path.join(s2sfcstroot,"user_mods","cesm2smyle-extend")
 
