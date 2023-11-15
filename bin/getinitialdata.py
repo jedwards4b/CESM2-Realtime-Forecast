@@ -52,7 +52,7 @@ def get_data_from_campaignstore(date):
 #    source_path = get_ocn_src_path(source_root_local, date)
 
     source_path = 'cesm/development/cross-wg/S2S/SDnudgedOcn/rest/{date}-00000/'.format(date=date)
-    dest_path = os.path.join(os.getenv("SCRATCH"),"cesm2cam6","Ocean","rest","{}".format(date))
+    dest_path = os.path.join(os.getenv("SCRATCH"),"cesm2cam6","StageIC","rest","{}".format(date))
 
 
     #    if os.path.exists(os.path.join(dest_path,"rpointer.ocn.restart")):

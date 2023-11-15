@@ -212,11 +212,11 @@ def _main_func(description):
     else:
         compset = "BSSP585"
 
-    print ("baseyear is {} basemonth is {}".format(baseyear,basemonth))
+#    print ("baseyear is {} basemonth is {}".format(baseyear,basemonth))
 
     overwrite = True
 
-    sdrestdir = os.path.join(os.getenv("SCRATCH"),"cesm2cam6","Ocean","rest","{}".format(date))
+    sdrestdir = os.path.join(os.getenv("SCRATCH"),"cesm2cam6","StageIC","rest","{}".format(date))
 
     workflow = os.getenv("CESM_WORKFLOW")
     if not workflow:
@@ -225,7 +225,7 @@ def _main_func(description):
     user_mods_dir = os.path.join(s2sfcstroot,"user_mods",workflow)
 
     # END TODO
-    print("basemonth = {}".format(basemonth))
+    #print("basemonth = {}".format(basemonth))
     caseroot = build_base_case(date, baseroot, basemonth, res,
                                compset, overwrite, sdrestdir, workflow, user_mods_dir+'.base', pecount="S")
     clone_base_case(date, caseroot, ensemble_start, ensemble_end, sdrestdir, user_mods_dir, overwrite)

@@ -82,7 +82,7 @@ def _main_func(description):
             for _file in glob.iglob(os.path.join(rundir,"*"+date+"*")):
                 os.unlink(os.path.join(rundir,_file))
     # Clean up ocean init files
-    ocn_init_path = os.path.join(os.getenv("SCRATCH"),"cesm2cam6","Ocean","rest","{}".format(date))
+    ocn_init_path = os.path.join(os.getenv("SCRATCH"),"cesm2cam6","StageIC","rest","{}".format(date))
     if os.path.isdir(ocn_init_path):
         shutil.rmtree(ocn_init_path)
 

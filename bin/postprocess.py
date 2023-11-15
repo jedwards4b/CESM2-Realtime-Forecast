@@ -158,7 +158,7 @@ def _main_func(description):
         #            os.unlink(os.path.join(atmhistpath,histfile))
         #Concatinate cice history into a single file
 
-        fnameout = basecasename+"v2."+basemonth+"."+date+".{0:02d}".format(curmem)+".cice.hd.nc"
+        fnameout = basecasename + basemonth+"."+date+".{0:02d}".format(curmem)+".cice.hd.nc"
         outroot = os.path.join(os.getenv("SCRATCH"),basecasename)
         outdir = os.path.join(outroot,"ice")
 
@@ -177,7 +177,7 @@ def _main_func(description):
         outdir = os.path.join(outroot,"ocn")
 
         for _file in glob.iglob(os.path.join(ocnhistpath,"*pop.h.*.nc")):
-            newfname = os.path.basename(_file).replace("cesm2cam6.","cesm2cam6v2.")
+            newfname = os.path.basename(_file).replace("cesm2cam6.","cesm2cam6.")
             run_cmd("nccopy -4 -d 1 {}  {}".format(_file, os.path.join(outdir,newfname)), verbose=True, from_dir=ocnhistpath)
 
 
@@ -186,7 +186,7 @@ def _main_func(description):
 
         for _file in glob.iglob(os.path.join(atmhistpath,"*cam.h4*.nc")):
             print("Copying {} file into {}".format(_file,outdir))
-            newfname = os.path.basename(_file).replace("cesm2cam6.","cesm2cam6v2.")
+            newfname = os.path.basename(_file).replace("cesm2cam6.","cesm2cam6.")
 
             run_cmd("nccopy -4 -d 1 -VTS,PS,PSL,QBOT,TMQ,UBOT,VBOT,lat,lon,date,time_bnds,time,gw,ndcur,nscur,nsteph {}  {}".format(_file, os.path.join(outdir,newfname)), verbose=True, from_dir=atmhistpath)
 
@@ -194,7 +194,7 @@ def _main_func(description):
 
         for _file in glob.iglob(os.path.join(atmhistpath,"*cam.h3*.nc")):
             print("Copying {} file into {}".format(_file,outdir))
-            newfname = os.path.basename(_file).replace("cesm2cam6.","cesm2cam6v2.")
+            newfname = os.path.basename(_file).replace("cesm2cam6.","cesm2cam6.")
 
             run_cmd("nccopy -4 -d 1 -VU850,V850,TMQ,PRECT,uIVT,vIVT,IVT,PS,PSL,UBOT,VBOT,Z200,Z500,U10,lat,lon,date,time_bnds,time,gw,ndcur,nscur,nsteph {}  {}".format(_file, os.path.join(outdir,newfname)), verbose=True, from_dir=atmhistpath)
 
@@ -202,7 +202,7 @@ def _main_func(description):
 
         for _file in glob.iglob(os.path.join(atmhistpath,"*cam.h2*.nc")):
             print("Copying {} file into {}".format(_file, outdir))
-            newfname = os.path.basename(_file).replace("cesm2cam6.","cesm2cam6v2.")
+            newfname = os.path.basename(_file).replace("cesm2cam6.","cesm2cam6.")
             run_cmd("nccopy -4 -d 1 -VFLNT,FSNT,FLDS,FSDS,PRECC,PRECL,QREFHT,RHREFHT,RH600,PSL,PS,SNOWHICE,SNOWHLND,CLDTOT,TMQ,SST,LANDFRAC,OCNFRAC,UVzm,VTHzm,UWzm,WTHzm,TROP_P,TROP_T,THzm,Uzm,Vzm,Wzm,PHIS,WSPDSRFMX,WSPDSRFAV,QFLX,U10,TGCLDIWP,TGCLDLWP,lev,ilev,lat,lon,date,time_bnds,time,gw,ndcur,nscur,nsteph {} {}".format(_file, os.path.join(outdir,newfname)), verbose=True, from_dir=atmhistpath)
 #        for _file in glob.iglob(os.path.join(atmhistpath,"*cam.h1*.nc")):
 #            print("Copying {} file into {}".format(_file, outdir))
@@ -215,7 +215,7 @@ def _main_func(description):
 
         for _file in glob.iglob(os.path.join(lndhistpath,"*clm2.h0*.nc")):
             print("Copying {} file into {}".format(_file, outdir))
-            newfname = os.path.basename(_file).replace("cesm2cam6.","cesm2cam6v2.")
+            newfname = os.path.basename(_file).replace("cesm2cam6.","cesm2cam6.")
             run_cmd("nccopy -4 -d 1 {} {}".format(_file, os.path.join(outdir,newfname)), verbose=True, from_dir=lndhistpath)
 
 

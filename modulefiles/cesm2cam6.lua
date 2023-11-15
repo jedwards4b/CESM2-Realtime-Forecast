@@ -3,6 +3,7 @@ help([[
 ]])
 
 conflict("70Lwaccm6")
+
 local workflow = os.getenv("CESM_WORKFLOW")
 local work = pathJoin(os.getenv("WORK"),"derecho","cases",workflow)
 local home = os.getenv("HOME")
@@ -12,4 +13,3 @@ then
 end
 setenv("CESM_ROOT", pathJoin(home, "cesm2_1"))
 setenv("FCST_HOME", pathJoin(home, workflow, "CESM2-Realtime-Forecast"))
-setenv("CESM_ROOT", pathJoin(home, "cesm2_1"))

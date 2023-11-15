@@ -69,11 +69,11 @@ varStrings = (/ "huss_850","tasmax_2m","tasmin_2m","hfss_sfc","hfls_sfc","stx_sf
 do i = 0,ListCount(var)-1
         v:=linint2(xi,yi,var[i],True,xo,yo,0)
 	if (waccm) then
-          outDir = getenv("ARCHIVEROOT") + "/70Lwaccm6/p2/" + varStrings(i) + "/" + yyyy + "/" + mm + "/"
+          outDir = getenv("SCRATCH") + "/70Lwaccm6/p2/" + varStrings(i) + "/" + yyyy + "/" + mm + "/"
           fout = outDir + varStrings(i) + "_70Lwaccm6_" + outdate + "_00z_d01_d46_m" + member + ".nc"
         else
-          outDir = getenv("ARCHIVEROOT") + "/cesm2cam6v2/p2/" + varStrings(i) + "/" + yyyy + "/" + mm + "/"
-          fout = outDir + varStrings(i) + "_cesm2cam6v2_" + outdate + "_00z_d01_d46_m" + member + ".nc"
+          outDir = getenv("SCRATCH") + "/cesm2cam6/p2/" + varStrings(i) + "/" + yyyy + "/" + mm + "/"
+          fout = outDir + varStrings(i) + "_cesm2cam6_" + outdate + "_00z_d01_d46_m" + member + ".nc"
         end if
         if (.not. fileexists(outDir)) then
           system("mkdir -p "+outDir)

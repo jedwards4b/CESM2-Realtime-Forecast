@@ -32,11 +32,11 @@ lev_p@positive  = "down"
 
   do i = 0,dimsizes(varStrings)-1
         if (waccm) then
-          outDir = getenv("ARCHIVEROOT")+"/70Lwaccm6/" + varStrings(i) + "/" + yyyy + "/" + mm + "/"	
+          outDir = getenv("SCRATCH")+"/70Lwaccm6/" + varStrings(i) + "/" + yyyy + "/" + mm + "/"	
           fout = outDir + varStrings(i) + "_70Lwaccm6_" + outdate + "00z_d01_d46_m" + member + ".nc"
         else
-          outDir = getenv("ARCHIVEROOT")+"/cesm2cam6v2/" + varStrings(i) + "/" + yyyy + "/" + mm + "/"
-  	  fout = outDir + varStrings(i) + "_cesm2cam6v2_" + outdate + "00z_d01_d46_m" + member + ".nc"
+          outDir = getenv("SCRATCH")+"/cesm2cam6/" + varStrings(i) + "/" + yyyy + "/" + mm + "/"
+  	  fout = outDir + varStrings(i) + "_cesm2cam6_" + outdate + "00z_d01_d46_m" + member + ".nc"
         end if
 	v = f[:]->$varStrings(i)$
 	PS = f[:]->PS
