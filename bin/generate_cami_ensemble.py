@@ -139,9 +139,9 @@ def create_perturbed_init_file(original, perturb_file, outfile, weight):
 
 def _main_func(description):
     date, ensemble_start, ensemble_end = parse_command_line(sys.argv, description)
-
-    baserundir = os.path.join(os.getenv("SCRATCH"),"70Lwaccm6."+date[5:7]+".00","run.00")
-    sdrestdir = os.path.join(os.getenv("SCRATCH"),"S2S_70LIC_globus","SDnudgedOcn","rest","{}".format(date))
+    workflow = os.getenv("CESM_WORKFLOW")
+    baserundir = os.path.join(os.getenv("SCRATCH"),workflow+"_"+date+".00","run.00")
+    sdrestdir = os.path.join(os.getenv("SCRATCH"),workflow,"StageIC","rest","{}".format(date))
     caminame = os.path.join(sdrestdir,"b.e21.BWHIST.SD.f09_g17.002.nudgedOcn.cam.i.{date}-00000.nc".format(date=date))
     outroot = "b.e21.BWHIST.SD.f09_g17.002.nudgedOcn.cam.i."
 

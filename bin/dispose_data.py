@@ -66,7 +66,9 @@ def _main_func(description):
     basecasename = "70Lwaccm6"
     basemonth = date[5:7]
     baseroot = os.getenv("WORK")
-    sdrestdir = os.path.join(scratch,"S2S_70LIC_globus","SDnudgedOcn","rest","{}".format(date))
+    workflow = os.getenv("CESM_WORKFLOW")
+    sdrestdir = os.path.join(os.getenv("SCRATCH"),workflow,"StageIC","rest","{}".format(date))
+    
     if os.path.isdir(sdrestdir):
         shutil.rmtree(sdrestdir)        
     for i in range(0,10):

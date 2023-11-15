@@ -48,7 +48,8 @@ def get_data_from_campaignstore(date):
     odate = "{:04d}".format(oyr)+date[4:]
 
     source_path = 'cesm/development/cross-wg/S2S/SDnudgedOcn/rest/{date}-00000/'.format(date=date)
-    dest_path = os.path.join(os.getenv("SCRATCH"),"S2S_70LIC_globus","SDnudgedOcn","rest","{}".format(date))
+    workflow = os.getenv("CESM_WORKFLOW")
+    dest_path = os.path.join(os.getenv("SCRATCH"),workflow,"StageIC","rest","{}".format(date))
 
     if os.path.exists(os.path.join(dest_path,"rpointer.ocn.restart")):
         print("Data already exists in {}".format(dest_path))

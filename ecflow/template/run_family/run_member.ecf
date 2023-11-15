@@ -1,0 +1,9 @@
+%include <multinode.h>
+%include <head.h>
+
+member=$(echo %TASK% | cut -c 12-)
+echo %FCSTDATE% $member
+cd %FCST_WORK%/%CESM_WORKFLOW%_%FCSTDATE%.$member
+./case.submit --job case.run
+
+%include <tail.h>

@@ -25,6 +25,10 @@ def parse_command_line(args, description):
     CIME.utils.setup_standard_logging_options(parser)
     parser.add_argument("--date",
                         help="Specify a start Date")
+    parser.add_argument("--ensemble-start",default=0,
+                        help="Specify the first ensemble member")
+    parser.add_argument("--ensemble-end",default=10,
+                        help="Specify the last ensemble member")
 
     args = CIME.utils.parse_args_and_handle_standard_logging_options(args, parser)
     cdate = os.getenv("CYLC_TASK_CYCLE_POINT")
@@ -40,7 +44,7 @@ def parse_command_line(args, description):
         date = datetime.date.today()
         date = date.replace(day=date.day-1)
 
-    return date.strftime("%Y-%m-%d")
+    return date.strftime("%Y-%m-%d"), int(args.ensemble_start), int(args.ensemble_end)
 
 def stage_refcase(rundir, refdir, date):
     if not os.path.isdir(rundir):
@@ -103,8 +107,9 @@ def per_run_case_updates(case, date, sdrestdir, user_mods_dir, rundir):
 
 
 def build_base_case(date, baseroot, basemonth,res, compset, overwrite,
-                    sdrestdir, user_mods_dir, pecount=None):
-    caseroot = os.path.join(baseroot,"70Lwaccm6.{:02d}".format(basemonth)+".00")
+                    sdrestdir, workflow, user_mods_dir, pecount=None):
+    caseroot = os.path.join(baseroot,"{}_{}".format(workflow,date)+".00")
+
     if overwrite and os.path.isdir(caseroot):
         shutil.rmtree(caseroot)
             
@@ -113,6 +118,21 @@ def build_base_case(date, baseroot, basemonth,res, compset, overwrite,
             case.create(os.path.basename(caseroot), cesmroot, compset, res,
                         run_unsupported=True, answer="r",walltime="04:00:00",
                         user_mods_dir=user_mods_dir, pecount=pecount, project="NCGD0042")
+            # PELAYOUT for derecho
+            case.set_value("NTASKS_CPL",2048)
+            case.set_value("NTASKS_ATM",2048)
+            case.set_value("NTASKS_ICE",128)
+            case.set_value("NTASKS_LND",1920)
+            case.set_value("NTASKS_ROF",1920)
+            case.set_value("NTASKS_OCN",64)
+            case.set_value("NTASKS_WAV",64)
+            case.set_value("NTASKS_GLC",64)
+            case.set_value("ROOTPE_ICE",1920)
+            case.set_value("ROOTPE_OCN",2048)
+            case.set_value("ROOTPE_WAV",2112)
+            case.set_value("ROOTPE_GLC",2112)
+            
+            
             # make sure that changing the casename will not affect these variables
             case.set_value("EXEROOT",case.get_value("EXEROOT", resolved=True))
             case.set_value("RUNDIR",case.get_value("RUNDIR",resolved=True)+".00")
@@ -161,13 +181,14 @@ def clone_base_case(date, caseroot, ensemble, sdrestdir, user_mods_dir, overwrit
             per_run_case_updates(case, date, sdrestdir, user_mods_dir, rundir)
 
 def _main_func(description):
-    date = parse_command_line(sys.argv, description)
+    date, ensemble_start, ensemble_end = parse_command_line(sys.argv, description)
 
     # TODO make these input vars
 
     basemonth = int(date[5:7])
     baseyear = int(date[0:4])
-    baseroot = os.getenv("WORK")
+    baseroot = os.getenv("FCST_WORK")
+    workflow = os.getenv("CESM_WORKFLOW")
     res = "f09_g17"
     waccm = False
 
@@ -177,20 +198,20 @@ def _main_func(description):
     else:
         compset = "BWSSP585"
         
-    print ("baseyear is {} basemonth is {}".format(baseyear,basemonth))
+#    print ("baseyear is {} basemonth is {}".format(baseyear,basemonth))
     
     overwrite = True
 
-    sdrestdir = os.path.join(os.getenv("SCRATCH"),"S2S_70LIC_globus","SDnudgedOcn","rest","{}".format(date))
-    ensemble = 20
-
+    sdrestdir = os.path.join(os.getenv("SCRATCH"),workflow,"StageIC","rest","{}".format(date))
+    
     user_mods_dir = os.path.join(s2sfcstroot,"user_mods","70Lwaccm6")
 
     # END TODO
-    print("basemonth = {}".format(basemonth))
+    #print("basemonth = {}".format(basemonth))
     caseroot = build_base_case(date, baseroot, basemonth, res,
-                            compset, overwrite, sdrestdir, user_mods_dir+'.base', pecount="S")
-    clone_base_case(date, caseroot, ensemble, sdrestdir, user_mods_dir, overwrite)
+                               compset, overwrite, sdrestdir, workflow,
+                               user_mods_dir+'.base', pecount="S")
+    clone_base_case(date, caseroot, ensemble_end, sdrestdir, user_mods_dir, overwrite)
 
 if __name__ == "__main__":
     _main_func(__doc__)

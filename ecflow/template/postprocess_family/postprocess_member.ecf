@@ -1,0 +1,12 @@
+%include <singlenode.h>
+%include <head.h>
+
+module load intel netcdf ncl nco %CESM_WORKFLOW% 
+#month=$(echo %FCSTDATE% | cut -c 6,7)
+member=$(echo %TASK% | cut -c 20-)
+cd %FCST_WORK%/%CESM_WORKFLOW%_%FCSTDATE%.$member
+./case.st_archive
+
+%FCST_HOME%/bin/postprocess.py --member $member --date %FCSTDATE% --sendtoftp
+
+%include <tail.h>

@@ -132,9 +132,9 @@ def _main_func(description):
 
         with Case(caseroot, read_only=True) as case:
             rundir = case.get_value("RUNDIR")
-            dout_s_root = case.get_value("DOUT_S_ROOT")
+            dout_s_root = os.path.join(os.getenv("SCRATCH"),"archive", os.path.basename(caseroot))
             print("HERE caseroot {} dout_s_root {} date {} curmem {}".format(caseroot, dout_s_root,date,curmem))
-            dout_s_root = dout_s_root[:-13] + date + ".{0:02d}".format(curmem)
+#            dout_s_root = dout_s_root + date + ".{0:02d}".format(curmem)
             os.environ["DOUT_S_ROOT"] = dout_s_root
         outfiles = run_ncl_scripts()
         # Copy data to ftp site
