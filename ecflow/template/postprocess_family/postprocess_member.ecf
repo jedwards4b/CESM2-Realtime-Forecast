@@ -6,7 +6,8 @@ module load intel netcdf ncl nco %CESM_WORKFLOW%
 member=$(echo %TASK% | cut -c 20-)
 cd %FCST_WORK%/%CESM_WORKFLOW%_%FCSTDATE%.$member
 ./case.st_archive
-
-%FCST_HOME%/bin/postprocess.py --member $member --date %FCSTDATE% --sendtoftp
+# sendtoftp not yet working from compute nodes
+#%FCST_HOME%/bin/postprocess.py --member $member --date %FCSTDATE% --sendtoftp true
+%FCST_HOME%/bin/postprocess.py --member $member --date %FCSTDATE% 
 
 %include <tail.h>

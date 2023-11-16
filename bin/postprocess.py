@@ -43,7 +43,7 @@ def parse_command_line(args, description):
 
     parser.add_argument("--sendtoftp",help="Send output to ftp server", default=False, const=True, nargs='?', type=str2bool)
 
-    parser.add_argument("--sendtoglobus",help="Send output to globus datashare", default=True, const=True, nargs='?', type=str2bool)
+    parser.add_argument("--sendtoglobus",help="Send output to globus datashare", default=False, const=True, nargs='?', type=str2bool)
 
     args = CIME.utils.parse_args_and_handle_standard_logging_options(args, parser)
     cdate = os.environ.get("CYLC_TASK_CYCLE_POINT")
@@ -112,10 +112,10 @@ def send_data_to_campaignstore(source_path):
 
 def _main_func(description):
     date, member, sendtoftp, sendtoglobus = parse_command_line(sys.argv, description)
-    basecasename = "70Lwaccm6"
-    basemonth = date[5:7]
-    baseroot = os.getenv("WORK")
-    ftproot = " jedwards@thorodin.cgd.ucar.edu:/ftp/pub/jedwards/70Lwaccm6"
+    basecasename = os.getenv("CESM_WORKFLOW")
+
+    baseroot = os.getenv("FCST_WORK")
+    ftproot = " jedwards@thorodin.cgd.ucar.edu:/ftp/pub/jedwards/" + basecasename
     
 
     if member < 0:
@@ -128,7 +128,7 @@ def _main_func(description):
     for curmem in range(firstmember, lastmember+1):
         print("Running postprocessing for member {} on date {}".format(curmem, date))
         os.environ["CYLC_TASK_PARAM_member"] = "{0:02d}".format(curmem)
-        caseroot = os.path.join(baseroot,basecasename+"."+basemonth+".{0:02d}".format(curmem))
+        caseroot = os.path.join(baseroot,basecasename+"_"+date+".{0:02d}".format(curmem))
 
         with Case(caseroot, read_only=True) as case:
             rundir = case.get_value("RUNDIR")
@@ -182,11 +182,9 @@ def _main_func(description):
         #            os.unlink(os.path.join(atmhistpath,histfile))
         #Concatinate cice history into a single file
 
-        fnameout = basecasename+"v2."+basemonth+"."+date+".{0:02d}".format(curmem)+".cice.hd.nc"
-        if basecasename == "cesm2cam6":
-            outdir = "/glade/scratch/ssfcst/cesm2cam6v2/ice"
-        else:
-            outdir = "/glade/scratch/ssfcst/{}/ice".format(basecasename)
+        fnameout = basecasename+"."+date+".{0:02d}".format(curmem)+".cice.hd.nc"
+        outroot = os.path.join(os.getenv("SCRATCH"),basecasename)
+        outdir = os.path.join(outroot,"ice")
 
         print("ICE PATH")
         print(outdir)
@@ -200,53 +198,39 @@ def _main_func(description):
         fnameout = fnameout.replace("cice.hd.nc","pop.h.nday1.nc")
 
         print("Copying ocn daily files into {}".format(fnameout))
-        if basecasename == "cesm2cam6":
-            outdir = "/glade/scratch/ssfcst/cesm2cam6v2/ocn"
-        else:
-            outdir = "/glade/scratch/ssfcst/{}/ocn".format(basecasename)
+        outdir = os.path.join(outroot, "ocn")
 
         for _file in glob.iglob(os.path.join(ocnhistpath,"*pop.h.[no]*.nc")):
-            newfname = os.path.basename(_file).replace("cesm2cam6.","cesm2cam6v2.")
+            newfname = os.path.basename(_file)
             run_cmd("nccopy -4 -d 1 {}  {}".format(_file, os.path.join(outdir,newfname)), verbose=True, from_dir=ocnhistpath)
 
         #    send_data_to_campaignstore(dout_s_root+os.sep )
-        if basecasename == "cesm2cam6":
-            outdir = "/glade/scratch/ssfcst/cesm2cam6v2/6hourly"
-        else:
-            outdir = "/glade/scratch/ssfcst/{}/6hourly".format(basecasename)
+        outdir = os.path.join(outroot, "6hourly")
 
         for _file in glob.iglob(os.path.join(atmhistpath,"*cam.h3*.nc")):
             print("Copying {} file into {}".format(_file,outdir))
-            if basecasename == "cesm2cam6":
-                newfname = os.path.basename(_file).replace("cesm2cam6.","cesm2cam6v2.")
-            else:
-                newfname = os.path.basename(_file)
+            newfname = os.path.basename(_file)
 
             run_cmd("nccopy -4 -d 1 -VPS,PSL,UBOT,VBOT,Z200,Z500,U10,lat,lon,date,time_bnds,time,gw,ndcur,nscur,nsteph {}  {}".format(_file, os.path.join(outdir,newfname)), verbose=True, from_dir=atmhistpath)
 
-#        outdir = "/glade/scratch/ssfcst/cesm2cam6v2/daily"
-
-        if basecasename == "cesm2cam6":
-            outdir = "/glade/scratch/ssfcst/cesm2cam6v2/daily"
-        else:
-            outdir = "/glade/scratch/ssfcst/{}/daily".format(basecasename)
+        outdir = os.path.join(outroot, "daily")
 
         for _file in glob.iglob(os.path.join(atmhistpath,"*cam.h2*.nc")):
             print("Copying {} file into {}".format(_file, outdir))
-            newfname = os.path.basename(_file).replace("cesm2cam6.","cesm2cam6v2.")
+            newfname = os.path.basename(_file)
             run_cmd("nccopy -4 -d 1 -VFLNT,FSNT,FLDS,FSDS,PRECC,PRECL,QREFHT,RHREFHT,RH600,PSL,PS,SNOWHICE,SNOWHLND,CLDTOT,TMQ,SST,LANDFRAC,OCNFRAC,UVzm,VTHzm,UWzm,WTHzm,TROP_P,TROP_T,THzm,Uzm,Vzm,Wzm,PHIS,WSPDSRFMX,WSPDSRFAV,QFLX,U10,TGCLDIWP,TGCLDLWP,lev,ilev,lat,lon,date,time_bnds,time,gw,ndcur,nscur,nsteph {} {}".format(_file, os.path.join(outdir,newfname)), verbose=True, from_dir=atmhistpath)
 #        for _file in glob.iglob(os.path.join(atmhistpath,"*cam.h1*.nc")):
 #            print("Copying {} file into {}".format(_file, outdir))
 #            run_cmd("nccopy -4 -d 1 -VU10,TGCLDIWP,TGCLDLWP,lev,ilev,lat,lon,date,time_bnds,time,gw,ndcur,nscur,nsteph {} {}".format(_file, os.path.join(outdir,os.path.basename(_file))), verbose=True, from_dir=atmhistpath)
 
-        outdir="/glade/scratch/ssfcst/{}/lnd".format(basecasename)
+        outdir = os.path.join(outroot, "lnd")
 
         print("LND OUTDIR:")
         print(outdir)
 
         for _file in glob.iglob(os.path.join(lndhistpath,"*clm2.h0*.nc")):
            print("Copying {} file into {}".format(_file, outdir))
-           newfname = os.path.basename(_file).replace("cesm2cam6.","cesm2cam6v2.")
+           newfname = os.path.basename(_file)
            run_cmd("nccopy -4 -d 1 {} {}".format(_file, os.path.join(outdir,newfname)), verbose=True, from_dir=lndhistpath)
 
 

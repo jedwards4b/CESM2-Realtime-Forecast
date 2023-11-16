@@ -4,7 +4,7 @@ load "get_member_and_date.ncl"
 
 histDir = getenv("DOUT_S_ROOT") + "/atm/hist/"
 landDir = getenv("DOUT_S_ROOT") + "/lnd/hist/"
-waccm = isStrSubset(getenv("DOUT_S_ROOT"),"70Lwaccm6")
+workflow = getenv("CESM_WORKFLOW")
 
 ; -------------------------- READ IN H2 VARIABLES --------------------------
 h2files = systemfunc("ls " + histDir + "*cam.h2.*")
@@ -68,13 +68,10 @@ var = [/ huss_850,tasmax_2m,tasmin_2m,hfss_sfc,hfls_sfc,stx_sfc,sty_sfc,rad_sfc,
 varStrings = (/ "huss_850","tasmax_2m","tasmin_2m","hfss_sfc","hfls_sfc","stx_sfc","sty_sfc","rad_sfc","sic","cape","wap_500","psl","ua_100","va_100","uvas","snc","mrro","rzsm","mrso" /)
 do i = 0,ListCount(var)-1
         v:=linint2(xi,yi,var[i],True,xo,yo,0)
-	if (waccm) then
-          outDir = getenv("ARCHIVEROOT") + "/70Lwaccm6/p2/" + varStrings(i) + "/" + yyyy + "/" + mm + "/"
-          fout = outDir + varStrings(i) + "_70Lwaccm6_" + outdate + "_00z_d01_d46_m" + member + ".nc"
-        else
-          outDir = getenv("ARCHIVEROOT") + "/cesm2cam6v2/p2/" + varStrings(i) + "/" + yyyy + "/" + mm + "/"
-          fout = outDir + varStrings(i) + "_cesm2cam6v2_" + outdate + "_00z_d01_d46_m" + member + ".nc"
-        end if
+
+        outDir = getenv("SCRATCH") + "/" + workflow + "/p2/" + varStrings(i) + "/" + yyyy + "/" + mm + "/"
+    	fout = outDir + varStrings(i) + "_" + workflow + "_" + outdate + "_00z_d01_d46_m" + member + ".nc"
+
         if (.not. fileexists(outDir)) then
           system("mkdir -p "+outDir)
         end if

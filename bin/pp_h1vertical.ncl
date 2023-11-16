@@ -17,6 +17,7 @@ hyam=f[0]->hyam
 hybm=f[0]->hybm
 P0mb=0.01*f[0]->P0
 waccm = isStrSubset(getenv("DOUT_S_ROOT"),"70Lwaccm6")
+workflow = getenv("CESM_WORKFLOW")
 if (waccm) then
   lev_p = todouble((/0.0001,0.001,0.01,0.1,0.5,1,2,3,5,10,20,30,50,70,100,200,300,500,700,850,925,1000/))
   varStrings = (/ "U","V","T","OMEGA","Z3","Q","UQ","VQ","O3","RELHUM","QRS_TOT","QRL_TOT" /)
@@ -31,13 +32,8 @@ lev_p@units     = "hPa"
 lev_p@positive  = "down"
 
   do i = 0,dimsizes(varStrings)-1
-        if (waccm) then
-          outDir = getenv("ARCHIVEROOT")+"/70Lwaccm6/" + varStrings(i) + "/" + yyyy + "/" + mm + "/"	
-          fout = outDir + varStrings(i) + "_70Lwaccm6_" + outdate + "00z_d01_d46_m" + member + ".nc"
-        else
-          outDir = getenv("ARCHIVEROOT")+"/cesm2cam6v2/" + varStrings(i) + "/" + yyyy + "/" + mm + "/"
-  	  fout = outDir + varStrings(i) + "_cesm2cam6v2_" + outdate + "00z_d01_d46_m" + member + ".nc"
-        end if
+        outDir = getenv("SCRATCH") + "/" + workflow  + varStrings(i) + "/" + yyyy + "/" + mm + "/"
+    	fout = outDir + varStrings(i) + "_" + workflow + "_" + outdate + "_00z_d01_d46_m" + member + ".nc"
 	v = f[:]->$varStrings(i)$
 	PS = f[:]->PS
 	vnew = vinth2p(v,hyam,hybm,lev_p,PS,1,P0mb,1,False)
