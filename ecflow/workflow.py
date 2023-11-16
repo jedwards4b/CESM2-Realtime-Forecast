@@ -61,7 +61,7 @@ def workflow(description):
 
     workdir = os.path.join(home,workflow+"_"+fcstdate)
     if os.path.isdir(workdir):
-        txt = input(f"Direcotry {workdir} exists, delete? (y or n) ")
+        txt = input(f"Directory {workdir} exists, delete? (y or n) ")
         if txt == 'y':
             shutil.rmtree(workdir)
         else:

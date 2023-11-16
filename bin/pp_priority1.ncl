@@ -3,7 +3,8 @@ begin
 load "get_member_and_date.ncl"
 
 histDir = getenv("DOUT_S_ROOT") + "/atm/hist/"
-waccm = isStrSubset(getenv("DOUT_S_ROOT"),"70Lwaccm6")
+workflow = getenv("CESM_WORKFLOW")
+
 ; -------------------------- READ IN H2 VARIABLES --------------------------
 h2files = systemfunc("ls " + histDir + "*cam.h2.*")
 f = addfiles(h2files, "r")
@@ -33,16 +34,13 @@ yi = f[0]->lat
 xo = fspan(0., 359., 360)
 yo = fspan(-90., 90.,181)
 var = [/ rlut, pr, tas_2m, ts, ua_200, ua_850, va_200, va_850, zg_200, zg_500 /]
+
 varStrings = (/ "rlut", "pr_sfc", "tas_2m", "ts", "ua_200", "ua_850", "va_200", "va_850", "zg_200", "zg_500" /)
   do i = 0,ListCount(var)-1
 	v:=linint2(xi,yi,var[i],True,xo,yo,0)
-	if (waccm) then
-	  outDir = getenv("SCRATCH") + "/70Lwaccm6/p1/" + varStrings(i) + "/" + yyyy + "/" + mm + "/"
-    	  fout = outDir + varStrings(i) + "_70Lwaccm6_" + outdate + "_00z_d01_d46_m" + member + ".nc"
-        else
-	  outDir = getenv("SCRATCH") + "/cesm2cam6/p1/" + varStrings(i) + "/" + yyyy + "/" + mm + "/"
-          fout = outDir + varStrings(i) + "_cesm2cam6_" + outdate + "_00z_d01_d46_m" + member + ".nc"
-        end if
+        outDir = getenv("SCRATCH") + "/" + workflow + "/p1/" + varStrings(i) + "/" + yyyy + "/" + mm + "/"
+    	fout = outDir + varStrings(i) + "_" + workflow + "_" + outdate + "_00z_d01_d46_m" + member + ".nc"
+
 	if (.not. fileexists(outDir)) then
           system("mkdir -p "+outDir)
         end if

@@ -18,6 +18,7 @@ export CESM_WORKFLOW=%CESM_WORKFLOW%
 #source /etc/profile.d/z00_modules.sh
 module load cesmdev/1.0 ncarenv/23.09 ecflow
 module use %FCST_HOME%/modulefiles
+module load %CESM_WORKFLOW%
   
 # export NO_ECF=1             # uncomment to run as a standalone task on the command line
 # Optionally define the path where to find ecflow_client
