@@ -41,23 +41,19 @@ def parse_command_line(args, description):
     else:
         date = datetime.today() - timedelta(days=1)
 
-
     return date.strftime("%Y-%m-%d")
 
 def get_data_from_campaignstore(date):
-
     source_root_local = "/glade/campaign"
-#    source_path = 'cesm/development/cross-wg/S2S/CESM2/OCEANIC/{date}-00000/'.format(date=date)
-
-#    source_path = get_ocn_src_path(source_root_local, date)
-
-    source_path = 'cesm/development/cross-wg/S2S/SDnudgedOcn/rest/{date}-00000/'.format(date=date)
+    source_path = 'cesm/development/cross-wg/S2S/CESM2/OCEANIC/0274-11-01-00000/' # sg hardcoded sorry
+    print("sg says source_path is...")
+    print(source_path)
+#    source_path = 'cesm/development/cross-wg/S2S/SDnudgedOcn/rest/{date}-00000/'.format(date=date)
     dest_path = os.path.join(os.getenv("SCRATCH"),"cesm2cam6","StageIC","rest","{}".format(date))
 
-
-    #    if os.path.exists(os.path.join(dest_path,"rpointer.ocn.restart")):
-    #        print("Data already exists in {}".format(dest_path))
-    #        return
+    if os.path.exists(os.path.join(dest_path,"rpointer.ocn.restart")):
+        print("Data already exists in {}".format(dest_path))
+        return
     if(not os.path.exists(dest_path)):
         os.makedirs(dest_path)
 
@@ -83,8 +79,10 @@ lnd_source_path)))
         print("Renaming {} to {}".format(lndfile,newfile))
         os.rename(os.path.join(dest_path,lndfile), os.path.join(dest_path,newfile))
 
-    for ocnfile in glob.iglob(dest_path+"b.e21.BWHIST.SD*"):
-        newfile = ocnfile.replace("b.e21.BWHIST.SD.f09_g17.002.nudgedOcn",refname)
+#    for ocnfile in glob.iglob(dest_path+"b.e21.BWHIST.SD*"):
+#        newfile = ocnfile.replace("b.e21.BWHIST.SD.f09_g17.002.nudgedOcn",refname)
+    for ocnfile in glob.iglob(dest_path+"g.e21.GIAF_JRA.TL319_g17.ssfcst_03*"):
+        newfile = ocnfile.replace("g.e21.GIAF_JRA.TL319_g17.ssfcst_03",refname)
         print("Renaming {} to {}".format(ocnfile,newfile))
         os.rename(os.path.join(dest_path,ocnfile), os.path.join(dest_path,newfile))
 

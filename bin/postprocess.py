@@ -128,7 +128,7 @@ def _main_func(description):
         if sendtoftp:
             for _file in outfiles:
                 # path for realtime
-                rsynccmd = "rsync -azvh --rsync-path=\"cd /ftp/pub && mkdir -p /ftp/pub/jedwards/"+basecasename+"/realtime && rsync\" {} {}/realtime/{}".format(_file, ftproot,os.path.basename(_file))
+                rsynccmd = "rsync -azvh --rsync-path=\"cd /project/webshare/projects/S2S/ && mkdir -p /project/webshare/projects/S2S/"+basecasename+"/realtime && rsync\" {} {}/realtime/{}".format(_file, ftproot,os.path.basename(_file))
                 print("copying file {} to ftp server location {}".format(_file,ftproot+"/realtime/"))
                 run_cmd(rsynccmd,verbose=True)
 #        if sendtoglobus:
