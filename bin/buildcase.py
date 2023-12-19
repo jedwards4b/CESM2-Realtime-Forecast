@@ -71,7 +71,7 @@ def stage_refcase(rundir, refdir, date):
 
 def per_run_case_updates(case, date, sdrestdir, user_mods_dir, rundir):
     caseroot = case.get_value("CASEROOT")
-    basecasename = os.path.basename(caseroot)[:-6]
+    basecasename = os.path.basename(caseroot)[:-14]
     member = os.path.basename(caseroot)[-2:]
 
     unlock_file("env_case.xml",caseroot=caseroot)
@@ -119,18 +119,18 @@ def build_base_case(date, baseroot, basemonth,res, compset, overwrite,
                         run_unsupported=True, answer="r",walltime="04:00:00",
                         user_mods_dir=user_mods_dir, pecount=pecount, project="NCGD0042")
             # PELAYOUT for derecho
-            case.set_value("NTASKS_CPL",2048)
-            case.set_value("NTASKS_ATM",2048)
-            case.set_value("NTASKS_ICE",128)
-            case.set_value("NTASKS_LND",1920)
-            case.set_value("NTASKS_ROF",1920)
-            case.set_value("NTASKS_OCN",64)
-            case.set_value("NTASKS_WAV",64)
-            case.set_value("NTASKS_GLC",64)
-            case.set_value("ROOTPE_ICE",1920)
-            case.set_value("ROOTPE_OCN",2048)
-            case.set_value("ROOTPE_WAV",2112)
-            case.set_value("ROOTPE_GLC",2112)
+#            case.set_value("NTASKS_CPL",2048)
+#            case.set_value("NTASKS_ATM",2048)
+#            case.set_value("NTASKS_ICE",128)
+#            case.set_value("NTASKS_LND",1920)
+#            case.set_value("NTASKS_ROF",1920)
+#            case.set_value("NTASKS_OCN",64)
+#            case.set_value("NTASKS_WAV",64)
+#            case.set_value("NTASKS_GLC",64)
+#            case.set_value("ROOTPE_ICE",1920)
+#            case.set_value("ROOTPE_OCN",2048)
+#            case.set_value("ROOTPE_WAV",2112)
+#            case.set_value("ROOTPE_GLC",2112)
             
             
             # make sure that changing the casename will not affect these variables
@@ -202,7 +202,7 @@ def _main_func(description):
     
     overwrite = True
 
-    sdrestdir = os.path.join(os.getenv("SCRATCH"),workflow,"StageIC","rest","{}".format(date))
+    sdrestdir = os.path.join(os.getenv("SCRATCH"),"70Lwaccm6","StageIC","rest","{}".format(date))
     
     user_mods_dir = os.path.join(s2sfcstroot,"user_mods","70Lwaccm6")
 

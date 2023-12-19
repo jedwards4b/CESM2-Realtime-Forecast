@@ -32,8 +32,8 @@ lev_p@units     = "hPa"
 lev_p@positive  = "down"
 
   do i = 0,dimsizes(varStrings)-1
-        outDir = getenv("SCRATCH") + "/" + workflow  + varStrings(i) + "/" + yyyy + "/" + mm + "/"
-    	fout = outDir + varStrings(i) + "_" + workflow + "_" + outdate + "_00z_d01_d46_m" + member + ".nc"
+        outDir = getenv("SCRATCH") + "/" + workflow  + "/" + varStrings(i) + "/" + yyyy + "/" + mm + "/" ; ---- sglanvil edit Nov 24 (added '+ "/"' after workflow)
+    	fout = outDir + varStrings(i) + "_" + workflow + "_" + outdate + "00z_d01_d46_m" + member + ".nc" ; ---- sglanvil edit Nov 24 ("_00z" --> "00z")
 	v = f[:]->$varStrings(i)$
 	PS = f[:]->PS
 	vnew = vinth2p(v,hyam,hybm,lev_p,PS,1,P0mb,1,False)

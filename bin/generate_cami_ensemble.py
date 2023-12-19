@@ -48,7 +48,7 @@ def parse_command_line(args, description):
     return date.strftime("%Y-%m-%d"),int(args.ensemble_start),int(args.ensemble_end)
 
 def get_rvals(date, ensemble_start, ensemble_end):
-    rvals_file = os.path.join(os.getenv("WORK"),"camic_"+date+".txt")
+    rvals_file = os.path.join(os.getenv("WORK"),"cases",os.getenv("CESM_WORKFLOW"),"camic_"+date+".txt")
     rvals = []
     if os.path.isfile(rvals_file):
         with open(rvals_file,"r") as fd:
