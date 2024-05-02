@@ -32,7 +32,7 @@ def parse_command_line(args, description):
 
     parser.add_argument("--ensemble-start",default=1,
                         help="Specify the first ensemble member")
-    parser.add_argument("--ensemble-end",default=20,
+    parser.add_argument("--ensemble-end",default=40,
                         help="Specify the last ensemble member")
 
     args = CIME.utils.parse_args_and_handle_standard_logging_options(args, parser)
@@ -55,7 +55,7 @@ def get_rvals(date, ensemble_start,ensemble_end, model):
     random.seed(int(date[0:4])+int(date[5:7])+int(date[8:10]))
     rvals = random.sample(range(1001),k=ensemble_end//2)
     print("Rvals are {}".format(rvals))
-    rvals_file = os.path.join("/glade/p/cesm/espwg/CESM2-SMYLE/","cases","camic_"+date+".{}-{}.txt".format(ensemble_start,ensemble_end))
+    rvals_file = os.path.join("/glade/campaign/cesm/development/espwg/SMYLE-CASES/CESM2-SMYLE/","cases","camic_"+date+".{}-{}.txt".format(ensemble_start,ensemble_end))
     #rvals_file = os.path.join("/glade/p/cesm/espwg/CESM2-SMYLE/","cases","camic_"+date+"."+ensemble_start+"-"+ensemble_end+".txt")
     if not os.path.isfile(rvals_file):
         with open(rvals_file,"w") as fd:
@@ -92,7 +92,7 @@ def create_cam_ic_perturbed(original, ensemble_start,ensemble_end, date, baserun
         local_path = "/glade/campaign/cesm/development/cross-wg/S2S/CESM2/CAMI/RP"
     perturb_files = []
     for i in range(ensemble_start,ensemble_end, 2):
-        print "HERE rvals[{}] = {}".format((i-1)//2,rvals[(i-1)//2])
+        print("HERE rvals[{}] = {}".format((i-1)//2,rvals[(i-1)//2]))
         if model == "cesm2smyle":
             perturb_file = os.path.join("{}".format(month),
                                         "CESM2.cam.i.M{}.diff.{}.nc".format(month,rvals[(i-1)//2]))
@@ -105,7 +105,7 @@ def create_cam_ic_perturbed(original, ensemble_start,ensemble_end, date, baserun
             os.makedirs(dirname)
         perturb_files.append(perturb_file)
 
-    pertroot = os.path.join("/glade/p/cesm/espwg/CESM2-SMYLE/inputdata/cesm2_init","b.e21.SMYLE_IC.f09_g17."+date[0:7]+".01","pert.01")
+    pertroot = os.path.join("/glade/campaign/cesm/development/espwg/SMYLE/inputdata/cesm2_init","b.e21.SMYLE_IC.f09_g17."+date[0:7]+".01","pert.01")
 
     for i in range(ensemble_start,ensemble_end, 2):
         pfile = os.path.join(local_path, perturb_files.pop(0))
@@ -167,7 +167,7 @@ def _main_func(description):
 
     sdrestdir = os.path.join("/glade/p/cesm/espwg/CESM2-SMYLE/inputdata/cesm2_init","b.e21.SMYLE_IC.f09_g17."+date[0:7]+".01","{}".format(date))
     user = os.getenv("USER")
-    baserundir = os.path.join("/glade/scratch/{}/".format(user),"SMYLE","b.e21.BSMYLE.f09_g17."+date[0:7]+".001","run.{:03d}".format(ensemble_start))
+    baserundir = os.path.join("/glade/derecho/scratch/{}/".format(user),"SMYLE","b.e21.BSMYLE.f09_g17."+date[0:7]+".001","run.{:03d}".format(ensemble_start))
     caminame = os.path.join(sdrestdir,"b.e21.SMYLE_IC.f09_g17.{}.01.cam.i.{date}-00000.nc".format(date[:7],date=date))
     outroot = "b.e21.SMYLE_IC.pert.f09_g17.cam.i."
 

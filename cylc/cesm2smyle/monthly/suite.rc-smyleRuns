@@ -24,8 +24,8 @@
 
 [scheduling]
   # Change the run start and end dates here
-    initial cycle point = "1958-11-01"
-    final cycle point = "1958-11-01"
+    initial cycle point = "1999-11-01"
+    final cycle point = "1999-11-01"
 
     # must start May 01, any year:
     # initial cycle point constraints = "0501T00"
@@ -107,7 +107,7 @@ if [ ! -d "postprocess" ]; then
    create_postprocess_cylc -caseroot=`pwd`
 fi
 cd postprocess
-pp_config --set TIMESERIES_OUTPUT_ROOTDIR=/glade/campaign/cesm/development/espwg/SMYLE/archive-pre1970/b.e21.BSMYLE.f09_g17.${CYLC_TASK_CYCLE_DATE}.$(printf "%03d" ${CYLC_TASK_PARAM_mbr})
+pp_config --set TIMESERIES_OUTPUT_ROOTDIR=/glade/campaign/cesm/development/espwg/SMYLE/archive/b.e21.BSMYLE.f09_g17.${CYLC_TASK_CYCLE_DATE}.$(printf "%03d" ${CYLC_TASK_PARAM_mbr})
 today=`date '+%Y%m%d-%H%M%S'`
 mpirun ./timeseries > ./logs/timeseries.log.${today} 2>&1
 """
@@ -117,7 +117,7 @@ mpirun ./timeseries > ./logs/timeseries.log.${today} 2>&1
       SMYLE_ROOT = "/glade/p/cesm/espwg/CESM2-SMYLE"
     [[[job]]]
       batch system = pbs
-      batch submit command template = qsubcasper -q casper -l walltime=03:00:00 -A P93300313 '%(job)s'
+      batch submit command template = qsub -q regular -l walltime=03:00:00 -A P93300313 '%(job)s'
       shell = /bin/bash
     [[[directives]]]
        -r = n

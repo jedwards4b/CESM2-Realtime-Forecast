@@ -10,8 +10,8 @@ setenv LOGSDIR  /glade/campaign/cesm/development/espwg/SMYLE/logs
 setenv RESTDIR  /glade/campaign/cesm/development/espwg/SMYLE/restarts
 setenv POPDDIR  /glade/campaign/cesm/development/espwg/SMYLE/popd
 
-set syr = 1958
-set eyr = 1960
+set syr = 1990
+set eyr = 1991
 
 @ ib = $syr
 @ ie = $eyr
@@ -23,8 +23,8 @@ foreach mon ( 11 )
 
 
 # case name counter
-set smbr =  1
-set embr =  20
+set smbr =  21
+set embr =  30
 
 @ mb = $smbr
 @ me = $embr
@@ -62,24 +62,62 @@ if (! -d $TSERIES/$CASE/cpl/hist) then
 else
    echo "cpl done"
 endif
+
+set filename = $CASE.logs.tar
+set empty_size = 10240  # Replace with your desired size in kilobytes
+
+# Check if the file exists
 if (! -e $LOGSDIR/$CASE.logs.tar) then
    cd $USE_ARCHDIR
-   tar -cvf $LOGSDIR/$CASE.logs.tar $CASE/logs/
+   tar -cvf $LOGSDIR/$CASE.logs.tar $CASE/logs/*.gz
+      echo "tar file doesn't exist"
 else
-   echo "logs done"
+   if (`stat -c %s $LOGSDIR/$filename` == $empty_size) then
+      echo "$filename is smaller than $desired_size KB"
+      echo "making new tarfile\n"
+      cd $USE_ARCHDIR
+      mv $LOGSDIR/$filename $LOGSDIR/$filename.empty
+      tar -cvf $LOGSDIR/$CASE.logs.tar $CASE/logs/*.gz
+   else
+      echo "logs done"
+   endif
 endif
+
+## Archive restarts
+
+set filename = $CASE.rest.tar
 if (! -e $RESTDIR/$CASE.rest.tar) then
    cd $USE_ARCHDIR
    tar -cvf $RESTDIR/$CASE.rest.tar $CASE/rest/
 else
-   echo "rest done"
+   if (`stat -c %s $RESTDIR/$filename` == $empty_size) then
+      echo "$filename is smaller than $desired_size KB"
+      echo "making new tarfile\n"
+      cd $USE_ARCHDIR
+      mv $RESTDIR/$filename $RESTDIR/$filename.empty
+      tar -cvf $RESTDIR/$CASE.rest.tar $CASE/rest/
+   else
+      echo "rest done"
+   endif
 endif
+
+## Archive popd files
+set filename = $CASE.popd.tar
 if (! -e $POPDDIR/$CASE.popd.tar) then
    cd $USE_ARCHDIR
    tar -cvf $POPDDIR/$CASE.popd.tar $CASE/ocn/hist/*.pop.d*
 else
-   echo "popd done"
+   if (`stat -c %s $POPDDIR/$filename` == $empty_size) then
+      echo "$filename is smaller than $desired_size KB"
+      echo "making new tarfile\n"
+      cd $USE_ARCHDIR
+      mv $POPDDIR/$filename $POPDDIR/$filename.empty
+      tar -cvf $POPDDIR/$CASE.popd.tar $CASE/ocn/hist/*.pop.d*
+   else
+      echo "popd done"
+   endif
 endif
+
 
 end             # mon loop
 end             # member loop

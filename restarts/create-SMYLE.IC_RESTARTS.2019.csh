@@ -10,16 +10,16 @@ endif
 
 
 #foreach  ye9r ( 1954 1964 1974 1984 1994 2004 )
-set syr = 2019
-set eyr = 2019
+set syr = 2020
+set eyr = 2020
 
 @ ib = $syr
 @ ie = $eyr
 
 foreach year ( `seq $ib $ie` )
-foreach mon ( 02 05 08 11 )
+#foreach mon ( 02 05 08 11 )
 #foreach mon ( 05 08 11 )
-#foreach mon ( 11 )
+foreach mon ( 11 )
 #foreach mon ( 02 )
 #foreach mon ( 05 )
 #foreach mon ( 08 )
@@ -38,7 +38,7 @@ if (! -d ${icdir}) then
 endif
 
 
-set doThis99 = 1
+set doThis99 = 0
 if ($doThis99 == 1) then
 
 # atm, lnd initial conditions
@@ -62,7 +62,7 @@ set roffout = ${case}.mosart.r.${year}-${mon}-01-00000.nc
 
 echo $atmfout
 
-set doThis = 1
+set doThis = 0
 
 if ($doThis == 1) then
 cp $atmdir/${atmfname} $icdir/$atmfout
@@ -106,7 +106,7 @@ set popwwfout = ${case}.ww3.r.${year}-${mon}-01-00000
 echo $icefname
 echo $poprfname
 
-set doThis2 = 1
+set doThis2 = 0
 if ($doThis2 == 1) then
 
 cp $ocndir/${icefname}    $icdir/${icefout}
