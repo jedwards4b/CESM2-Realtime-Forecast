@@ -3,15 +3,15 @@
 module load ncl nco
 
 setenv CESM2_TOOLS_ROOT /glade/work/$USER/cesm_tags/CASE_tools/cesm2-smyle/
-setenv ARCHDIR1  /glade/scratch/sglanvil/SMYLE/archive/
-setenv ARCHDIR2  /glade/scratch/nanr/SMYLE/archive/
+setenv ARCHDIR1  /glade/derecho/scratch/$USER/SMYLE/archive/
+#setenv ARCHDIR2  /glade/scratch/sglanvil/SMYLE/archive/
 setenv TSERIES  /glade/campaign/cesm/development/espwg/SMYLE/archive
 setenv LOGSDIR  /glade/campaign/cesm/development/espwg/SMYLE/logs
 setenv RESTDIR  /glade/campaign/cesm/development/espwg/SMYLE/restarts
 setenv POPDDIR  /glade/campaign/cesm/development/espwg/SMYLE/popd
 
-set syr = 1970
-set eyr = 2018
+set syr = 1964
+set eyr = 1964
 
 @ ib = $syr
 @ ie = $eyr
@@ -23,8 +23,8 @@ foreach mon ( 08 )
 
 
 # case name counter
-set smbr =  1
-set embr =  20
+set smbr =  7
+set embr =  7
 
 @ mb = $smbr
 @ me = $embr
@@ -36,15 +36,19 @@ else
         set CASE = b.e21.BSMYLE.f09_g17.${year}-${mon}.0${mbr}
 endif
 
-if ($year >= 1970 && $year <= 1999) then
+if ($year >= 1970 && $year <= 1979) then
  set USE_ARCHDIR = $ARCHDIR1
 endif
-if ($year >= 2000 && $year <= 2010) then
+if ($year >= 1990 && $year <= 1999) then
+ set USE_ARCHDIR = $ARCHDIR1
+endif
+if ($year >= 2010 && $year <= 2018) then
  set USE_ARCHDIR = $ARCHDIR2
 endif
-if ($year >= 2011 && $year <= 2018) then
- set USE_ARCHDIR = $ARCHDIR1
+if ($year >= 1980 && $year <= 1989) then
+ set USE_ARCHDIR = $ARCHDIR2
 endif
+ set USE_ARCHDIR = $ARCHDIR1
 
 if (! -d $TSERIES/$CASE/cpl/hist) then
 	mkdir -p $TSERIES/$CASE/cpl/hist

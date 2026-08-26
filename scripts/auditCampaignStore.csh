@@ -10,23 +10,20 @@ setenv TSERIES2  /glade/campaign/cesm/development/espwg/SMYLE/archive
 #setenv TSERIES2  /glade/campaign/cesm/development/espwg/SMYLE/archive/pre-1970
 
 # ...
-set syr = 2021
-set eyr = 2022
+set syr = 1958
+set eyr = 1969
 
 if ($syr > 2022) then
 echo " go to cesm2-realtime scripts"
 exit
-endif
-if ($syr < 1970) then
-echo " pre-1970 archive"
-setenv TSERIES2  /glade/campaign/cesm/development/espwg/SMYLE/archive-pre1970/
 endif
 
 @ ib = $syr
 @ ie = $eyr
 
 foreach year ( `seq $ib $ie` )
-foreach mon ( 11 )
+	#foreach mon ( 02 )
+foreach mon ( 08 )
 #foreach mon ( 02 05 08 11)
 #foreach mon ( 02 05 08 11)
 

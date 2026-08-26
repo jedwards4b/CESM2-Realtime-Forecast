@@ -4,14 +4,14 @@ module load ncl nco
 
 setenv CESM2_TOOLS_ROOT /glade/work/nanr/cesm_tags/CASE_tools/cesm2-smyle/
 setenv ARCHDIR  /glade/scratch/$USER/SMYLE/archive/
-setenv TSERIES1  /glade/scratch/sglanvil/SMYLE/timeseries
-setenv TSERIES1  /glade/scratch/nanr/SMYLE/timeseries
-setenv TSERIES1  /glade/p/cesm/espwg/CESM2-SMYLE/timeseries
+#setenv TSERIES1  /glade/scratch/sglanvil/SMYLE/timeseries
+#setenv TSERIES1  /glade/scratch/nanr/SMYLE/timeseries
+#setenv TSERIES1  /glade/p/cesm/espwg/CESM2-SMYLE/timeseries
 setenv TSERIES2  /glade/campaign/cesm/development/espwg/SMYLE/archive
 
 # ...
-set syr = 2013
-set eyr = 2013
+set syr = 2023
+set eyr = 2023
 
 @ ib = $syr
 @ ie = $eyr
@@ -29,9 +29,9 @@ set embr =  20
 
 foreach mbr ( `seq $mb $me` )
 if ($mbr < 10) then
-        set CASE = b.e21.BSMYLE.f09_g17.${year}-${mon}.00${mbr}
+	set CASE = b.e21.BSMYLE.f09_g17.${year}-${mon}.00${mbr}
 else
-        set CASE = b.e21.BSMYLE.f09_g17.${year}-${mon}.0${mbr}
+	set CASE = b.e21.BSMYLE.f09_g17.${year}-${mon}.0${mbr}
 endif
 
 
