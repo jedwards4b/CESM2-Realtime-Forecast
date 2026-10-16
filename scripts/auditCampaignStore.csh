@@ -3,41 +3,28 @@
 module load ncl nco
 
 setenv CESM2_TOOLS_ROOT /glade/work/nanr/cesm_tags/CASE_tools/cesm2-smyle/
-setenv ARCHDIR  /glade/scratch/$USER/SMYLE/archive/
-setenv TSERIES1  /glade/scratch/sglanvil/SMYLE/timeseries
-setenv TSERIES1  /glade/scratch/nanr/SMYLE/timeseries
-setenv TSERIES1  /glade/p/cesm/espwg/CESM2-SMYLE/timeseries
-setenv TSERIES2  /glade/campaign/cesm/development/espwg/SMYLE/archive
-#setenv TSERIES2  /glade/campaign/cesm/development/espwg/SMYLE/archive/pre-1970
-
-set syr = 2000
-set eyr = 1993
-# ...
-set syr = 2000
-set eyr = 2000
-
-@ ib = $syr
-@ ie = $eyr
-
-foreach year ( `seq $ib $ie` )
-#foreach mon ( 11 )
-foreach mon ( 02 )
-
+setenv TSERIES2  /glade/campaign/cesm/development/espwg/CESM2-SMYLE-AMIP/timeseries
 
 # case name counter
-set smbr =  1
-set embr =  20
+set smbr =  01
+set embr =  50
+
 
 @ mb = $smbr
 @ me = $embr
 
 foreach mbr ( `seq $mb $me` )
-if ($mbr < 10) then
-        set CASE = b.e21.BSMYLE.f09_g17.${year}-${mon}.00${mbr}
-else
-        set CASE = b.e21.BSMYLE.f09_g17.${year}-${mon}.0${mbr}
-endif
+set mbr_padZeros = `printf %02d $mbr`
+set CASE = f.e21.FHIST_Obs_TPacAMIP_SSTSIC_2023.f09_f09_mg17.2023-11.1${mbr_padZeros}
+set CASE = f.e21.FHIST_Obs_Tzonal_SSTSIC_1979cf.f09_f09_mg17.1979-11.1${mbr_padZeros}
+set CASE = f.e21.FHIST_Obs_Tzonal_SSTSIC_2023.f09_f09_mg17.2023-11.1${mbr_padZeros}
+set CASE = f.e21.FHIST_Obs_TIndAtlAMIP_SSTSIC_1979cf.f09_f09_mg17.1979-11.1${mbr_padZeros}
+set CASE = f.e21.FHIST_Obs_TIndAtlAMIP_SSTSIC_2023.f09_f09_mg17.2023-11.1${mbr_padZeros}
 
+#set CASE = f.e21.FHIST_Obs_TPacAMIP_SSTSIC_1979cf.f09_f09_mg17.1979-11.1${mbr_padZeros}
+#set CASE = f.e21.FHIST_SMYLE_1979cntl.f09_f09_mg17.1979-11.${mbr_padZeros}
+#set CASE = f.e21.FHIST_SMYLE_1979CF-Tropics.f09_f09_mg17.1979-11.${mbr_padZeros}
+#set CASE = f.e21.FHIST_SMYLE_SSTv2-Tropics.f09_f09_mg17.2023-11.${mbr_padZeros}
 
 #echo "==================================    " 
 #echo $CASE 
@@ -46,13 +33,15 @@ if (-d $TSERIES2/$CASE) then
     #set t1 = `ls  $TSERIES2/$CASE/atm/proc/tseries/month_1/*ZM_CLUBB* | wc -l`
     set t2 = `ls -lR $TSERIES2/$CASE | wc -l`
     set s2 = `du . -sh`
-    echo  $CASE " ===    " $t2  $s2
+    if ($t2 < 1425 ) then
+       echo  $CASE " ==============    " $t2  $s2
+    else
+       echo  $CASE " ===    " $t2  $s2
+    endif
 else
     echo " missing   ===    " $CASE
 endif
 
-end             # member loop
-end             # member loop
 end             # member loop
 
 exit
